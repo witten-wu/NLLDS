@@ -8,4 +8,6 @@ Mysql 5.7.42
 
 Tomcat 8.5
 
-IDE: Eclipse (neon) for JavaEE
+IDE(Recommand): Eclipse (neon) for JavaEE
+
+
