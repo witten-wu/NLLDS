@@ -79,7 +79,7 @@ $(document).ready(function(){
 			success:function(data){
 				data=JSON.parse(data);
 				if(data.code==1){
-					window.location.href="test"
+					window.location.href="projectlist"
 				}else{
 					alert(data.msg)
 				}
