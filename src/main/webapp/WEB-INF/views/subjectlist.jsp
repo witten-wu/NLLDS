@@ -18,15 +18,14 @@
            <table class="table">
 			<thead>
 				<tr>
-					<th>Project_ID</th>
-					<th>Project_Name</th>
-					<th>Project_Created_By</th>
-					<th>Project_Manage_By</th>
-					<th>Project_Created_date</th>
-					<th>Project_Descriptions</th>
+					<th>Subject_ID</th>
+					<th>Subject</th>
+					<th>Questionnaire</th>
+					<th>Tasks</th>
+					<th>FTP</th>
 				</tr>
 			</thead>
-			<tbody id="showprojectlist">
+			<tbody id="showsubjectlist">
 			</tbody>
 		   </table>
         </div>
@@ -36,10 +35,13 @@
 <script src="bootstrap/js/bootstrap.min.js"></script>
 <script type="text/javascript">
 $(document).ready(function(){
+	var value = window.location.search.substr(1);
+	var pid = value.split('=')[1];
 	$.ajax({ 
-		url:"./showProjectList",
+		url:"./showSubjectList",
 		type:"POST", 
-		datatype:"json",	 
+		datatype:"json",
+		data:{"pid":pid},	 
 		async:"false",
 		success:function(data){
 			var str =""; 
@@ -53,34 +55,43 @@ $(document).ready(function(){
 	 				var newTdRow3 = document.createElement("td");
 	 				var newTdRow4 = document.createElement("td");
 	 				var newTdRow5 = document.createElement("td");
-	 				var newTdRow6 = document.createElement("td");
 	 				
-	 				var pid = document.createTextNode(dataList[i].pid);
-	 				var pname = document.createTextNode(dataList[i].pname);
-	 				var createby = document.createTextNode(dataList[i].createby);
-	 				var manageby = document.createTextNode(dataList[i].manageby);
-	 				var createdate = document.createTextNode(dataList[i].createdate);
-	 				var description = document.createTextNode(dataList[i].description);
+	 				var subjectid = document.createTextNode(dataList[i].subjectid);
+	 				var subjectno = document.createTextNode(dataList[i].subjectno);
+	 				var filename = document.createTextNode(dataList[i].filename);
+	 				var filepath = document.createTextNode(dataList[i].filepath);
 	 				
 	 				var newLink = document.createElement("a");
-					newLink.href = "subjectlist?pid=" + dataList[i].pid;
-					newLink.text = dataList[i].pname;
+					newLink.href = "viewFile?filepath=" + dataList[i].filepath;
+					newLink.text = dataList[i].filename;
 					
-	 				newTdRow1.append(pid);
-	 				newTdRow2.append(newLink);
-	 				newTdRow3.append(createby);
-	 				newTdRow4.append(manageby);
-	 				newTdRow5.append(createdate);
-	 				newTdRow6.append(description);
+					var newLink2 = document.createElement("a");
+					newLink2.href = "Task?taskid=";
+					newLink2.text = "Task1";
+	 				
+	 				var uploadButton = document.createElement("button");
+	 				uploadButton.innerText = "upload";
+	 				var downloadButton = document.createElement("button");
+	 				downloadButton.innerText = "download";
+	 				var deleteButton = document.createElement("button");
+	 				deleteButton.innerText = "delete";
+	 				var viewButton = document.createElement("button");
+	 				viewButton.innerText = "view";
+	 				
+	 				newTdRow1.append(subjectid);
+	 				newTdRow2.append(subjectno);
+	 				newTdRow3.append(newLink);
+	 				newTdRow4.append(newLink2);
+
+	 				newTdRow5.append(viewButton);
 	 				
 	 				newTrRow.append(newTdRow1);
 	 				newTrRow.append(newTdRow2);
 	 				newTrRow.append(newTdRow3);
 	 				newTrRow.append(newTdRow4);
 	 				newTrRow.append(newTdRow5);
-	 				newTrRow.append(newTdRow6);
 	 				
-	 				$("tbody#showprojectlist").append(newTrRow);
+	 				$("tbody#showsubjectlist").append(newTrRow);
 	 			}
 			}else if(data.code==0){
 				alert(data.msg)

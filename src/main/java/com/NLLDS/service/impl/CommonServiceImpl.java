@@ -7,9 +7,11 @@ import javax.annotation.Resource;
 import org.springframework.stereotype.Service;
 
 import com.NLLDS.dao.ProjectDao;
+import com.NLLDS.dao.SubjectDao;
 import com.NLLDS.dao.UserDao;
 import com.NLLDS.model.User;
 import com.NLLDS.model.Project;
+import com.NLLDS.model.Subject;
 import com.NLLDS.service.CommonService;
 
 
@@ -21,6 +23,9 @@ public class CommonServiceImpl implements CommonService{
 	
 	@Resource
 	private ProjectDao projectDao;
+	
+	@Resource
+	private SubjectDao subjectDao;
 
 	public User selectUserByUidAndPassword(String username, String password) {
 		return userDao.selectUserByUidAndPassword(username, password);
@@ -28,5 +33,9 @@ public class CommonServiceImpl implements CommonService{
 	
 	public List<Project> selectAllProject() {
 		return projectDao.selectAllProject();
+	}
+	
+	public List<Subject> selectSubjectByProjectId(String pid) {
+		return subjectDao.selectSubjectByProjectId(pid);
 	}
 }

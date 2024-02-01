@@ -12,6 +12,7 @@ import com.NLLDS.model.User;
 import com.NLLDS.util.CommonUtil;
 import com.NLLDS.util.EnumUtil;
 import com.NLLDS.model.Project;
+import com.NLLDS.model.Subject;
 import com.NLLDS.service.CommonService;
 import com.alibaba.fastjson.JSONObject;
 
@@ -26,10 +27,19 @@ public class LoginController {
         return "login";
     }
     
-    // Just for test, need delete later.
     @RequestMapping("/projectlist")
-    public String test() {
+    public String projectlist() {
         return "projectlist";
+    }
+    
+    @RequestMapping("/subjectlist")
+    public String subjectlist() {
+        return "subjectlist";
+    }
+    
+    @RequestMapping("/questionnaire")
+    public String questionnaire() {
+        return "questionnaire";
     }
     
     @RequestMapping("/loginclick")
@@ -56,6 +66,17 @@ public class LoginController {
 			return CommonUtil.constructResponse(0,"no record", null);
 		}else{
 			return CommonUtil.constructResponse(EnumUtil.OK,"project info", projects);
+		}
+	}
+    
+    @RequestMapping("/showSubjectList")
+    @ResponseBody
+    public JSONObject showSubjectList(String pid) throws Exception {
+		List<Subject> subjects=commonService.selectSubjectByProjectId(pid);
+		if(subjects.isEmpty()||subjects.size()==0){
+			return CommonUtil.constructResponse(0,"no record", null);
+		}else{
+			return CommonUtil.constructResponse(EnumUtil.OK,"project info", subjects);
 		}
 	}
 }
