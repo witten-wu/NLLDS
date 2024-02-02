@@ -12,6 +12,10 @@ public interface CommonService {
 	
 	List<Project> selectAllProject();
 	
+	int insertProject(Project project);
+	
+	List<Project> checkProject(String pname);
+	
 	List<Subject> selectSubjectByProjectId(String pid);
 	
 }

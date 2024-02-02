@@ -37,11 +37,6 @@ public class LoginController {
         return "subjectlist";
     }
     
-    @RequestMapping("/questionnaire")
-    public String questionnaire() {
-        return "questionnaire";
-    }
-    
     @RequestMapping("/loginclick")
     @ResponseBody
     public JSONObject loginclick(HttpSession session,String username,String password){
@@ -76,7 +71,30 @@ public class LoginController {
 		if(subjects.isEmpty()||subjects.size()==0){
 			return CommonUtil.constructResponse(0,"no record", null);
 		}else{
-			return CommonUtil.constructResponse(EnumUtil.OK,"project info", subjects);
+			return CommonUtil.constructResponse(EnumUtil.OK,"subject info", subjects);
 		}
+	}
+    
+    @RequestMapping("/addProject")
+	@ResponseBody
+	public JSONObject addProject(String pname,String createdby,String manageby,String description) throws Exception {
+    	Project project=new Project();
+    	project.setPname(pname);
+    	project.setCreateby(createdby);
+    	project.setManageby(manageby);
+    	project.setDescription(description);
+    	
+    	List<Project> projects=commonService.checkProject(pname);
+    	if(projects.isEmpty()){
+	    	Integer resultOfInsertProject=commonService.insertProject(project);
+			if(resultOfInsertProject>0){
+				return CommonUtil.constructResponse(EnumUtil.OK,"insert success", null);
+			}else{
+				return CommonUtil.constructResponse(0,"insert error", null);
+			}
+    	}else{
+			return CommonUtil.constructResponse(0,"Project name already exists", null);
+		}
+		
 	}
 }

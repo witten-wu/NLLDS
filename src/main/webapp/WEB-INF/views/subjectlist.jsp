@@ -22,7 +22,7 @@
 					<th>Subject</th>
 					<th>Questionnaire</th>
 					<th>Tasks</th>
-					<th>FTP</th>
+					<th>File</th>
 				</tr>
 			</thead>
 			<tbody id="showsubjectlist">
@@ -30,6 +30,7 @@
 		   </table>
         </div>
 	</div>
+	<ul id="file-list"></ul>
 </div>
 <script src="bootstrap/js/jquery-3.1.1.min.js"></script>
 <script src="bootstrap/js/bootstrap.min.js"></script>
@@ -58,25 +59,21 @@ $(document).ready(function(){
 	 				
 	 				var subjectid = document.createTextNode(dataList[i].subjectid);
 	 				var subjectno = document.createTextNode(dataList[i].subjectno);
-	 				var filename = document.createTextNode(dataList[i].filename);
-	 				var filepath = document.createTextNode(dataList[i].filepath);
 	 				
 	 				var newLink = document.createElement("a");
-					newLink.href = "viewFile?filepath=" + dataList[i].filepath;
-					newLink.text = dataList[i].filename;
+					newLink.href = "questionnaire?id=";
+					newLink.text = "Null"
 					
 					var newLink2 = document.createElement("a");
-					newLink2.href = "Task?taskid=";
-					newLink2.text = "Task1";
+					newLink2.href = "task?id=";
+					newLink2.text = "Task...";
 	 				
-	 				var uploadButton = document.createElement("button");
-	 				uploadButton.innerText = "upload";
-	 				var downloadButton = document.createElement("button");
-	 				downloadButton.innerText = "download";
-	 				var deleteButton = document.createElement("button");
-	 				deleteButton.innerText = "delete";
 	 				var viewButton = document.createElement("button");
 	 				viewButton.innerText = "view";
+	 				
+	 				viewButton.addEventListener("click", function() {
+					    loginToFilestash();
+					});
 	 				
 	 				newTdRow1.append(subjectid);
 	 				newTdRow2.append(subjectno);
@@ -99,5 +96,9 @@ $(document).ready(function(){
 		}
 	});
 });
+
+	function loginToFilestash() {
+    	window.open("http://192.168.1.221:8334/files/home/wyd/NLLDS/")
+    }
 </script>
 </html>    

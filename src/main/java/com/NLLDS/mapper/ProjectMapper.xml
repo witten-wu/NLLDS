@@ -6,7 +6,7 @@
     <result column="pname" property="pname" jdbcType="VARCHAR" />
     <result column="createby" property="createby" jdbcType="VARCHAR" />
     <result column="manageby" property="manageby" jdbcType="VARCHAR" />
-    <result column="createdate" property="createdate" jdbcType="TIMESTAMP" />
+    <result column="createdate" property="createdate" jdbcType="TIMESTAMP"/>
     <result column="description" property="description" jdbcType="VARCHAR" />
   </resultMap>
   <sql id="Base_Column_List" >
@@ -18,5 +18,18 @@
 	FROM project
   </select>
   
+  <insert id="insertProject" parameterType="com.NLLDS.model.Project" >
+    insert into project (pname, createby, 
+      manageby,description)
+    values (#{pname,jdbcType=VARCHAR}, #{createby,jdbcType=VARCHAR}, #{manageby,jdbcType=VARCHAR}, 
+      #{description,jdbcType=VARCHAR})
+  </insert>
+  
+  <select id="checkProject" resultMap="BaseResultMap" parameterType="java.lang.String">
+    select
+    <include refid="Base_Column_List" />
+    from project
+    where pname = #{pname,jdbcType=VARCHAR}
+  </select>
   
 </mapper>

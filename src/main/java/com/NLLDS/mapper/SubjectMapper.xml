@@ -4,15 +4,13 @@
   <resultMap id="BaseResultMap" type="com.NLLDS.model.Subject" >
     <id column="subjectid" property="subjectid" jdbcType="VARCHAR" />
     <result column="subjectno" property="subjectno" jdbcType="VARCHAR" />
-    <result column="filename" property="filename" jdbcType="VARCHAR" />
-    <result column="filepath" property="filepath" jdbcType="VARCHAR" />
   </resultMap>
   <sql id="Base_Column_List" >
-    subjectid, subjectno, filename, filepath
+    subjectid, subjectno
   </sql>
   
   <select id="selectSubjectByProjectId" resultMap="BaseResultMap">
-    SELECT subjectid, subjectno, filename, filepath
+    SELECT subjectid, subjectno
 	FROM subject
 	where projectid = #{pid,jdbcType=VARCHAR}
   </select>

@@ -35,6 +35,13 @@ public class CommonServiceImpl implements CommonService{
 		return projectDao.selectAllProject();
 	}
 	
+	public int insertProject(Project project) {
+		return projectDao.insertProject(project);
+	}
+	public List<Project> checkProject(String pname) {
+		return projectDao.checkProject(pname);
+	}
+	
 	public List<Subject> selectSubjectByProjectId(String pid) {
 		return subjectDao.selectSubjectByProjectId(pid);
 	}
