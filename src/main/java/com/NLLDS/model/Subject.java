@@ -5,6 +5,8 @@ public class Subject {
 
     private String subjectno;
     
+    private String projectid;
+    
 
     public String getSubjectid() {
         return subjectid;
@@ -20,6 +22,14 @@ public class Subject {
 
     public void setSubjectno(String subjectno) {
         this.subjectno = subjectno;
+    }
+    
+    public String getProjectid() {
+        return projectid;
+    }
+
+    public void setProjectid(String projectid) {
+        this.projectid = projectid;
     }
 
 

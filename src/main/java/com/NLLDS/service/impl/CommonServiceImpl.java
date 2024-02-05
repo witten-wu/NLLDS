@@ -9,9 +9,13 @@ import org.springframework.stereotype.Service;
 import com.NLLDS.dao.ProjectDao;
 import com.NLLDS.dao.SubjectDao;
 import com.NLLDS.dao.UserDao;
+import com.NLLDS.dao.TaskDao;
+import com.NLLDS.dao.TableDao;
 import com.NLLDS.model.User;
 import com.NLLDS.model.Project;
 import com.NLLDS.model.Subject;
+import com.NLLDS.model.Task;
+import com.NLLDS.model.Table;
 import com.NLLDS.service.CommonService;
 
 
@@ -26,6 +30,12 @@ public class CommonServiceImpl implements CommonService{
 	
 	@Resource
 	private SubjectDao subjectDao;
+	
+	@Resource
+	private TaskDao taskDao;
+	
+	@Resource
+	private TableDao tableDao;
 
 	public User selectUserByUidAndPassword(String username, String password) {
 		return userDao.selectUserByUidAndPassword(username, password);
@@ -45,4 +55,27 @@ public class CommonServiceImpl implements CommonService{
 	public List<Subject> selectSubjectByProjectId(String pid) {
 		return subjectDao.selectSubjectByProjectId(pid);
 	}
+	
+	public int insertSubject(Subject subject) {
+		return subjectDao.insertSubject(subject);
+	}
+	public List<Subject> checkSubject(String subjectno) {
+		return subjectDao.checkSubject(subjectno);
+	}
+	
+	public List<Task> selectAllTask() {
+		return taskDao.selectAllTask();
+	}
+	
+	public int insertTask(Task task) {
+		return taskDao.insertTask(task);
+	}
+	public List<Task> checkTask(String tname) {
+		return taskDao.checkTask(tname);
+	}
+	
+	public int createTable(Table table) {
+		return tableDao.createTable(table);
+	}
+	
 }

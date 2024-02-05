@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.NLLDS.dao.TaskDao" >
+  <resultMap id="BaseResultMap" type="com.NLLDS.model.Task" >
+    <id column="tid" property="tid" jdbcType="INTEGER" />
+    <result column="tname" property="tname" jdbcType="VARCHAR" />
+    <result column="createby" property="createby" jdbcType="VARCHAR" />
+    <result column="createdate" property="createdate" jdbcType="TIMESTAMP"/>
+    <result column="description" property="description" jdbcType="VARCHAR" />
+    <result column="fields_table" property="fields_table" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    tid, tname, createby, createdate, description, fields_table
+  </sql>
+  
+  <select id="selectAllTask" resultMap="BaseResultMap">
+    SELECT tid,tname,createby,createdate,description, fields_table
+	FROM task
+  </select>
+  
+  <insert id="insertTask" parameterType="com.NLLDS.model.Task" >
+    INSERT into task (tname, createby, description, fields_table)
+    values (#{tname,jdbcType=VARCHAR}, #{createby,jdbcType=VARCHAR}, #{description,jdbcType=VARCHAR}, #{fields_table,jdbcType=VARCHAR})
+  </insert>
+  
+  <select id="checkTask" resultMap="BaseResultMap" parameterType="java.lang.String">
+    SELECT tname
+    FROM task
+    WHERE tname = #{tname,jdbcType=VARCHAR}
+  </select>
+  
+</mapper>

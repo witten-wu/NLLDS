@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.NLLDS.dao.TableDao" >
+
+  <sql id="createTableSql">
+    CREATE TABLE IF NOT EXISTS ${tablename} (
+      id INT(10) PRIMARY KEY AUTO_INCREMENT,
+      projectid VARCHAR(255),
+      subjectid VARCHAR(255),
+      FOREIGN KEY (projectid) REFERENCES project(pid),
+      FOREIGN KEY (subjectid) REFERENCES subject(subjectid)
+    );
+  </sql>
+  
+  <insert id="createTable">
+    <include refid="createTableSql"/>
+  </insert>
+  
+  <!-- <update id="addColumn">
+    ALTER TABLE table_name ADD COLUMN new_column_name new_column_type;
+  </update>
+
+  <update id="modifyColumn">
+    ALTER TABLE table_name MODIFY COLUMN column_name new_column_type;
+  </update>
+
+  <update id="dropColumn">
+    ALTER TABLE table_name DROP COLUMN column_name;
+  </update> -->
+  
+</mapper>

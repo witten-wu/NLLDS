@@ -79,6 +79,7 @@ $(document).ready(function(){
 			success:function(data){
 				data=JSON.parse(data);
 				if(data.code==1){
+					window.history.replaceState(null, "", "projectlist");
 					window.location.href="projectlist"
 				}else{
 					alert(data.msg)

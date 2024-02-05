@@ -12,8 +12,19 @@
   <select id="selectSubjectByProjectId" resultMap="BaseResultMap">
     SELECT subjectid, subjectno
 	FROM subject
-	where projectid = #{pid,jdbcType=VARCHAR}
+	WHERE projectid = #{pid,jdbcType=VARCHAR}
   </select>
   
+  <insert id="insertSubject" parameterType="com.NLLDS.model.Subject" >
+    INSERT into subject (subjectno,projectid)
+    values (#{subjectno,jdbcType=VARCHAR}, #{projectid,jdbcType=VARCHAR})
+  </insert>
+  
+  <select id="checkSubject" resultMap="BaseResultMap" parameterType="java.lang.String">
+    SELECT
+    <include refid="Base_Column_List" />
+    FROM subject
+    WHERE subjectno = #{subjectno,jdbcType=VARCHAR}
+  </select>
   
 </mapper>

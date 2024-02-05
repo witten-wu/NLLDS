@@ -10,10 +10,10 @@
   </sql>
 
   <select id="selectUserByUidAndPassword" resultMap="BaseResultMap" >
-    select 
+    SELECT 
     <include refid="Base_Column_List" />
-    from user
-    where username = #{username,jdbcType=VARCHAR} and password = #{password,jdbcType=VARCHAR}
+    FROM user
+    WHERE username = #{username,jdbcType=VARCHAR} and password = #{password,jdbcType=VARCHAR}
   </select>
   
 </mapper>

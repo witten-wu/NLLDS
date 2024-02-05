@@ -5,6 +5,8 @@ import java.util.List;
 import com.NLLDS.model.Project;
 import com.NLLDS.model.Subject;
 import com.NLLDS.model.User;
+import com.NLLDS.model.Task;
+import com.NLLDS.model.Table;
 
 public interface CommonService {
 	
@@ -18,4 +20,15 @@ public interface CommonService {
 	
 	List<Subject> selectSubjectByProjectId(String pid);
 	
+	int insertSubject(Subject subject);
+	
+	List<Subject> checkSubject(String subjectno);
+	
+	List<Task> selectAllTask();
+	
+	int insertTask(Task task);
+	
+	List<Task> checkTask(String tname);
+	
+	int createTable(Table table);
 }

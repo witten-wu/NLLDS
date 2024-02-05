@@ -13,6 +13,8 @@ import com.NLLDS.util.CommonUtil;
 import com.NLLDS.util.EnumUtil;
 import com.NLLDS.model.Project;
 import com.NLLDS.model.Subject;
+import com.NLLDS.model.Task;
+import com.NLLDS.model.Table;
 import com.NLLDS.service.CommonService;
 import com.alibaba.fastjson.JSONObject;
 
@@ -35,6 +37,16 @@ public class LoginController {
     @RequestMapping("/subjectlist")
     public String subjectlist() {
         return "subjectlist";
+    }
+    
+    @RequestMapping("/tasklist")
+    public String tasklist() {
+        return "tasklist";
+    }
+    
+    @RequestMapping("/taskfields")
+    public String taskfields() {
+        return "taskfields";
     }
     
     @RequestMapping("/loginclick")
@@ -75,6 +87,17 @@ public class LoginController {
 		}
 	}
     
+    @RequestMapping("/showTaskList")
+    @ResponseBody
+    public JSONObject showTaskList() throws Exception {
+		List<Task> tasks=commonService.selectAllTask();
+		if(tasks.isEmpty()||tasks.size()==0){
+			return CommonUtil.constructResponse(0,"no record", null);
+		}else{
+			return CommonUtil.constructResponse(EnumUtil.OK,"subject info", tasks);
+		}
+	}
+    
     @RequestMapping("/addProject")
 	@ResponseBody
 	public JSONObject addProject(String pname,String createdby,String manageby,String description) throws Exception {
@@ -95,6 +118,60 @@ public class LoginController {
     	}else{
 			return CommonUtil.constructResponse(0,"Project name already exists", null);
 		}
-		
 	}
+    
+    @RequestMapping("/addSubject")
+	@ResponseBody
+	public JSONObject addSubject(String subjectno,String projectid) throws Exception {
+    	Subject subject=new Subject();
+    	subject.setSubjectno(subjectno);
+    	subject.setProjectid(projectid);
+
+    	List<Subject> subjects=commonService.checkSubject(subjectno);
+    	if(subjects.isEmpty()){
+	    	Integer resultOfInsertSubject=commonService.insertSubject(subject);
+			if(resultOfInsertSubject>0){
+				return CommonUtil.constructResponse(EnumUtil.OK,"insert success", null);
+			}else{
+				return CommonUtil.constructResponse(0,"insert error", null);
+			}
+    	}else{
+			return CommonUtil.constructResponse(0,"Subject No. already exists", null);
+		}
+	}
+    
+    @RequestMapping("/addTask")
+	@ResponseBody
+	public JSONObject addTask(String tname,String createby,String description, String fields_table) throws Exception {
+    	Task task=new Task();
+    	task.setTname(tname);
+    	task.setCreateby(createby);
+    	task.setDescription(description);
+    	task.setFields_table(fields_table);
+    	List<Task> tasks=commonService.checkTask(tname);
+    	if(tasks.isEmpty()){
+	    	Integer resultOfInsertTask=commonService.insertTask(task);
+			if(resultOfInsertTask>0){
+				return CommonUtil.constructResponse(EnumUtil.OK,"insert success", null);
+			}else{
+				return CommonUtil.constructResponse(0,"insert error", null);
+			}
+    	}else{
+			return CommonUtil.constructResponse(0,"Task name already exists", null);
+		}
+	}
+    
+    @RequestMapping("/createTable")
+	@ResponseBody
+	public JSONObject createTable(String fields_table) throws Exception {
+    	Table table=new Table();
+    	table.setdTablename(fields_table);
+    	Integer resultOfCreateTable=commonService.createTable(table);
+		if(resultOfCreateTable>0){
+			return CommonUtil.constructResponse(EnumUtil.OK,"create success", null);
+		}else{
+			return CommonUtil.constructResponse(0,"create error", null);
+		}
+	}
+    
 }

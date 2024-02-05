@@ -1,33 +1,33 @@
 package com.NLLDS.model;
 import java.sql.Timestamp;
 
-public class Project {
-    private String pid;
+public class Task {
+    private int tid;
 
-    private String pname;
+    private String tname;
 
     private String createby;
-
-    private String manageby;
 
     private Timestamp createdate;
 
     private String description;
+    
+    private String fields_table;
 
-    public String getPid() {
-        return pid;
+    public int getTid() {
+        return tid;
     }
 
-    public void setPid(String pid) {
-        this.pid = pid;
+    public void setTid(int tid) {
+        this.tid = tid;
     }
 
-    public String getPname() {
-        return pname;
+    public String getTname() {
+        return tname;
     }
 
-    public void setPname(String pname) {
-        this.pname = pname;
+    public void setTname(String tname) {
+        this.tname = tname;
     }
 
     public String getCreateby() {
@@ -36,14 +36,6 @@ public class Project {
 
     public void setCreateby(String createby) {
         this.createby = createby;
-    }
-
-    public String getManageby() {
-        return manageby;
-    }
-
-    public void setManageby(String manageby) {
-        this.manageby = manageby;
     }
 
     public Timestamp getCreatedate() {
@@ -60,6 +52,14 @@ public class Project {
 
     public void setDescription(String description) {
         this.description = description;
+    }
+    
+    public String getFields_table() {
+        return fields_table;
+    }
+
+    public void setFields_table(String fields_table) {
+        this.fields_table = fields_table;
     }
 
    

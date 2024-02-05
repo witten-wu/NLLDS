@@ -2,24 +2,88 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<title>Project</title>
+<title>Subject</title>
 </head>
 <style>
+  /* 全局样式 */
+  body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+  }
+  
+  /* 容器样式 */
+  .container {
+    max-width: 960px;
+    margin: 0 auto;
+    padding: 20px;
+  }
+  
+  /* 表格样式 */
+  .table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 20px;
+  }
   .table th,
   .table td {
     padding: 10px;
     text-align: left;
+    border: 1px solid #ccc;
+  }
+  
+  /* 输入字段样式 */
+  .input-container {
+    margin-bottom: 10px;
+  }
+  .input-container label {
+    display: inline-block;
+    width: 150px;
+    font-weight: bold;
+  }
+  .input-container input[type="text"] {
+    width: 300px;
+    padding: 5px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+  }
+  
+  /* 隐藏内容样式 */
+  .hidden {
+    display: none;
+  }
+  
+  /* 按钮样式 */
+  button {
+    padding: 10px 20px;
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+  }
+  button:hover {
+    background-color: #45a049;
   }
 </style>
 <body>
 <div class="container">
+	<jsp:include page="sidebar.jsp" />
 	<div class="row clearfix">
 		<div class="col-md-10">
-           <table class="table">
+			<button id=addSubjectButton style="margin-bottom: 10px;">Add Subject</button>
+			<div id="inputFields" class="hidden" style="margin-bottom: 10px;">
+                <div class="input-container">
+                    <label for="newSubject">Subject No. :</label>
+                    <input type="text" id="newSubject" name="newSubject">
+                </div>
+                <button id="saveSubjectButton" style="margin-bottom: 10px;">Save</button>
+            </div>
+           <table class="table" style="margin-bottom: 10px;">
 			<thead>
 				<tr>
 					<th>Subject_ID</th>
-					<th>Subject</th>
+					<th>Subject_No</th>
 					<th>Questionnaire</th>
 					<th>Tasks</th>
 					<th>File</th>
@@ -35,9 +99,45 @@
 <script src="bootstrap/js/jquery-3.1.1.min.js"></script>
 <script src="bootstrap/js/bootstrap.min.js"></script>
 <script type="text/javascript">
-$(document).ready(function(){
 	var value = window.location.search.substr(1);
 	var pid = value.split('=')[1];
+	
+	$(document).ready(function(){
+	$("#addSubjectButton").click(function() {
+        $("#inputFields").toggleClass("hidden");
+    });
+    
+    $("#saveSubjectButton").click(function() {
+        saveNewSubject();
+    });
+    
+    function saveNewSubject() {
+        var subjectno = $("#newSubject").val();
+		var projectid = pid;
+        if(subjectno == ""){
+			alert("Please input subject No.")
+		}else{
+	        $.ajax({ 
+				url:"./addSubject",
+				type:"POST", 
+				datatype:"json",
+				data:{"subjectno":subjectno,"projectid":projectid},	 
+				success:function(data){
+					data=JSON.parse(data);
+					if(data.code==1){
+					}else if(data.code==0){
+						alert(data.msg)
+					}
+				}
+			})
+
+	        $("#newSubject").val("");
+	        $("#inputFields").addClass("hidden");
+	        
+	        location.reload();
+        }
+    }
+
 	$.ajax({ 
 		url:"./showSubjectList",
 		type:"POST", 
@@ -61,12 +161,12 @@ $(document).ready(function(){
 	 				var subjectno = document.createTextNode(dataList[i].subjectno);
 	 				
 	 				var newLink = document.createElement("a");
-					newLink.href = "questionnaire?id=";
-					newLink.text = "Null"
+					newLink.href = "questionnaire?subjectid=";
+					newLink.text = "detail..."
 					
 					var newLink2 = document.createElement("a");
-					newLink2.href = "task?id=";
-					newLink2.text = "Task...";
+					newLink2.href = "task?subjectid=";
+					newLink2.text = "detail...";
 	 				
 	 				var viewButton = document.createElement("button");
 	 				viewButton.innerText = "view";

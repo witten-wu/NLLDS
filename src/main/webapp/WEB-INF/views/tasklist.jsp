@@ -2,7 +2,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<title>Project</title>
+<title>Task</title>
 </head>
 <style>
   /* 全局样式 */
@@ -71,38 +71,32 @@
 <div class="container">
 	<jsp:include page="sidebar.jsp" />
 	<div class="row clearfix">
-	 	
 		<div class="col-md-10">
-			<button id=addProjectButton style="margin-bottom: 10px;">Add Project</button>
+			<button id=addTaskButton style="margin-bottom: 10px;">Add Task</button>
 			<div id="inputFields" class="hidden" style="margin-bottom: 10px;">
 	                <div class="input-container">
-	                    <label for="newProjectName">Project Name:</label>
-	                    <input type="text" id="newProjectName" name="newProjectName">
+	                    <label for="newTaskName">Task Name:</label>
+	                    <input type="text" id="newTaskName" name="newTaskName">
 	                </div>
 
 	                <div class="input-container">
-	                    <label for="newProjectManageBy">Manage By:</label>
-	                    <input type="text" id="newProjectManageBy" name="newProjectManageBy">
+	                    <label for="newTaskDescription">Description:</label>
+	                    <input type="text" id="newTaskDescription" name="newTaskDescription">
 	                </div>
-
-	                <div class="input-container">
-	                    <label for="newProjectDescription">Description:</label>
-	                    <input type="text" id="newProjectDescription" name="newProjectDescription">
-	                </div>
-	                <button id="saveProjectButton" style="margin-bottom: 10px;">Save</button>
+	                <button id="saveTaskButton" style="margin-bottom: 10px;">Save</button>
 	            </div>
            <table class="table" style="margin-bottom: 10px;">
 			<thead>
 				<tr>
-					<th>Project_ID</th>
-					<th>Project_Name</th>
-					<th>Project_Descriptions</th>
-					<th>Project_Manage_By</th>
-					<th>Project_Created_By</th>
-					<th>Project_Created_date</th>
+					<th>Task_ID</th>
+					<th>Task_Name</th>
+					<th>Task_Descriptions</th>
+					<th>Task_Created_By</th>
+					<th>Task_Created_date</th>
+					<th>Task_Fields</th>
 				</tr>
 			</thead>
-			<tbody id="showprojectlist">
+			<tbody id="showtasklist">
 			</tbody>
 		   </table>
         </div>
@@ -112,29 +106,41 @@
 <script src="bootstrap/js/bootstrap.min.js"></script>
 <script type="text/javascript">
 $(document).ready(function(){
-	$("#addProjectButton").click(function() {
+	$("#addTaskButton").click(function() {
         $("#inputFields").toggleClass("hidden");
     });
     
-    $("#saveProjectButton").click(function() {
-        saveNewProject();
+    $("#saveTaskButton").click(function() {
+        saveNewTask();
     });
     
-    function saveNewProject() {
-        var pname = $("#newProjectName").val();
-        var createdby = "<%=Username%>"
-        var manageby = $("#newProjectManageBy").val();
-        var description = $("#newProjectDescription").val();
-        if(pname == ""){
-			alert("Please input project name")
-		}else if(manageby == ""){
-			alert("Please input the manager name")
+    function saveNewTask() {
+        var tname = $("#newTaskName").val();
+        var createby = "<%=Username%>"
+        var description = $("#newTaskDescription").val();
+        var fields_table = tname + '_template'
+        if(tname == ""){
+			alert("Please input task name")
 		}else{
 	        $.ajax({ 
-				url:"./addProject",
+				url:"./addTask",
 				type:"POST", 
 				datatype:"json",
-				data:{"pname":pname,"createdby":createdby,"manageby":manageby,"description":description},	 
+				data:{"tname":tname,"createby":createby,"description":description,"fields_table":fields_table},	 
+				success:function(data){
+					data=JSON.parse(data);
+					if(data.code==1){
+					}else if(data.code==0){
+						alert(data.msg)
+					}
+				}
+			})
+			
+			$.ajax({ 
+				url:"./createTable",
+				type:"POST", 
+				datatype:"json",
+				data:{"fields_table":fields_table},	
 				success:function(data){
 					data=JSON.parse(data);
 					if(data.code==1){
@@ -144,9 +150,8 @@ $(document).ready(function(){
 				}
 			})
 
-	        $("#newProjectName").val("");
-	        $("#newProjectManageBy").val("");
-	        $("#newProjectDescription").val("");
+	        $("#newTaskName").val("");
+	        $("#newTaskDescription").val("");
 	        $("#inputFields").addClass("hidden");
 	        
 	        location.reload();
@@ -155,7 +160,7 @@ $(document).ready(function(){
     
     
 	$.ajax({ 
-		url:"./showProjectList",
+		url:"./showTaskList",
 		type:"POST", 
 		datatype:"json",	 
 		async:"false",
@@ -173,9 +178,10 @@ $(document).ready(function(){
 	 				var newTdRow5 = document.createElement("td");
 	 				var newTdRow6 = document.createElement("td");
 	 				
-	 				var pid = document.createTextNode(dataList[i].pid);
+	 				var tid = document.createTextNode(dataList[i].tid);
+	 				var tname = document.createTextNode(dataList[i].tname);
+	 				var description = document.createTextNode(dataList[i].description);
 	 				var createby = document.createTextNode(dataList[i].createby);
-	 				var manageby = document.createTextNode(dataList[i].manageby);
 	 				
 	 				var date = new Date(dataList[i].createdate);
 					Y = date.getFullYear() + '-';
@@ -183,18 +189,16 @@ $(document).ready(function(){
 					D = date.getDate() + ' ';
 					transferdate = Y+M+D;
 	 				
-	 				var description = document.createTextNode(dataList[i].description);
-	 				
 	 				var newLink = document.createElement("a");
-					newLink.href = "subjectlist?pid=" + dataList[i].pid;
-					newLink.text = dataList[i].pname;
+					newLink.href = "taskfields?table=" + dataList[i].fields_table;
+					newLink.text = "detail...";
 					
-	 				newTdRow1.append(pid);
-	 				newTdRow2.append(newLink);
+	 				newTdRow1.append(tid);
+	 				newTdRow2.append(tname);
 	 				newTdRow3.append(description);
-	 				newTdRow4.append(manageby);
-	 				newTdRow5.append(createby);
-	 				newTdRow6.append(transferdate);
+	 				newTdRow4.append(createby);
+	 				newTdRow5.append(transferdate);
+	 				newTdRow6.append(newLink);
 	 				
 	 				newTrRow.append(newTdRow1);
 	 				newTrRow.append(newTdRow2);
@@ -203,7 +207,7 @@ $(document).ready(function(){
 	 				newTrRow.append(newTdRow5);
 	 				newTrRow.append(newTdRow6);
 	 				
-	 				$("tbody#showprojectlist").append(newTrRow);
+	 				$("tbody#showtasklist").append(newTrRow);
 	 			}
 			}else if(data.code==0){
 				alert(data.msg)
