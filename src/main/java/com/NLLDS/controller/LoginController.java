@@ -49,6 +49,11 @@ public class LoginController {
         return "taskfields";
     }
     
+    @RequestMapping("/subjectask")
+    public String subjectask() {
+        return "subjectask";
+    }
+    
     @RequestMapping("/loginclick")
     @ResponseBody
     public JSONObject loginclick(HttpSession session,String username,String password){
@@ -163,15 +168,51 @@ public class LoginController {
     
     @RequestMapping("/createTable")
 	@ResponseBody
-	public JSONObject createTable(String fields_table) throws Exception {
+	public void createTable(String fields_table) throws Exception {
     	Table table=new Table();
     	table.setdTablename(fields_table);
-    	Integer resultOfCreateTable=commonService.createTable(table);
-		if(resultOfCreateTable>0){
-			return CommonUtil.constructResponse(EnumUtil.OK,"create success", null);
+    	commonService.createTable(table);
+	}
+    
+    @RequestMapping("/showFields")
+    @ResponseBody
+    public JSONObject showFields(int taskid) throws Exception {
+		List<Table> fields=commonService.selectTaskFields(taskid);
+		if(fields.isEmpty()||fields.size()==0){
+			return CommonUtil.constructResponse(0,"no record", null);
 		}else{
-			return CommonUtil.constructResponse(0,"create error", null);
+			return CommonUtil.constructResponse(EnumUtil.OK,"fields info", fields);
 		}
+	}
+    
+    @RequestMapping("/addField")
+	@ResponseBody
+	public JSONObject addField(String fieldname, String remark, int taskid) throws Exception {
+    	Table table=new Table();
+    	table.setFieldname(fieldname);
+    	table.setRemark(remark);
+    	table.setTaskid(taskid);
+    	List<Table> tables=commonService.checkTable(fieldname,taskid);
+    	if(tables.isEmpty()){
+	    	Integer resultOfInsertFields=commonService.insertFields(table);
+			if(resultOfInsertFields>0){
+				return CommonUtil.constructResponse(EnumUtil.OK,"insert success", null);
+			}else{
+				return CommonUtil.constructResponse(0,"insert error", null);
+			}
+    	}else{
+			return CommonUtil.constructResponse(0,"Field Name already exists", null);
+		}
+
+	}
+    
+    @RequestMapping("/addColumn")
+	@ResponseBody
+	public void addColumn(String tablename,String fieldname) throws Exception {
+    	Table table=new Table();
+    	table.setdTablename(tablename);
+    	table.setFieldname(fieldname);
+    	commonService.addColumn(table);
 	}
     
 }

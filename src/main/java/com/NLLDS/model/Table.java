@@ -6,9 +6,9 @@ public class Table {
 	
 	private String fieldname;
 	
-	private String datatype;
+	private String remark;
 	
-	private String length;
+	private int taskid;
 	
 	public String getTablename() {
         return tablename;
@@ -26,19 +26,19 @@ public class Table {
         this.fieldname = fieldname;
     }
     
-    public String getDatatype() {
-        return datatype;
+    public String getRemark() {
+        return remark;
     }
 
-    public void setDatatype(String datatype) {
-        this.datatype = datatype;
+    public void setRemark(String remark) {
+        this.remark = remark;
     }
     
-    public String getLength() {
-        return length;
+    public int getTaskid() {
+        return taskid;
     }
 
-    public void setLength(String length) {
-        this.length = length;
+    public void setTaskid(int taskid) {
+        this.taskid = taskid;
     }
 }

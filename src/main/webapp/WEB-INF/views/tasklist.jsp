@@ -77,6 +77,7 @@
 	                <div class="input-container">
 	                    <label for="newTaskName">Task Name:</label>
 	                    <input type="text" id="newTaskName" name="newTaskName">
+	                    <span id="newTaskNameError" style="color: red;"></span>
 	                </div>
 
 	                <div class="input-container">
@@ -106,6 +107,21 @@
 <script src="bootstrap/js/bootstrap.min.js"></script>
 <script type="text/javascript">
 $(document).ready(function(){
+	var newTaskNameInput = document.getElementById('newTaskName');
+    var newTaskNameError = document.getElementById('newTaskNameError');
+    var saveTaskButton = document.getElementById('saveTaskButton');
+
+    newTaskNameInput.addEventListener('input', function() {
+        var value = newTaskNameInput.value;
+        var isValid = /^[a-zA-Z_][a-zA-Z0-9_]*$/.test(value);
+        if (!isValid) {
+            newTaskNameError.textContent = 'Please enter a valid task name';
+            saveTaskButton.disabled = true;
+        } else {
+            newTaskNameError.textContent = '';
+            saveTaskButton.disabled = false;
+        }
+    });
 	$("#addTaskButton").click(function() {
         $("#inputFields").toggleClass("hidden");
     });
@@ -130,31 +146,23 @@ $(document).ready(function(){
 				success:function(data){
 					data=JSON.parse(data);
 					if(data.code==1){
+							$.ajax({ 
+							url:"./createTable",
+							type:"POST", 
+							datatype:"json",
+							data:{"fields_table":fields_table},	
+							success:function(){
+								$("#newTaskName").val("");
+						        $("#newTaskDescription").val("");
+						        $("#inputFields").addClass("hidden");
+						        location.reload();
+							}
+						})
 					}else if(data.code==0){
 						alert(data.msg)
 					}
 				}
-			})
-			
-			$.ajax({ 
-				url:"./createTable",
-				type:"POST", 
-				datatype:"json",
-				data:{"fields_table":fields_table},	
-				success:function(data){
-					data=JSON.parse(data);
-					if(data.code==1){
-					}else if(data.code==0){
-						alert(data.msg)
-					}
-				}
-			})
-
-	        $("#newTaskName").val("");
-	        $("#newTaskDescription").val("");
-	        $("#inputFields").addClass("hidden");
-	        
-	        location.reload();
+			})  
         }
     }
     
@@ -190,7 +198,7 @@ $(document).ready(function(){
 					transferdate = Y+M+D;
 	 				
 	 				var newLink = document.createElement("a");
-					newLink.href = "taskfields?table=" + dataList[i].fields_table;
+					newLink.href = "taskfields?tid=" + dataList[i].tid + "&table=" + dataList[i].fields_table;
 					newLink.text = "detail...";
 					
 	 				newTdRow1.append(tid);
@@ -216,4 +224,5 @@ $(document).ready(function(){
 	});
 });
 </script>
+</body>
 </html>    

@@ -15,7 +15,7 @@ import javax.servlet.http.HttpServletResponse;
 import com.NLLDS.model.User;
 
 
-@WebFilter({"/projectlist", "/subjectlist", "/tasklist"})
+@WebFilter({"/projectlist", "/subjectlist", "/tasklist", "/taskfields"})
 public class UserLoginFilter implements Filter {
 	
     public UserLoginFilter() {

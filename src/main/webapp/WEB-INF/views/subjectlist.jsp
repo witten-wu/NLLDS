@@ -76,6 +76,7 @@
                 <div class="input-container">
                     <label for="newSubject">Subject No. :</label>
                     <input type="text" id="newSubject" name="newSubject">
+                    <span id="newSubjectError" style="color: red;"></span>
                 </div>
                 <button id="saveSubjectButton" style="margin-bottom: 10px;">Save</button>
             </div>
@@ -94,13 +95,27 @@
 		   </table>
         </div>
 	</div>
-	<ul id="file-list"></ul>
 </div>
 <script src="bootstrap/js/jquery-3.1.1.min.js"></script>
 <script src="bootstrap/js/bootstrap.min.js"></script>
 <script type="text/javascript">
 	var value = window.location.search.substr(1);
 	var pid = value.split('=')[1];
+	
+	var newSubjectInput = document.getElementById('newSubject');
+    var newSubjectError = document.getElementById('newSubjectError');
+    var saveSubjectButton = document.getElementById('saveSubjectButton');
+
+    newSubjectInput.addEventListener('input', function() {
+        var value = newSubjectInput.value;
+        if (/[\u4e00-\u9fa5]/.test(value)) {
+            newSubjectError.textContent = 'Please enter a valid Subject No.';
+            saveSubjectButton.disabled = true;
+        } else {
+            newSubjectError.textContent = '';
+            saveSubjectButton.disabled = false;
+        }
+    });
 	
 	$(document).ready(function(){
 	$("#addSubjectButton").click(function() {
@@ -159,13 +174,14 @@
 	 				
 	 				var subjectid = document.createTextNode(dataList[i].subjectid);
 	 				var subjectno = document.createTextNode(dataList[i].subjectno);
+	 				var projectid = pid;
 	 				
 	 				var newLink = document.createElement("a");
-					newLink.href = "questionnaire?subjectid=";
+					newLink.href = "subjectquestionnaire?projectid="+projectid+"&subjectid="+dataList[i].subjectid;
 					newLink.text = "detail..."
 					
 					var newLink2 = document.createElement("a");
-					newLink2.href = "task?subjectid=";
+					newLink2.href = "subjectask?projectid="+projectid+"&subjectid="+dataList[i].subjectid;
 					newLink2.text = "detail...";
 	 				
 	 				var viewButton = document.createElement("button");
@@ -201,4 +217,5 @@
     	window.open("http://192.168.1.221:8334/files/home/wyd/NLLDS/")
     }
 </script>
+</body>
 </html>    

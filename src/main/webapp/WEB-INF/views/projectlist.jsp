@@ -78,6 +78,7 @@
 	                <div class="input-container">
 	                    <label for="newProjectName">Project Name:</label>
 	                    <input type="text" id="newProjectName" name="newProjectName">
+	                    <span id="newProjectNameError" style="color: red;"></span>
 	                </div>
 
 	                <div class="input-container">
@@ -112,6 +113,22 @@
 <script src="bootstrap/js/bootstrap.min.js"></script>
 <script type="text/javascript">
 $(document).ready(function(){
+
+	var newProjectNameInput = document.getElementById('newProjectName');
+    var newProjectNameError = document.getElementById('newProjectNameError');
+    var saveProjectButton = document.getElementById('saveProjectButton');
+
+    newProjectNameInput.addEventListener('input', function() {
+        var value = newProjectNameInput.value;
+        if (/[\u4e00-\u9fa5]/.test(value)) {
+            newProjectNameError.textContent = 'Please enter a valid Project Name';
+            saveProjectButton.disabled = true;
+        } else {
+            newProjectNameError.textContent = '';
+            saveProjectButton.disabled = false;
+        }
+    });
+
 	$("#addProjectButton").click(function() {
         $("#inputFields").toggleClass("hidden");
     });
@@ -212,4 +229,5 @@ $(document).ready(function(){
 	});
 });
 </script>
+</body>
 </html>    

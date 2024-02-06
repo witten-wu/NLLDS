@@ -31,4 +31,12 @@ public interface CommonService {
 	List<Task> checkTask(String tname);
 	
 	int createTable(Table table);
+	
+	List<Table> selectTaskFields(int taskid);
+	
+	int insertFields(Table table);
+	
+	int addColumn(Table table);
+	
+	List<Table> checkTable(String fieldname, int taskid);
 }

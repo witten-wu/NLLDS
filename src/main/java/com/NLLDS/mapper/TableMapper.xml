@@ -1,7 +1,12 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.NLLDS.dao.TableDao" >
-
+  <resultMap id="BaseResultMap" type="com.NLLDS.model.Table" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="fieldname" property="fieldname" jdbcType="VARCHAR" />
+    <result column="remark" property="remark" jdbcType="VARCHAR" />
+  </resultMap>
+  
   <sql id="createTableSql">
     CREATE TABLE IF NOT EXISTS ${tablename} (
       id INT(10) PRIMARY KEY AUTO_INCREMENT,
@@ -16,11 +21,29 @@
     <include refid="createTableSql"/>
   </insert>
   
-  <!-- <update id="addColumn">
-    ALTER TABLE table_name ADD COLUMN new_column_name new_column_type;
+  <select id="selectTaskFields" resultMap="BaseResultMap">
+    SELECT fieldname, remark
+	FROM taskfields
+	WHERE taskid = #{taskid,jdbcType=INTEGER}
+  </select>
+  
+  <insert id="insertFields" parameterType="com.NLLDS.model.Table" >
+    INSERT into taskfields (fieldname,remark,taskid)
+    values (#{fieldname,jdbcType=VARCHAR}, #{remark,jdbcType=VARCHAR}, #{taskid,jdbcType=INTEGER})
+  </insert>
+  
+  <select id="checkTable" resultMap="BaseResultMap">
+    SELECT fieldname
+    FROM taskfields
+    WHERE fieldname = #{fieldname,jdbcType=VARCHAR} and taskid = #{taskid,jdbcType=INTEGER}
+  </select>
+  
+  <update id="addColumn">
+    ALTER TABLE ${tablename}
+  	ADD COLUMN ${fieldname} VARCHAR(255);
   </update>
 
-  <update id="modifyColumn">
+  <!-- <update id="modifyColumn">
     ALTER TABLE table_name MODIFY COLUMN column_name new_column_type;
   </update>
 

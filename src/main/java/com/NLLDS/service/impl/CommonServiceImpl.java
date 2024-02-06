@@ -78,4 +78,20 @@ public class CommonServiceImpl implements CommonService{
 		return tableDao.createTable(table);
 	}
 	
+	public List<Table> selectTaskFields(int taskid) {
+		return tableDao.selectTaskFields(taskid);
+	}
+	
+	public int insertFields(Table table) {
+		return tableDao.insertFields(table);
+	}
+	
+	public int addColumn(Table table) {
+		return tableDao.addColumn(table);
+	}
+	
+	public List<Table> checkTable(String fieldname, int taskid) {
+		return tableDao.checkTable(fieldname, taskid);
+	}
+	
 }
