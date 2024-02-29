@@ -1,11 +1,13 @@
 package com.NLLDS.controller;
 import java.util.List;
+import java.util.Map;
 
 import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.NLLDS.model.User;
@@ -16,7 +18,9 @@ import com.NLLDS.model.Subject;
 import com.NLLDS.model.Task;
 import com.NLLDS.model.Table;
 import com.NLLDS.service.CommonService;
+import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
+import com.alibaba.fastjson.TypeReference;
 
 @Controller
 public class LoginController {
@@ -39,6 +43,11 @@ public class LoginController {
         return "subjectlist";
     }
     
+    @RequestMapping("/questionnaire")
+    public String questionnaire() {
+        return "questionnaire";
+    }
+    
     @RequestMapping("/tasklist")
     public String tasklist() {
         return "tasklist";
@@ -52,6 +61,16 @@ public class LoginController {
     @RequestMapping("/subjectask")
     public String subjectask() {
         return "subjectask";
+    }
+    
+    @RequestMapping("/subjectquestionnaire")
+    public String subjectquestionnaire() {
+        return "subjectquestionnaire";
+    }
+    
+    @RequestMapping("/projectquestionnaire")
+    public String projectquestionnaire() {
+        return "projectquestionnaire";
     }
     
     @RequestMapping("/loginclick")
@@ -78,6 +97,28 @@ public class LoginController {
 			return CommonUtil.constructResponse(0,"no record", null);
 		}else{
 			return CommonUtil.constructResponse(EnumUtil.OK,"project info", projects);
+		}
+	}
+    
+    @RequestMapping("/showProjectQus")
+    @ResponseBody
+    public JSONObject showProjectQus(HttpSession session) throws Exception {
+		List<Project> projects=commonService.selectProjectQus();
+		if(projects.isEmpty()||projects.size()==0){
+			return CommonUtil.constructResponse(0,"no record", null);
+		}else{
+			return CommonUtil.constructResponse(EnumUtil.OK,"project info", projects);
+		}
+	}
+    
+    @RequestMapping("/getQuestionnaire")
+    @ResponseBody
+    public JSONObject getQuestionnaire(String pid) throws Exception {
+		List<Project> projects=commonService.selectQuestionnaire(pid);
+		if(projects.isEmpty()||projects.size()==0){
+			return CommonUtil.constructResponse(0,"no record", null);
+		}else{
+			return CommonUtil.constructResponse(EnumUtil.OK,"questionnaire info", projects);
 		}
 	}
     
@@ -122,6 +163,25 @@ public class LoginController {
 			}
     	}else{
 			return CommonUtil.constructResponse(0,"Project name already exists", null);
+		}
+	}
+    
+    @RequestMapping("/addQuestionnaire")
+	@ResponseBody
+	public JSONObject addQuestionnaire(String pid,String questionnaire) throws Exception {
+    	Project project=new Project();
+    	project.setPid(pid);
+    	project.setQuestionnaire(questionnaire);
+    	List<Project> projects=commonService.checkQuestionnaire(pid);
+    	if(projects.isEmpty()){
+    		return CommonUtil.constructResponse(0,"Project ID not exists.", null);
+    	}else{
+			Integer resultOfUpdateProject=commonService.updateProject(project);
+			if(resultOfUpdateProject>0){
+				return CommonUtil.constructResponse(EnumUtil.OK,"update success", null);
+			}else{
+				return CommonUtil.constructResponse(0,"update error", null);
+			}
 		}
 	}
     
@@ -215,4 +275,10 @@ public class LoginController {
     	commonService.addColumn(table);
 	}
     
+    @RequestMapping("/insertField")
+	@ResponseBody
+	public void insertField(String tablename, String formData) throws Exception {
+    	Map<String, String> map = JSON.parseObject(formData, new TypeReference<Map<String, String>>() {});
+    	commonService.insertFieldValue(tablename, map);
+	}
 }

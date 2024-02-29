@@ -9,7 +9,7 @@
 	    <div class="sidebar">
 		  <ul>
 		    <li><a href="projectlist">Project</a></li>
-		    <li><a href="#">Questionnaire</a></li>
+		    <li><a href="questionnaire">Questionnaire</a></li>
 		    <li><a href="tasklist">Task</a></li>
 		  </ul>
 		</div>

@@ -1,6 +1,7 @@
 package com.NLLDS.dao;
 
 import java.util.List;
+import java.util.Map;
 
 import org.apache.ibatis.annotations.Param;
 
@@ -19,4 +20,6 @@ public interface TableDao {
     int addColumn(Table table);
     
     List<Table> checkTable(@Param("fieldname")String fieldname,@Param("taskid")int taskid);
+    
+    int insertFieldValue(@Param("tablename") String tablename, @Param("formData") Map<String, String> formData);
 }

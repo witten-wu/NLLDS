@@ -13,6 +13,8 @@ public class Project {
     private Timestamp createdate;
 
     private String description;
+    
+    private String questionnaire;
 
     public String getPid() {
         return pid;
@@ -60,6 +62,14 @@ public class Project {
 
     public void setDescription(String description) {
         this.description = description;
+    }
+    
+    public String getQuestionnaire() {
+        return questionnaire;
+    }
+
+    public void setQuestionnaire(String questionnaire) {
+        this.questionnaire = questionnaire;
     }
 
    

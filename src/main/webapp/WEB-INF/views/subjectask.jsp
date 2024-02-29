@@ -150,15 +150,21 @@
             fieldsContainer.firstChild.remove();
         }
     }
-
+	
     $("#saveButton").click(function() {
     	var taskid = $('#showTaskList option:selected').val();
-    	var taskname = $('#showTaskList option:selected').text();
+    	var tablename = $('#showTaskList option:selected').text() + '_template';
         var formData = getFormData();
-        // insert database
-        saveData(taskname, formData);	
+        $.ajax({ 
+			url:"./insertField",
+			type:"POST", 
+			data: {"tablename": tablename,"formData": JSON.stringify(formData)},
+			success:function(data){
+				location.reload();
+			}
+		})
     });
-
+    
     function getFormData() {
         var formData = {};
         var fieldsContainer = document.getElementById('fieldsContainer');
@@ -168,32 +174,6 @@
             formData[input.name] = input.value;
         }
         return formData;
-    }
-
-    function saveData(template, data) {
-        taskData.push({ template: template, data: data });
-        clearDataTable();
-        var dataTable = document.getElementById('dataTable');
-        var headerRow = dataTable.insertRow();
-        var headerCell1 = headerRow.insertCell();
-        headerCell1.textContent = 'Task';
-        var headerCell2 = headerRow.insertCell();
-        headerCell2.textContent = 'Data';
-        for (var i = 0; i < taskData.length; i++) {
-            var task = taskData[i];
-            var dataRow = dataTable.insertRow();
-            var dataCell1 = dataRow.insertCell();
-            dataCell1.textContent = task.template;
-            var dataCell2 = dataRow.insertCell();
-            dataCell2.textContent = JSON.stringify(task.data);
-        }
-    }
-
-    function clearDataTable() {
-        var dataTable = document.getElementById('dataTable');
-        while (dataTable.rows.length > 0) {
-            dataTable.deleteRow(0);
-        }
     }
 
 	$(document).ready(function(){

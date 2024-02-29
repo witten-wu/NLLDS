@@ -8,14 +8,28 @@
     <result column="manageby" property="manageby" jdbcType="VARCHAR" />
     <result column="createdate" property="createdate" jdbcType="TIMESTAMP"/>
     <result column="description" property="description" jdbcType="VARCHAR" />
+    <result column="questionnaire" property="questionnaire" jdbcType="VARCHAR" />
   </resultMap>
   <sql id="Base_Column_List" >
-    pid, pname, createby, manageby, createdate, description
+    pid, pname, createby, manageby, createdate, description, questionnaire
   </sql>
   
   <select id="selectAllProject" resultMap="BaseResultMap">
     SELECT pid,pname,createby,manageby,createdate,description
 	FROM project
+  </select>
+  
+  <select id="selectProjectQus" resultMap="BaseResultMap">
+    SELECT pid,pname,questionnaire
+	FROM project
+	WHERE questionnaire IS NOT NULL
+  </select>
+  
+  <select id="selectQuestionnaire" resultMap="BaseResultMap" parameterType="java.lang.String">
+    SELECT questionnaire
+	FROM project
+	WHERE pid = #{pid,jdbcType=VARCHAR}
+	AND questionnaire IS NOT NULL
   </select>
   
   <insert id="insertProject" parameterType="com.NLLDS.model.Project" >
@@ -25,11 +39,24 @@
       #{description,jdbcType=VARCHAR})
   </insert>
   
+  <update id="updateProject" parameterType="com.NLLDS.model.Project" >
+    UPDATE project
+    set questionnaire = #{questionnaire,jdbcType=VARCHAR}
+    WHERE pid = #{pid,jdbcType=VARCHAR}
+  </update>
+  
   <select id="checkProject" resultMap="BaseResultMap" parameterType="java.lang.String">
     SELECT
     <include refid="Base_Column_List" />
     FROM project
     WHERE pname = #{pname,jdbcType=VARCHAR}
+  </select>
+  
+  <select id="checkQuestionnaire" resultMap="BaseResultMap" parameterType="java.lang.String">
+    SELECT
+    <include refid="Base_Column_List" />
+    FROM project
+    WHERE pid = #{pid,jdbcType=VARCHAR}
   </select>
   
 </mapper>

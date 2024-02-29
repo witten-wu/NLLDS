@@ -157,7 +157,6 @@ $(document).ready(function(){
 						$.ajax({ 
 							url:"./addColumn",
 							type:"POST", 
-							datatype:"json",
 							data:{"tablename":tablename,"fieldname":fieldname},	
 							success:function(){
 								$("#fieldname").val("");
@@ -186,7 +185,7 @@ $(document).ready(function(){
 			if(data.code==1){
 				for(var i=0;i<dataList.length;i++){
 					var newTrRow = document.createElement("tr");
-	 				var newTdRow1 = document.createElement("td");
+	 				var newTdRow1 = document.createElement("td"); 
 	 				var newTdRow2 = document.createElement("td");
 
 	 				var fieldname = document.createTextNode(dataList[i].fieldname);

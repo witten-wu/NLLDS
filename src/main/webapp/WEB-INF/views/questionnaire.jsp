@@ -1,75 +1,195 @@
 <%@ page language="java" import="com.NLLDS.model.*" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <title>Questionnaire</title>
+<title>Questionnaire</title>
 </head>
+<style>
+  /* 全局样式 */
+  body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+  }
+  
+  /* 容器样式 */
+  .container {
+    max-width: 960px;
+    margin: 0 auto;
+    padding: 20px;
+  }
+  
+  /* 表格样式 */
+  .table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 20px;
+  }
+  .table th,
+  .table td {
+    padding: 10px;
+    text-align: left;
+    border: 1px solid #ccc;
+  }
+  
+  /* 输入字段样式 */
+  .input-container {
+    margin-bottom: 10px;
+  }
+  .input-container label {
+    display: inline-block;
+    width: 150px;
+    font-weight: bold;
+  }
+  .input-container input[type="text"] {
+    width: 300px;
+    padding: 5px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+  }
+  
+  /* 隐藏内容样式 */
+  .hidden {
+    display: none;
+  }
+  
+  /* 按钮样式 */
+  button {
+    padding: 10px 20px;
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+  }
+  button:hover {
+    background-color: #45a049;
+  }
+</style>
 <body>
-  <h1>Questionnaire</h1>
-  
-  <form id="surveyForm">
-    <div>
-      <label for="surveyTitle">Title：</label>
-      <input type="text" id="surveyTitle" name="surveyTitle" required>
-    </div>
-    <div>
-      <label for="question">Question：</label>
-      <textarea id="question" name="question" rows="4" cols="50" required></textarea>
-    </div>
-    <button type="button" onclick="addQuestion()">Add Question</button>
-    <button type="submit">Save</button>
-  </form>
-  
-  <div id="questionList">
-    <!-- 这里将显示添加的问题列表 -->
-  </div>
-  
-  <script>
-    var questionCount = 0; // 问题计数器
-    
-    function addQuestion() {
-      var question = document.getElementById("question").value;
-      
-      // 创建问题元素
-      var questionElement = document.createElement("div");
-      questionElement.innerHTML = "<span>问题 " + (++questionCount) + "：</span>" + question;
-      
-      // 将问题元素添加到问题列表中
-      document.getElementById("questionList").appendChild(questionElement);
-      
-      // 清空问题输入框
-      document.getElementById("question").value = "";
+<div class="container">
+	<jsp:include page="sidebar.jsp" />
+	<div class="row clearfix">
+	 	
+		<div class="col-md-10">
+			<button id=addQusButton style="margin-bottom: 10px;">Add Questionnaire</button>
+			<div id="inputFields" class="hidden" style="margin-bottom: 10px;">
+	                <div class="input-container">
+	                    <label for="newPId">Project ID:</label>
+	                    <input type="text" id="newPId" name="newPId">
+	                </div>
+
+	                <div class="input-container">
+	                    <label for="QusUrl">Questionnaire:</label>
+	                    <input type="text" id="QusUrl" name="QusUrl">
+	                </div>
+	                <button id="saveQusButton" style="margin-bottom: 10px;">Save</button>
+	            </div>
+           <table class="table" style="margin-bottom: 10px;">
+			<thead>
+				<tr>
+					<th>Project_ID</th>
+					<th>Project_Name</th>
+					<th>Questionnaire</th>
+				</tr>
+			</thead>
+			<tbody id="showquslist">
+			</tbody>
+		   </table>
+        </div>
+	</div>
+</div>
+<script src="bootstrap/js/jquery-3.1.1.min.js"></script>
+<script src="bootstrap/js/bootstrap.min.js"></script>
+<script type="text/javascript">
+$(document).ready(function(){
+
+	$("#addQusButton").click(function() {
+	    $("#inputFields").toggleClass("hidden");
+	});
+	
+	$("#saveQusButton").click(function() {
+	    saveQus();
+	});
+	
+	function saveQus() {
+	    var pid = $("#newPId").val();
+	    var questionnaire = $("#QusUrl").val();
+	    if(pid == ""){
+			alert("Please input the Project ID")
+		}else if(questionnaire == ""){
+			alert("Please input the Questionnaire url")
+		}else{
+	        $.ajax({ 
+				url:"./addQuestionnaire",
+				type:"POST", 
+				datatype:"json",
+				data:{"pid":pid,"questionnaire":questionnaire},	 
+				success:function(data){
+					data=JSON.parse(data);
+					if(data.code==1){
+					}else if(data.code==0){
+						alert(data.msg)
+					}
+				}
+			})
+	
+	        $("#newPId").val("");
+	        $("#QusUrl").val("");
+	        $("#inputFields").addClass("hidden");
+	        
+	        location.reload();
+	    }
+	}
+	
+	
+	function viewquestionnaire(pid) {
+		window.location.href = "projectquestionnaire?projectid=" + pid;
     }
-    
-    document.getElementById("surveyForm").addEventListener("submit", function(event) {
-      event.preventDefault(); // 阻止表单默认提交行为
-      
-      var surveyTitle = document.getElementById("surveyTitle").value;
-      var questions = document.getElementById("questionList").querySelectorAll("div");
-      
-      // 将问题文本提取为数组
-      var questionArray = Array.from(questions).map(function(questionElement) {
-        return questionElement.innerText;
-      });
-      
-      // 构造问卷对象
-      var surveyData = {
-        "surveyTitle": surveyTitle,
-        "questions": questionArray
-      };
-      
-      // 发送问卷数据到服务器进行保存
-      // 在这里可以使用Ajax或其他方式发送问卷数据到服务器进行保存
-      
-      // 这里只是一个示例，将问卷数据打印到控制台
-      console.log(surveyData);
-      
-      // 清空表单和问题列表
-      event.target.reset();
-      document.getElementById("questionList").innerHTML = "";
-      questionCount = 0;
-    });
-  </script>
+	
+	$.ajax({ 
+		url:"./showProjectQus",
+		type:"POST", 
+		datatype:"json",	 
+		async:"false",
+		success:function(data){
+			var str =""; 
+			data = JSON.parse(data); 
+			dataList = data.data; 
+			if(data.code==1){
+				for(var i=0;i<dataList.length;i++){
+					var newTrRow = document.createElement("tr");
+	 				var newTdRow1 = document.createElement("td");
+	 				var newTdRow2 = document.createElement("td");
+	 				var newTdRow3 = document.createElement("td");
+
+	 				var pid = document.createTextNode(dataList[i].pid);
+	 				var pname = document.createTextNode(dataList[i].pname);
+	 				var viewButton = document.createElement("button");
+	 				viewButton.innerText = "view";
+	 				viewButton.setAttribute("data-projectid", dataList[i].pid);
+	 				viewButton.addEventListener("click", function() {
+	 					var pid = this.getAttribute("data-projectid");
+					    viewquestionnaire(pid);
+					});
+					
+	 				newTdRow1.append(pid);
+	 				newTdRow2.append(pname);
+	 				newTdRow3.append(viewButton);
+	 				
+	 				newTrRow.append(newTdRow1);
+	 				newTrRow.append(newTdRow2);
+	 				newTrRow.append(newTdRow3);
+	 				
+	 				$("tbody#showquslist").append(newTrRow);
+	 			}
+			}else if(data.code==0){
+				alert(data.msg)
+			}
+		}
+	});
+});
+
+</script>
 </body>
-</html>
+</html>    

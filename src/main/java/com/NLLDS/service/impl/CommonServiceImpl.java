@@ -1,6 +1,7 @@
 package com.NLLDS.service.impl;
 
 import java.util.List;
+import java.util.Map;
 
 import javax.annotation.Resource;
 
@@ -45,9 +46,26 @@ public class CommonServiceImpl implements CommonService{
 		return projectDao.selectAllProject();
 	}
 	
+	public List<Project> selectProjectQus() {
+		return projectDao.selectProjectQus();
+	}
+	
+	public List<Project> selectQuestionnaire(String pid) {
+		return projectDao.selectQuestionnaire(pid);
+	}
+	
+	public List<Project> checkQuestionnaire(String pid) {
+		return projectDao.checkQuestionnaire(pid);
+	}
+	
 	public int insertProject(Project project) {
 		return projectDao.insertProject(project);
 	}
+	
+	public int updateProject(Project project) {
+		return projectDao.updateProject(project);
+	}
+	
 	public List<Project> checkProject(String pname) {
 		return projectDao.checkProject(pname);
 	}
@@ -84,6 +102,10 @@ public class CommonServiceImpl implements CommonService{
 	
 	public int insertFields(Table table) {
 		return tableDao.insertFields(table);
+	}
+	
+	public int insertFieldValue(String tablename, Map<String, String> formData) {
+		return tableDao.insertFieldValue(tablename, formData);
 	}
 	
 	public int addColumn(Table table) {

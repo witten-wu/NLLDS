@@ -17,6 +17,20 @@
     );
   </sql>
   
+  <insert id="insertFieldValue">
+        INSERT INTO ${tablename}
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+        <foreach collection="formData" index="key" item="value" separator=",">
+            ${key}
+        </foreach>
+    	</trim>
+	    <trim prefix="VALUES (" suffix=")" suffixOverrides=",">
+	        <foreach collection="formData" index="key" item="value" separator=",">
+	            #{value}
+	        </foreach>
+	    </trim>
+    </insert>
+  
   <insert id="createTable">
     <include refid="createTableSql"/>
   </insert>
