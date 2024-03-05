@@ -4,15 +4,22 @@
   <resultMap id="BaseResultMap" type="com.NLLDS.model.Subject" >
     <id column="subjectid" property="subjectid" jdbcType="VARCHAR" />
     <result column="subjectno" property="subjectno" jdbcType="VARCHAR" />
+    <result column="tasks" property="tasks" jdbcType="VARCHAR" />
   </resultMap>
   <sql id="Base_Column_List" >
-    subjectid, subjectno
+    subjectid, subjectno, tasks
   </sql>
   
   <select id="selectSubjectByProjectId" resultMap="BaseResultMap">
     SELECT subjectid, subjectno
 	FROM subject
 	WHERE projectid = #{pid,jdbcType=VARCHAR}
+  </select>
+  
+  <select id="selectSubjectTasks" resultMap="BaseResultMap">
+    SELECT *
+	FROM subject
+	WHERE subjectid = #{subjectid,jdbcType=VARCHAR}
   </select>
   
   <insert id="insertSubject" parameterType="com.NLLDS.model.Subject" >
@@ -26,5 +33,16 @@
     FROM subject
     WHERE subjectno = #{subjectno,jdbcType=VARCHAR}
   </select>
+  
+  <update id="updateSubjecttasks" parameterType="com.NLLDS.model.Subject" >
+    UPDATE subject
+    SET tasks = CASE
+    WHEN tasks IS NULL THEN #{tasks, jdbcType=VARCHAR}
+    WHEN FIND_IN_SET(#{tasks, jdbcType=VARCHAR}, tasks) > 0 THEN tasks
+    ELSE CONCAT_WS(',', tasks, #{tasks, jdbcType=VARCHAR})
+    END
+    WHERE subjectid = #{subjectid,jdbcType=VARCHAR}
+    AND projectid = #{projectid,jdbcType=VARCHAR}
+  </update>
   
 </mapper>

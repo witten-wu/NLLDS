@@ -29,6 +29,8 @@ public interface CommonService {
 	
 	List<Subject> selectSubjectByProjectId(String pid);
 	
+	List<Subject> selectSubjectTasks(String subjectid);
+	
 	int insertSubject(Subject subject);
 	
 	List<Subject> checkSubject(String subjectno);
@@ -48,6 +50,8 @@ public interface CommonService {
 	int insertFieldValue(String tablename, Map<String, String> formData);
 	
 	int addColumn(Table table);
+	
+	int updateSubjecttasks(Subject subject);
 	
 	List<Table> checkTable(String fieldname, int taskid);
 }

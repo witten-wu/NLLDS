@@ -14,6 +14,16 @@
 	<!-- 自动扫描 -->
 	<context:component-scan base-package="com.NLLDS" />
 	
+	<bean id="dataSource" class="org.springframework.jdbc.datasource.DriverManagerDataSource">
+    <property name="driverClassName" value="com.mysql.jdbc.Driver" />
+    <property name="url" value="jdbc:mysql://192.168.1.107:3306/NLLDS" />
+    <property name="username" value="admin" />
+    <property name="password" value="3349" />
+	</bean>
+	<bean id="jdbcTemplate" class="org.springframework.jdbc.core.JdbcTemplate">
+    <property name="dataSource" ref="dataSource" />
+	</bean>
+	
 <!-- 	<bean id="CheckUserService" class="com.IVMS.service.impl.CheckUserServiceImpl"/> -->
 
 	<!-- 访问静态资源(不拦截该资源) -->

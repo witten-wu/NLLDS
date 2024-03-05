@@ -5,9 +5,10 @@ import java.util.Map;
 import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.NLLDS.model.User;
@@ -27,6 +28,9 @@ public class LoginController {
 	
 	@Autowired
 	CommonService commonService;    
+	
+	@Autowired
+	private JdbcTemplate jdbcTemplate;
     
     @RequestMapping("/login")
     public String login() {
@@ -280,5 +284,30 @@ public class LoginController {
 	public void insertField(String tablename, String formData) throws Exception {
     	Map<String, String> map = JSON.parseObject(formData, new TypeReference<Map<String, String>>() {});
     	commonService.insertFieldValue(tablename, map);
+	}
+    
+    @RequestMapping("/updateSubjecttasks")
+	@ResponseBody
+	public void updateSubjecttasks(String tablename, String subjectid, String projectid) throws Exception {
+    	Subject subject=new Subject();
+    	subject.setTasks(tablename);
+    	subject.setSubjectid(subjectid);
+    	subject.setProjectid(projectid);
+    	commonService.updateSubjecttasks(subject);
+	}
+    
+    @RequestMapping("/getSubjectTasks")
+   	@ResponseBody
+   	public JSONObject getSubjectTasks(String subjectid) throws Exception {
+    	List<Subject> subjects = commonService.selectSubjectTasks(subjectid);
+		return CommonUtil.constructResponse(EnumUtil.OK,"tasks info", subjects);
+   	}
+    
+    @RequestMapping("/showSubjectTasks")
+	@ResponseBody
+	public JSONObject showSubjectTasks(String subjectid, String tablename) throws Exception {
+    	String sql = "SELECT * FROM " + tablename + " where subjectid = '" + subjectid + "'";
+        List<Map<String, Object>> result = jdbcTemplate.queryForList(sql);
+        return CommonUtil.constructResponse(EnumUtil.OK,"tasks info", result);
 	}
 }

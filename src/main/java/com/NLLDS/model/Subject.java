@@ -7,6 +7,7 @@ public class Subject {
     
     private String projectid;
     
+    private String tasks;
 
     public String getSubjectid() {
         return subjectid;
@@ -31,6 +32,13 @@ public class Subject {
     public void setProjectid(String projectid) {
         this.projectid = projectid;
     }
+    
+    public String getTasks() {
+        return tasks;
+    }
 
+    public void setTasks(String tasks) {
+        this.tasks = tasks;
+    }
 
 }

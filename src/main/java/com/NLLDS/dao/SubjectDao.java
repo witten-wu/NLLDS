@@ -11,5 +11,9 @@ public interface SubjectDao {
 	int insertSubject(Subject subject);
 	    
 	List<Subject> checkSubject(String subjectno);
+	
+	List<Subject> selectSubjectTasks(String subjectid);
+	
+	int updateSubjecttasks(Subject subject);
 
 }

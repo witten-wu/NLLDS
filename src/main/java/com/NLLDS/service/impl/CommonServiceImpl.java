@@ -74,6 +74,10 @@ public class CommonServiceImpl implements CommonService{
 		return subjectDao.selectSubjectByProjectId(pid);
 	}
 	
+	public List<Subject> selectSubjectTasks(String subjectid) {
+		return subjectDao.selectSubjectTasks(subjectid);
+	}
+	
 	public int insertSubject(Subject subject) {
 		return subjectDao.insertSubject(subject);
 	}
@@ -110,6 +114,10 @@ public class CommonServiceImpl implements CommonService{
 	
 	public int addColumn(Table table) {
 		return tableDao.addColumn(table);
+	}
+	
+	public int updateSubjecttasks(Subject subject) {
+		return subjectDao.updateSubjecttasks(subject);
 	}
 	
 	public List<Table> checkTable(String fieldname, int taskid) {

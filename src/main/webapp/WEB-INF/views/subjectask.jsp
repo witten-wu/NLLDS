@@ -86,7 +86,7 @@
 		    <div id="fieldsContainer" style="margin-bottom: 10px;"></div>
 		    <button id="saveButton" class="hidden">Save Data</button>
 		    <h2>Added Task Data</h2>
-		    <table id="dataTable"></table>
+		    <div id="tableContainer"></div>
         </div>
 	</div>
 </div>
@@ -158,9 +158,16 @@
         $.ajax({ 
 			url:"./insertField",
 			type:"POST", 
-			data: {"tablename": tablename,"formData": JSON.stringify(formData)},
+			data: {"tablename": tablename, "formData": JSON.stringify(formData)},
 			success:function(data){
-				location.reload();
+				$.ajax({ 
+					url:"./updateSubjecttasks",
+					type:"POST", 
+					data: {"tablename": tablename, "subjectid": subjectid, "projectid": projectid},
+					success:function(data){
+						location.reload();
+					}
+				})
 			}
 		})
     });
@@ -173,6 +180,8 @@
             var input = inputs[i];
             formData[input.name] = input.value;
         }
+        formData["projectid"] = projectid;
+        formData["subjectid"] = subjectid;
         return formData;
     }
 
@@ -191,6 +200,72 @@
 					newRow.append(tname);
 					newRow.value=dataList[i].tid;
 					$("#showTaskList").append(newRow);
+				}
+			}
+		});
+		
+		$.ajax({
+			url:"./getSubjectTasks",
+			type:"POST", 
+			datatype:"json",
+			data: {"subjectid": subjectid},
+			async:"false",
+			success:function(data){
+				data = JSON.parse(data); 
+				dataList = data.data; 
+				for(var i=0;i < dataList.length;i++){
+				  var tasks = dataList[i].tasks.split(",");
+			      for (var j = 0; j < tasks.length; j++) {
+			      	(function (currentTask) {
+			    	    var processedTask = currentTask.replace("_template", "");
+				        $.ajax({
+							url:"./showSubjectTasks",
+							type:"POST", 
+							datatype:"json",
+							data: {"subjectid": subjectid, "tablename": tasks[j]},
+							async:"false",
+							success:function(data){
+								data = JSON.parse(data);
+								dataList = data.data; 
+								var tableContainer = document.getElementById("tableContainer");
+						        var table = document.createElement("table");
+						        table.classList.add("table");
+						        var thead = document.createElement("thead");
+						        var headerRow = document.createElement("tr");
+						        var keys = Object.keys(dataList[0]);
+					            var th = document.createElement("th");
+					            th.textContent = "Task";
+					            headerRow.appendChild(th);
+						        keys.forEach(function(key) {
+						        	if (key !== "id" && key !== "projectid" && key !== "subjectid") {
+							            var th = document.createElement("th");
+							            th.textContent = key;
+							            headerRow.appendChild(th);
+						        	}
+						        });
+						        thead.appendChild(headerRow);
+						        table.appendChild(thead);
+						        var tbody = document.createElement("tbody");
+						        dataList.forEach(function(rowData) {
+						            var row = document.createElement("tr");
+						            var tablenameCell = document.createElement("td");
+						            tablenameCell.textContent = processedTask;
+						            row.appendChild(tablenameCell);
+						            keys.forEach(function(key) {
+						            	if (key !== "id" && key !== "projectid" && key !== "subjectid") {
+							                var cell = document.createElement("td");
+							                cell.textContent = rowData[key];
+							                row.appendChild(cell);
+						            	}
+						            });
+						            tbody.appendChild(row);
+						        });
+						        table.appendChild(tbody);
+						        tableContainer.appendChild(table);
+							}
+						});
+			    	 })(tasks[j]);
+			      }
 				}
 			}
 		});
