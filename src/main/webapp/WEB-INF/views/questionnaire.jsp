@@ -27,7 +27,7 @@
   }
   .table th,
   .table td {
-    padding: 10px;
+    padding: 5px;
     text-align: left;
     border: 1px solid #ccc;
   }
@@ -52,18 +52,10 @@
   .hidden {
     display: none;
   }
-  
-  /* 按钮样式 */
-  button {
-    padding: 10px 20px;
-    background-color: #4CAF50;
-    color: white;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
-  }
-  button:hover {
-    background-color: #45a049;
+
+  .selected-row {
+  	background-color: #2d72d2;
+  	color: white;
   }
 </style>
 <body>
@@ -72,7 +64,7 @@
 	<div class="row clearfix">
 	 	
 		<div class="col-md-10">
-			<button id=addQusButton style="margin-bottom: 10px;">Add Questionnaire</button>
+			<button id=addQusButton style="margin-bottom: 10px;">Add/Update Questionnaire</button>
 			<div id="inputFields" class="hidden" style="margin-bottom: 10px;">
 	                <div class="input-container">
 	                    <label for="newPId">Project ID:</label>
@@ -80,7 +72,7 @@
 	                </div>
 
 	                <div class="input-container">
-	                    <label for="QusUrl">Questionnaire:</label>
+	                    <label for="QusUrl">Questionnaire Ref.:</label>
 	                    <input type="text" id="QusUrl" name="QusUrl">
 	                </div>
 	                <button id="saveQusButton" style="margin-bottom: 10px;">Save</button>
@@ -111,6 +103,11 @@ $(document).ready(function(){
 	$("#saveQusButton").click(function() {
 	    saveQus();
 	});
+	
+	$("tbody#showquslist").on("click", "tr", function() {
+   	  $("tbody#showquslist tr").removeClass("selected-row");
+   	  $(this).addClass("selected-row");
+   	});
 	
 	function saveQus() {
 	    var pid = $("#newPId").val();

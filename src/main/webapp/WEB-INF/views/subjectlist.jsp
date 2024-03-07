@@ -27,7 +27,7 @@
   }
   .table th,
   .table td {
-    padding: 10px;
+    padding: 5px;
     text-align: left;
     border: 1px solid #ccc;
   }
@@ -52,18 +52,10 @@
   .hidden {
     display: none;
   }
-  
-  /* 按钮样式 */
-  button {
-    padding: 10px 20px;
-    background-color: #4CAF50;
-    color: white;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
-  }
-  button:hover {
-    background-color: #45a049;
+
+  .selected-row {
+  	background-color: #2d72d2;
+  	color: white;
   }
 </style>
 <body>
@@ -125,6 +117,11 @@
     $("#saveSubjectButton").click(function() {
         saveNewSubject();
     });
+    
+    $("tbody#showsubjectlist").on("click", "tr", function() {
+   	  $("tbody#showsubjectlist tr").removeClass("selected-row");
+   	  $(this).addClass("selected-row");
+   	});
     
     function saveNewSubject() {
         var subjectno = $("#newSubject").val();
@@ -214,7 +211,7 @@
 });
 
 	function loginToFilestash() {
-    	window.open("http://192.168.1.107:8334/files/home/wyd/NLLDS/")
+    	window.open("http://192.168.1.107:8334/files/home/wyd/Test/")
     }
 </script>
 </body>

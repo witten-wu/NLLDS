@@ -1,6 +1,7 @@
 package com.NLLDS.model;
 
 public class Table {
+	private int id;
 	
 	private String tablename;
 	
@@ -9,6 +10,14 @@ public class Table {
 	private String remark;
 	
 	private int taskid;
+	
+	public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
 	
 	public String getTablename() {
         return tablename;

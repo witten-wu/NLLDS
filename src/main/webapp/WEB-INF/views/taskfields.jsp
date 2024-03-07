@@ -28,7 +28,7 @@
   }
   .table th,
   .table td {
-    padding: 10px;
+    padding: 5px;
     text-align: left;
     border: 1px solid #ccc;
     width: 300px;
@@ -54,20 +54,31 @@
   .hidden {
     display: none;
   }
+
+  .selected-row {
+  	background-color: #2d72d2;
+  	color: white;
+  }
   
-  /* 按钮样式 */
-  button {
-    padding: 10px 20px;
-    background-color: #4CAF50;
-    color: white;
-    border: none;
-    border-radius: 4px;
+  .context-menu {
+    position: absolute;
+    background-color: white;
+    color: black;
+    border: 1px solid #ccc;
+    padding: 0px 0;
+    z-index: 100;
+    font-family: Segoe UI, Arial, sans-serif;
+    box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+  }
+
+  .context-menu li {
     cursor: pointer;
+    list-style-type: none; 
   }
-  button:hover {
-    background-color: #45a049;
+
+  .context-menu li:hover {
+    background-color: gray;
   }
-  
 </style>
 <body>
 <div class="container">
@@ -139,6 +150,11 @@ $(document).ready(function(){
         saveField();
     });
     
+    $("tbody#showfields").on("click", "tr", function() {
+   	  $("tbody#showfields tr").removeClass("selected-row");
+   	  $(this).addClass("selected-row");
+   	});
+    
     function saveField() {
         var fieldname = $("#fieldname").val();
 		var remark = $("#remark").val();
@@ -172,6 +188,47 @@ $(document).ready(function(){
 		}	
     }
     
+    function showContextMenu(x, y, id) {
+       var menu = document.createElement("ul");
+       menu.className = "context-menu";
+       menu.innerHTML = "<li>delete</li>";
+       menu.querySelector("li").addEventListener("click", function () {
+         deleteTaskField(id); 
+         menu.remove(); 
+       });
+       menu.style.left = x + "px";
+       menu.style.top = y + "px";
+       document.body.appendChild(menu);
+       document.addEventListener("mousedown", function (event) {
+  	      var target = event.target;
+  	      if (!menu.contains(target)) {
+  	        menu.remove();
+  	        var selectedTr = document.querySelector("tr.selected-row");
+  	        if (selectedTr) {
+  	          selectedTr.classList.remove("selected-row");
+  	        }
+  	      }
+  	    });
+     }
+
+    function deleteTaskField(id) {
+    	$.ajax({ 
+    		url:"./deleteFields",
+    		type:"POST", 
+    		datatype:"json",	 
+    		data:{"id":id},	
+    		async:"false",
+    		success:function(data){
+    			data = JSON.parse(data); 
+    			dataList = data.data; 
+    			if(data.code==1){
+    				location.reload();
+    			}else if(data.code==0){
+    				alert(data.msg)
+    			}
+    		}
+    	});
+    }
     
 	$.ajax({ 
 		url:"./showFields",
@@ -185,6 +242,16 @@ $(document).ready(function(){
 			if(data.code==1){
 				for(var i=0;i<dataList.length;i++){
 					var newTrRow = document.createElement("tr");
+					
+			        (function (id) {
+			        	newTrRow.addEventListener("contextmenu", function (e) {
+				          e.preventDefault();
+				          showContextMenu(e.clientX, e.clientY, id);
+				          $("tbody#showfields tr").removeClass("selected-row");
+				          this.classList.add("selected-row");
+				        });
+			        })(dataList[i].id); 
+					
 	 				var newTdRow1 = document.createElement("td"); 
 	 				var newTdRow2 = document.createElement("td");
 

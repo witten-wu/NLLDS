@@ -27,7 +27,7 @@
   }
   .table th,
   .table td {
-    padding: 10px;
+    padding: 5px;
     text-align: left;
     border: 1px solid #ccc;
   }
@@ -45,19 +45,6 @@
     display: none;
   }
   
-  /* 按钮样式 */
-  button {
-    padding: 10px 20px;
-    background-color: #4CAF50;
-    color: white;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
-  }
-  button:hover {
-    background-color: #45a049;
-  }
-  
   #fieldsContainer {
     display: flex;
     flex-wrap: wrap;
@@ -73,6 +60,30 @@
     overflow: hidden; 
     text-overflow: ellipsis;
 }
+.selected-row {
+  	background-color: #2d72d2;
+  	color: white;
+  }
+  
+  .context-menu {
+    position: absolute;
+    background-color: white;
+    color: black;
+    border: 1px solid #ccc;
+    padding: 0px 0;
+    z-index: 100;
+    font-family: Segoe UI, Arial, sans-serif;
+    box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+  }
+
+  .context-menu li {
+    cursor: pointer;
+    list-style-type: none; 
+  }
+
+  .context-menu li:hover {
+    background-color: gray;
+  }
 </style>
 <body>
 <div class="container">
@@ -204,6 +215,68 @@
 			}
 		});
 		
+		function showContextMenu(x, y, id, tablename) {
+	       var menu = document.createElement("ul");
+	       menu.className = "context-menu";
+	       menu.innerHTML = "<li>delete</li>";
+	       menu.querySelector("li").addEventListener("click", function () {
+	         deleteSubjectTask(id, tablename); 
+	         menu.remove(); 
+	       });
+	       menu.style.left = x + "px";
+	       menu.style.top = y + "px";
+	       document.body.appendChild(menu);
+	       document.addEventListener("mousedown", function (event) {
+	  	      var target = event.target;
+	  	      if (!menu.contains(target)) {
+	  	        menu.remove();
+	  	        var selectedTr = document.querySelector("tr.selected-row");
+	  	        if (selectedTr) {
+	  	          selectedTr.classList.remove("selected-row");
+	  	        }
+	  	      }
+	  	    });
+	     }
+		
+		function deleteSubjectTask(id, tablename) {
+	    	$.ajax({ 
+	    		url:"./deleteSubjectTasks",
+	    		type:"POST", 
+	    		datatype:"json",	 
+	    		data:{"id":id, "tablename":tablename},	
+	    		async:"false",
+	    		success:function(data){
+	    			data = JSON.parse(data); 
+	    			dataList = data.data; 
+	    			if(data.code==1){
+	    				location.reload();
+	    			}else if(data.code==0){
+	    				alert(data.msg)
+	    			}
+	    		}
+	    	});
+	    }
+		
+		 function setRowClickListener() {
+			var div = document.getElementById("tableContainer");
+			var tbodies = div.getElementsByTagName("tbody");
+			var rows = [];
+			for (var i = 0; i < tbodies.length; i++) {
+			    var tbodyRows = tbodies[i].getElementsByTagName("tr");
+			    for (var j = 0; j < tbodyRows.length; j++) {
+			        rows.push(tbodyRows[j]);
+			    }
+			}
+			for (var i = 0; i < rows.length; i++) {
+			    rows[i].addEventListener("click", function() {
+			        for (var j = 0; j < rows.length; j++) {
+			            rows[j].classList.remove("selected-row");
+			        }
+			        this.classList.add("selected-row");
+			    });
+			}
+	    }
+		
 		$.ajax({
 			url:"./getSubjectTasks",
 			type:"POST", 
@@ -214,58 +287,78 @@
 				data = JSON.parse(data); 
 				dataList = data.data; 
 				for(var i=0;i < dataList.length;i++){
-				  var tasks = dataList[i].tasks.split(",");
-			      for (var j = 0; j < tasks.length; j++) {
-			      	(function (currentTask) {
-			    	    var processedTask = currentTask.replace("_template", "");
-				        $.ajax({
-							url:"./showSubjectTasks",
-							type:"POST", 
-							datatype:"json",
-							data: {"subjectid": subjectid, "tablename": tasks[j]},
-							async:"false",
-							success:function(data){
-								data = JSON.parse(data);
-								dataList = data.data; 
-								var tableContainer = document.getElementById("tableContainer");
-						        var table = document.createElement("table");
-						        table.classList.add("table");
-						        var thead = document.createElement("thead");
-						        var headerRow = document.createElement("tr");
-						        var keys = Object.keys(dataList[0]);
-					            var th = document.createElement("th");
-					            th.textContent = "Task";
-					            headerRow.appendChild(th);
-						        keys.forEach(function(key) {
-						        	if (key !== "id" && key !== "projectid" && key !== "subjectid") {
+				  if (dataList[i].tasks != null) {
+					  var tasks = dataList[i].tasks.split(",");
+					  var taskCount = tasks.length;
+	                  var completedTasks = 0;
+				      for (var j = 0; j < tasks.length; j++) {
+				      	(function (currentTask) {
+				    	    var processedTask = currentTask.replace("_template", "");
+					        $.ajax({
+								url:"./showSubjectTasks",
+								type:"POST", 
+								datatype:"json",
+								data: {"subjectid": subjectid, "tablename": currentTask},
+								async:"false",
+								success:function(data){
+									data = JSON.parse(data);
+									dataList = data.data; 
+									if(data.code==1){
+										var tableContainer = document.getElementById("tableContainer");
+								        var table = document.createElement("table");
+								        table.classList.add("table");
+								        var thead = document.createElement("thead");
+								        var headerRow = document.createElement("tr");
+								        var keys = Object.keys(dataList[0]);
 							            var th = document.createElement("th");
-							            th.textContent = key;
+							            th.textContent = "Task";
 							            headerRow.appendChild(th);
-						        	}
-						        });
-						        thead.appendChild(headerRow);
-						        table.appendChild(thead);
-						        var tbody = document.createElement("tbody");
-						        dataList.forEach(function(rowData) {
-						            var row = document.createElement("tr");
-						            var tablenameCell = document.createElement("td");
-						            tablenameCell.textContent = processedTask;
-						            row.appendChild(tablenameCell);
-						            keys.forEach(function(key) {
-						            	if (key !== "id" && key !== "projectid" && key !== "subjectid") {
-							                var cell = document.createElement("td");
-							                cell.textContent = rowData[key];
-							                row.appendChild(cell);
-						            	}
-						            });
-						            tbody.appendChild(row);
-						        });
-						        table.appendChild(tbody);
-						        tableContainer.appendChild(table);
-							}
-						});
-			    	 })(tasks[j]);
-			      }
+								        keys.forEach(function(key) {
+								        	if (key !== "id" && key !== "projectid" && key !== "subjectid") {
+									            var th = document.createElement("th");
+									            th.textContent = key;
+									            headerRow.appendChild(th);
+								        	}
+								        });
+								        thead.appendChild(headerRow);
+								        table.appendChild(thead);
+								        var tbody = document.createElement("tbody");
+								        dataList.forEach(function(rowData) {
+								            var row = document.createElement("tr");
+								            
+								            (function (id, tablename) {
+								            	row.addEventListener("contextmenu", function (e) {
+										          e.preventDefault();
+										          showContextMenu(e.clientX, e.clientY, id, tablename);
+										          $("div#tableContainer tr").removeClass("selected-row");
+										          this.classList.add("selected-row");
+										        });
+									        })(rowData["id"], currentTask); 
+								            
+								            var tablenameCell = document.createElement("td");
+								            tablenameCell.textContent = processedTask;
+								            row.appendChild(tablenameCell);
+								            keys.forEach(function(key) {
+								            	if (key !== "id" && key !== "projectid" && key !== "subjectid") {
+									                var cell = document.createElement("td");
+									                cell.textContent = rowData[key];
+									                row.appendChild(cell);
+								            	}
+								            });
+								            tbody.appendChild(row);
+								        });
+								        table.appendChild(tbody);
+								        tableContainer.appendChild(table);								        
+									}
+									completedTasks = completedTasks + 1;
+                                    if (completedTasks === taskCount) {
+                                        setRowClickListener();
+                                    }
+								}
+							});
+				    	 })(tasks[j]);
+				      } 
+				  }
 				}
 			}
 		});

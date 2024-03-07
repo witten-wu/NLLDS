@@ -6,16 +6,24 @@
   <title>Login</title>
   <style>
     body {
+      display: flex;
+  	  justify-content: center;
+  	  align-items: center;
+  	  margin: 100px;
       font-family: Arial, sans-serif;
     }
     .container {
-      max-width: 300px;
+      max-width: 800px;
       margin: 0 auto;
       padding: 20px;
       border: 1px solid #ccc;
       border-radius: 5px;
       background-color: #f9f9f9;
     }
+    form {
+	  width: 300px;
+	  /* other styles */
+	}
     .form-group {
       margin-bottom: 15px;
     }
@@ -30,21 +38,7 @@
       border: 1px solid #ccc;
       border-radius: 3px;
     }
-    .btn {
-      display: block;
-      width: 100%;
-      padding: 10px;
-      border: none;
-      border-radius: 3px;
-      background-color: #4caf50;
-      color: white;
-      font-size: 16px;
-      font-weight: bold;
-      cursor: pointer;
-    }
-    .btn:hover {
-      background-color: #45a049;
-    }
+    
   </style>
 </head>
 

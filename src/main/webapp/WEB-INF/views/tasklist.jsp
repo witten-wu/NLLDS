@@ -27,7 +27,7 @@
   }
   .table th,
   .table td {
-    padding: 10px;
+    padding: 5px;
     text-align: left;
     border: 1px solid #ccc;
   }
@@ -52,18 +52,10 @@
   .hidden {
     display: none;
   }
-  
-  /* 按钮样式 */
-  button {
-    padding: 10px 20px;
-    background-color: #4CAF50;
-    color: white;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
-  }
-  button:hover {
-    background-color: #45a049;
+
+  .selected-row {
+  	background-color: #2d72d2;
+  	color: white;
   }
 </style>
 <body>
@@ -130,6 +122,11 @@ $(document).ready(function(){
         saveNewTask();
     });
     
+    $("tbody#showtasklist").on("click", "tr", function() {
+   	  $("tbody#showtasklist tr").removeClass("selected-row");
+   	  $(this).addClass("selected-row");
+   	});
+    
     function saveNewTask() {
         var tname = $("#newTaskName").val();
         var createby = "<%=Username%>"
@@ -166,6 +163,10 @@ $(document).ready(function(){
         }
     }
     
+    function redirectToNewPage(taskid, tablename) {
+   	  var url = "taskfields?tid=" + taskid + "&table=" + tablename;
+   	  window.location.href = url;
+   	}
     
 	$.ajax({ 
 		url:"./showTaskList",
@@ -179,6 +180,13 @@ $(document).ready(function(){
 			if(data.code==1){
 				for(var i=0;i<dataList.length;i++){
 					var newTrRow = document.createElement("tr");
+					
+					(function (taskid, tablename) {
+			            newTrRow.addEventListener("dblclick", function () {
+			            	redirectToNewPage(taskid, tablename);
+			            });
+			        })(dataList[i].tid, dataList[i].fields_table); 
+					
 	 				var newTdRow1 = document.createElement("td");
 	 				var newTdRow2 = document.createElement("td");
 	 				var newTdRow3 = document.createElement("td");

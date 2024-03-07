@@ -36,7 +36,7 @@
   </insert>
   
   <select id="selectTaskFields" resultMap="BaseResultMap">
-    SELECT fieldname, remark
+    SELECT id, fieldname, remark
 	FROM taskfields
 	WHERE taskid = #{taskid,jdbcType=INTEGER}
   </select>
@@ -56,7 +56,12 @@
     ALTER TABLE ${tablename}
   	ADD COLUMN ${fieldname} VARCHAR(255);
   </update>
-
+	
+  <delete id="deleteFields" parameterType="java.lang.Integer" >
+    delete from taskfields
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  
   <!-- <update id="modifyColumn">
     ALTER TABLE table_name MODIFY COLUMN column_name new_column_type;
   </update>

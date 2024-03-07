@@ -308,6 +308,34 @@ public class LoginController {
 	public JSONObject showSubjectTasks(String subjectid, String tablename) throws Exception {
     	String sql = "SELECT * FROM " + tablename + " where subjectid = '" + subjectid + "'";
         List<Map<String, Object>> result = jdbcTemplate.queryForList(sql);
+        if (result == null || result.isEmpty()) {
+            return CommonUtil.constructResponse(0, "No tasks found", null);
+        }
         return CommonUtil.constructResponse(EnumUtil.OK,"tasks info", result);
 	}
+    
+    @RequestMapping("/deleteFields")
+	@ResponseBody
+	public JSONObject deleteFields(Integer id) throws Exception {
+		Table table=new Table();
+		table.setId(id);
+		Integer resultOfDelete=commonService.deleteFields(table);
+		if(resultOfDelete>0){ 
+			return CommonUtil.constructResponse(EnumUtil.OK,"delete success", null);
+		}else{
+			return CommonUtil.constructResponse(0,"delete error", null);
+		}
+	}
+    
+    @RequestMapping("/deleteSubjectTasks")
+   	@ResponseBody
+   	public JSONObject deleteSubjectTasks(String id, String tablename) throws Exception {
+       	String sql = "DELETE FROM " + tablename + " where id = '" + id + "'";
+       	int rowsAffected = jdbcTemplate.update(sql);
+       	if (rowsAffected > 0) {
+       		return CommonUtil.constructResponse(EnumUtil.OK, "delete success", null);
+        } else {
+        	return CommonUtil.constructResponse(0, "delete error", null);
+        }
+   	}
 }

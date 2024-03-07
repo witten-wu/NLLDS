@@ -124,4 +124,7 @@ public class CommonServiceImpl implements CommonService{
 		return tableDao.checkTable(fieldname, taskid);
 	}
 	
+	public int deleteFields(Table table) {
+		return tableDao.deleteFields(table);
+	}
 }

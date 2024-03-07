@@ -54,4 +54,6 @@ public interface CommonService {
 	int updateSubjecttasks(Subject subject);
 	
 	List<Table> checkTable(String fieldname, int taskid);
+	
+	int deleteFields(Table table);
 }

@@ -27,7 +27,7 @@
   }
   .table th,
   .table td {
-    padding: 10px;
+    padding: 5px;
     text-align: left;
     border: 1px solid #ccc;
   }
@@ -52,18 +52,10 @@
   .hidden {
     display: none;
   }
-  
-  /* 按钮样式 */
-  button {
-    padding: 10px 20px;
-    background-color: #4CAF50;
-    color: white;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
-  }
-  button:hover {
-    background-color: #45a049;
+
+  .selected-row {
+  	background-color: #2d72d2;
+  	color: white;
   }
 </style>
 <body>

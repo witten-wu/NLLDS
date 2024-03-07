@@ -22,4 +22,6 @@ public interface TableDao {
     List<Table> checkTable(@Param("fieldname")String fieldname,@Param("taskid")int taskid);
     
     int insertFieldValue(@Param("tablename") String tablename, @Param("formData") Map<String, String> formData);
+    
+    int deleteFields(Table table);
 }

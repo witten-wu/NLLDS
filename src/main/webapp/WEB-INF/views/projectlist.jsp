@@ -27,7 +27,7 @@
   }
   .table th,
   .table td {
-    padding: 10px;
+    padding: 5px;
     text-align: left;
     border: 1px solid #ccc;
   }
@@ -53,17 +53,9 @@
     display: none;
   }
   
-  /* 按钮样式 */
-  button {
-    padding: 10px 20px;
-    background-color: #4CAF50;
-    color: white;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
-  }
-  button:hover {
-    background-color: #45a049;
+  .selected-row {
+  	background-color: #2d72d2;
+  	color: white;
   }
 </style>
 <body>
@@ -137,6 +129,11 @@ $(document).ready(function(){
         saveNewProject();
     });
     
+    $("tbody#showprojectlist").on("click", "tr", function() {
+   	  $("tbody#showprojectlist tr").removeClass("selected-row");
+   	  $(this).addClass("selected-row");
+   	});
+    
     function saveNewProject() {
         var pname = $("#newProjectName").val();
         var createdby = "<%=Username%>"
@@ -170,6 +167,10 @@ $(document).ready(function(){
         }
     }
     
+    function redirectToNewPage(projectId) {
+   	  var url = "subjectlist?pid=" + projectId;
+   	  window.location.href = url;
+   	}
     
 	$.ajax({ 
 		url:"./showProjectList",
@@ -183,6 +184,13 @@ $(document).ready(function(){
 			if(data.code==1){
 				for(var i=0;i<dataList.length;i++){
 					var newTrRow = document.createElement("tr");
+			        
+			        (function (projectId) {
+			            newTrRow.addEventListener("dblclick", function () {
+			            	redirectToNewPage(projectId);
+			            });
+			        })(dataList[i].pid); 
+					
 	 				var newTdRow1 = document.createElement("td");
 	 				var newTdRow2 = document.createElement("td");
 	 				var newTdRow3 = document.createElement("td");
