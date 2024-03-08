@@ -62,6 +62,11 @@
     where id = #{id,jdbcType=INTEGER}
   </delete>
   
+  <update id="deleteColumn">
+	ALTER TABLE ${tablename}
+	DROP COLUMN ${fieldname};
+  </update>
+  
   <!-- <update id="modifyColumn">
     ALTER TABLE table_name MODIFY COLUMN column_name new_column_type;
   </update>

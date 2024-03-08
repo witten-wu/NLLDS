@@ -3,66 +3,12 @@
 <html lang="en">
 <head>
 <title>Questionnaire</title>
+<link rel="stylesheet" type="text/css" href="bootstrap/css/style.css">
 </head>
-<style>
-  /* 全局样式 */
-  body {
-    font-family: Arial, sans-serif;
-    margin: 0;
-    padding: 0;
-  }
-  
-  /* 容器样式 */
-  .container {
-    max-width: 960px;
-    margin: 0 auto;
-    padding: 20px;
-  }
-  
-  /* 表格样式 */
-  .table {
-    width: 100%;
-    border-collapse: collapse;
-    margin-bottom: 20px;
-  }
-  .table th,
-  .table td {
-    padding: 5px;
-    text-align: left;
-    border: 1px solid #ccc;
-  }
-  
-  /* 输入字段样式 */
-  .input-container {
-    margin-bottom: 10px;
-  }
-  .input-container label {
-    display: inline-block;
-    width: 150px;
-    font-weight: bold;
-  }
-  .input-container input[type="text"] {
-    width: 300px;
-    padding: 5px;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-  }
-  
-  /* 隐藏内容样式 */
-  .hidden {
-    display: none;
-  }
-
-  .selected-row {
-  	background-color: #2d72d2;
-  	color: white;
-  }
-</style>
 <body>
+<jsp:include page="sidebar.jsp" />
 <div class="container">
-	<jsp:include page="sidebar.jsp" />
 	<div class="row clearfix">
-	 	
 		<div class="col-md-10">
 			<button id=addQusButton style="margin-bottom: 10px;">Add/Update Questionnaire</button>
 			<div id="inputFields" class="hidden" style="margin-bottom: 10px;">
@@ -94,8 +40,16 @@
 <script src="bootstrap/js/jquery-3.1.1.min.js"></script>
 <script src="bootstrap/js/bootstrap.min.js"></script>
 <script type="text/javascript">
+	var box = document.getElementById("sidebox")
+	var btn = document.getElementById("sidebtn")
+	btn.onclick = function() {
+	    if (box.offsetLeft == 0) {
+	        box.style['margin-left'] = -150 + "px"
+	    } else {
+	        box.style['margin-left'] = 0 + "px"
+	    }
+	}
 $(document).ready(function(){
-
 	$("#addQusButton").click(function() {
 	    $("#inputFields").toggleClass("hidden");
 	});
@@ -141,7 +95,7 @@ $(document).ready(function(){
 	
 	
 	function viewquestionnaire(pid) {
-		window.location.href = "projectquestionnaire?projectid=" + pid;
+		window.open("projectquestionnaire?projectid=" + pid);
     }
 	
 	$.ajax({ 
@@ -180,8 +134,6 @@ $(document).ready(function(){
 	 				
 	 				$("tbody#showquslist").append(newTrRow);
 	 			}
-			}else if(data.code==0){
-				alert(data.msg)
 			}
 		}
 	});

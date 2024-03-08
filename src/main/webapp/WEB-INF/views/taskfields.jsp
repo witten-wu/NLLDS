@@ -3,86 +3,12 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>TaskFields</title>
+<title>TaskFields</title>
+<link rel="stylesheet" type="text/css" href="bootstrap/css/style.css">
 </head>
-<style>
-  /* 全局样式 */
-  body {
-    font-family: Arial, sans-serif;
-    margin: 0;
-    padding: 0;
-  }
-  
-  /* 容器样式 */
-  .container {
-    max-width: 960px;
-    margin: 0 auto;
-    padding: 20px;
-  }
-  
-  /* 表格样式 */
-  .table {
-    width: 100%;
-    border-collapse: collapse;
-    margin-bottom: 20px;
-  }
-  .table th,
-  .table td {
-    padding: 5px;
-    text-align: left;
-    border: 1px solid #ccc;
-    width: 300px;
-  }
-  
-  /* 输入字段样式 */
-  .input-container {
-    margin-bottom: 10px;
-  }
-  .input-container label {
-    display: inline-block;
-    width: 150px;
-    font-weight: bold;
-  }
-  .input-container input[type="text"] {
-    width: 300px;
-    padding: 5px;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-  }
-  
-  /* 隐藏内容样式 */
-  .hidden {
-    display: none;
-  }
-
-  .selected-row {
-  	background-color: #2d72d2;
-  	color: white;
-  }
-  
-  .context-menu {
-    position: absolute;
-    background-color: white;
-    color: black;
-    border: 1px solid #ccc;
-    padding: 0px 0;
-    z-index: 100;
-    font-family: Segoe UI, Arial, sans-serif;
-    box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
-  }
-
-  .context-menu li {
-    cursor: pointer;
-    list-style-type: none; 
-  }
-
-  .context-menu li:hover {
-    background-color: gray;
-  }
-</style>
 <body>
+<jsp:include page="sidebar.jsp" />
 <div class="container">
-  <jsp:include page="sidebar.jsp" />
   <div class="row clearfix">
 	<div class="col-md-10">
 	    <div id="inputFields" style="margin-bottom: 10px;">
@@ -115,6 +41,15 @@
 <script src="bootstrap/js/jquery-3.1.1.min.js"></script>
 <script src="bootstrap/js/bootstrap.min.js"></script>
 <script type="text/javascript">
+	var box = document.getElementById("sidebox")
+	var btn = document.getElementById("sidebtn")
+	btn.onclick = function() {
+	    if (box.offsetLeft == 0) {
+	        box.style['margin-left'] = -150 + "px"
+	    } else {
+	        box.style['margin-left'] = 0 + "px"
+	    }
+	}
 $(document).ready(function(){
 	
 	var value = window.location.search.substr(1);
@@ -188,12 +123,12 @@ $(document).ready(function(){
 		}	
     }
     
-    function showContextMenu(x, y, id) {
+    function showContextMenu(x, y, id, fieldname) {
        var menu = document.createElement("ul");
        menu.className = "context-menu";
        menu.innerHTML = "<li>delete</li>";
        menu.querySelector("li").addEventListener("click", function () {
-         deleteTaskField(id); 
+         deleteTaskField(id, fieldname); 
          menu.remove(); 
        });
        menu.style.left = x + "px";
@@ -211,18 +146,47 @@ $(document).ready(function(){
   	    });
      }
 
-    function deleteTaskField(id) {
+    function deleteTaskField(id, fieldname) {
     	$.ajax({ 
-    		url:"./deleteFields",
+    		url:"./checkTaskField",
     		type:"POST", 
     		datatype:"json",	 
-    		data:{"id":id},	
-    		async:"false",
+    		data:{"tablename":tablename, "fieldname":fieldname},	
     		success:function(data){
     			data = JSON.parse(data); 
     			dataList = data.data; 
     			if(data.code==1){
-    				location.reload();
+    				$.ajax({ 
+    		    		url:"./deleteFields",
+    		    		type:"POST", 
+    		    		datatype:"json",	 
+    		    		data:{"id":id},	
+    		    		async:"false",
+    		    		success:function(data){
+    		    			data = JSON.parse(data); 
+    		    			dataList = data.data; 
+    		    			if(data.code==1){
+    		    				location.reload();
+    		    				$.ajax({ 
+    		    		    		url:"./deleteColumn",
+    		    		    		type:"POST", 
+    		    		    		datatype:"json",	 
+    		    		    		data:{"tablename":tablename, "fieldname":fieldname},	
+    		    		    		success:function(data){
+    		    		    			data = JSON.parse(data); 
+    		    		    			dataList = data.data; 
+    		    		    			if(data.code==1){
+    		    		    			}else if(data.code==0){
+    		    		    				alert(data.msg)
+    		    		    			}
+    		    		    		}
+    		    		    	});
+    		    				
+    		    			}else if(data.code==0){
+    		    				alert(data.msg)
+    		    			}
+    		    		}
+    		    	});
     			}else if(data.code==0){
     				alert(data.msg)
     			}
@@ -243,14 +207,14 @@ $(document).ready(function(){
 				for(var i=0;i<dataList.length;i++){
 					var newTrRow = document.createElement("tr");
 					
-			        (function (id) {
+			        (function (id, fieldname) {
 			        	newTrRow.addEventListener("contextmenu", function (e) {
 				          e.preventDefault();
-				          showContextMenu(e.clientX, e.clientY, id);
+				          showContextMenu(e.clientX, e.clientY, id, fieldname);
 				          $("tbody#showfields tr").removeClass("selected-row");
 				          this.classList.add("selected-row");
 				        });
-			        })(dataList[i].id); 
+			        })(dataList[i].id, dataList[i].fieldname); 
 					
 	 				var newTdRow1 = document.createElement("td"); 
 	 				var newTdRow2 = document.createElement("td");
@@ -265,8 +229,6 @@ $(document).ready(function(){
 
 	 				$("tbody#showfields").append(newTrRow);
 	 			}
-			}else if(data.code==0){
-				alert(data.msg)
 			}
 		}
 	});

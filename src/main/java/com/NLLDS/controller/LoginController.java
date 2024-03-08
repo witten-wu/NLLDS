@@ -80,16 +80,12 @@ public class LoginController {
     @RequestMapping("/loginclick")
     @ResponseBody
     public JSONObject loginclick(HttpSession session,String username,String password){
-		try{
-			User user=commonService.selectUserByUidAndPassword(username, password);
-			if(user==null){
-				return CommonUtil.constructResponse(EnumUtil.PASSWORD_ERROR, "Username/Password Error", null);
-			}else{
-				session.setAttribute("user", user);	
-				return CommonUtil.constructResponse(EnumUtil.OK, "Success", user);
-			}
-		}catch(Exception e){
-			return CommonUtil.constructExceptionJSON(EnumUtil.UNKOWN_ERROR, "UNKOWN_ERROR", null);
+		User user=commonService.selectUserByUidAndPassword(username, password);
+		if(user==null){
+			return CommonUtil.constructResponse(EnumUtil.PASSWORD_ERROR, "Username/Password Error", null);
+		}else{
+			session.setAttribute("user", user);	
+			return CommonUtil.constructResponse(EnumUtil.OK, "Success", user);
 		}
 	}
     
@@ -267,7 +263,6 @@ public class LoginController {
     	}else{
 			return CommonUtil.constructResponse(0,"Field Name already exists", null);
 		}
-
 	}
     
     @RequestMapping("/addColumn")
@@ -338,4 +333,25 @@ public class LoginController {
         	return CommonUtil.constructResponse(0, "delete error", null);
         }
    	}
+    
+    @RequestMapping("/deleteColumn")
+	@ResponseBody
+	public void deleteColumn(String tablename,String fieldname) throws Exception {
+    	Table table=new Table();
+    	table.setdTablename(tablename);
+    	table.setFieldname(fieldname);
+    	commonService.deleteColumn(table);
+	}
+    
+    @RequestMapping("/checkTaskField")
+	@ResponseBody
+	public JSONObject checkTaskField(String tablename, String fieldname) throws Exception {
+    	String sql = "SELECT COUNT(*) FROM " + tablename + " where " + fieldname + " IS NOT NULL";
+    	int count = jdbcTemplate.queryForObject(sql, Integer.class);
+    	if (count > 0) {
+    		return CommonUtil.constructResponse(0, "Unable to delete, task data already exists.", count);
+        }else {
+        	return CommonUtil.constructResponse(EnumUtil.OK, "No record", null);
+        }
+	}
 }

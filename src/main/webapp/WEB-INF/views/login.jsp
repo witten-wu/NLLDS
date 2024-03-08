@@ -63,6 +63,16 @@
 $(document).ready(function(){
 	
 	$("#login").click(function(){
+		login();
+	});
+	
+	$("#password").keypress(function(event) {
+		if (event.which === 13) {
+			login();
+		}
+	});
+	
+	function login() {
 		var username = $("#username").val();
 		var password = $("#password").val();
 		$.ajax({
@@ -80,7 +90,7 @@ $(document).ready(function(){
 				}
 			}
 		});
-	});
+	}
 });
 </script>
 </body>

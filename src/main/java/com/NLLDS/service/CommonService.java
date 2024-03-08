@@ -56,4 +56,6 @@ public interface CommonService {
 	List<Table> checkTable(String fieldname, int taskid);
 	
 	int deleteFields(Table table);
+	
+	int deleteColumn(Table table);
 }

@@ -24,4 +24,6 @@ public interface TableDao {
     int insertFieldValue(@Param("tablename") String tablename, @Param("formData") Map<String, String> formData);
     
     int deleteFields(Table table);
+    
+    int deleteColumn(Table table);
 }

@@ -127,4 +127,8 @@ public class CommonServiceImpl implements CommonService{
 	public int deleteFields(Table table) {
 		return tableDao.deleteFields(table);
 	}
+	
+	public int deleteColumn(Table table) {
+		return tableDao.deleteColumn(table);
+	}
 }

@@ -3,91 +3,11 @@
 <html>
 <head>
 <title>Add Task Data</title>
+<link rel="stylesheet" type="text/css" href="bootstrap/css/style.css">
 </head>
-<style>
-  /* 全局样式 */
-  body {
-    font-family: Arial, sans-serif;
-    margin: 0;
-    padding: 0;
-  }
-  
-  /* 容器样式 */
-  .container {
-    max-width: 960px;
-    margin: 0 auto;
-    padding: 20px;
-  }
-  
-  /* 表格样式 */
-  .table {
-    width: 100%;
-    border-collapse: collapse;
-    margin-bottom: 20px;
-  }
-  .table th,
-  .table td {
-    padding: 5px;
-    text-align: left;
-    border: 1px solid #ccc;
-  }
-  
-  #fieldsContainer input[type="text"] {
-    width: 150px;
-    padding: 5px;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-    font-size: 12px;
-  }
-  
-  /* 隐藏内容样式 */
-  .hidden {
-    display: none;
-  }
-  
-  #fieldsContainer {
-    display: flex;
-    flex-wrap: wrap;
-    margin-bottom: 10px;
-}
-
-.field-label {
-	width: 170px;
-    display: inline-block;
-    margin-right: 10px;
-    margin-bottom: 10px;
-    font-size: 12px;
-    overflow: hidden; 
-    text-overflow: ellipsis;
-}
-.selected-row {
-  	background-color: #2d72d2;
-  	color: white;
-  }
-  
-  .context-menu {
-    position: absolute;
-    background-color: white;
-    color: black;
-    border: 1px solid #ccc;
-    padding: 0px 0;
-    z-index: 100;
-    font-family: Segoe UI, Arial, sans-serif;
-    box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
-  }
-
-  .context-menu li {
-    cursor: pointer;
-    list-style-type: none; 
-  }
-
-  .context-menu li:hover {
-    background-color: gray;
-  }
-</style>
 <body>
+<jsp:include page="sidebar.jsp" />
 <div class="container">
-	<jsp:include page="sidebar.jsp" />
 	<div class="row clearfix">
 		<div class="col-md-10">
 		    <h2>Add Task Data</h2>
@@ -104,6 +24,16 @@
 <script src="bootstrap/js/jquery-3.1.1.min.js"></script>
 <script src="bootstrap/js/bootstrap.min.js"></script>
 <script type="text/javascript">
+	var box = document.getElementById("sidebox")
+	var btn = document.getElementById("sidebtn")
+	btn.onclick = function() {
+	    if (box.offsetLeft == 0) {
+	        box.style['margin-left'] = -150 + "px"
+	    } else {
+	        box.style['margin-left'] = 0 + "px"
+	    }
+	}
+	
 	var value = window.location.search.substr(1);
 	var paramPairs = value.split('&');
 	var paramObj = {};
