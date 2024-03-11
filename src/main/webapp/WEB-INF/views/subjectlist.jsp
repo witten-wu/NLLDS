@@ -17,12 +17,14 @@
                     <input type="text" id="newSubject" name="newSubject">
                     <span id="newSubjectError" style="color: red;"></span>
                 </div>
+                <div class="input-container">
+                    <span id="subjectDescription" style="margin-right: 10px; font-size: 14px; color: #888;">subject No. Format: Project-HK/GZ-No-Date. For example, NGL-HK-001-20240101</span>
+                </div>
                 <button id="saveSubjectButton" style="margin-bottom: 10px;">Save</button>
             </div>
            <table class="table" style="margin-bottom: 10px;">
 			<thead>
 				<tr>
-					<th>Subject_ID</th>
 					<th>Subject_No</th>
 					<th>Questionnaire</th>
 					<th>Tasks</th>
@@ -120,7 +122,7 @@
 			if(data.code==1){
 				for(var i=0;i<dataList.length;i++){
 					var newTrRow = document.createElement("tr");
-	 				var newTdRow1 = document.createElement("td");
+	 				//var newTdRow1 = document.createElement("td");
 	 				var newTdRow2 = document.createElement("td");
 	 				var newTdRow3 = document.createElement("td");
 	 				var newTdRow4 = document.createElement("td");
@@ -145,14 +147,13 @@
 					    loginToFilestash();
 					});
 	 				
-	 				newTdRow1.append(subjectid);
+	 				//newTdRow1.append(subjectid);
 	 				newTdRow2.append(subjectno);
 	 				newTdRow3.append(newLink);
 	 				newTdRow4.append(newLink2);
-
 	 				newTdRow5.append(viewButton);
 	 				
-	 				newTrRow.append(newTdRow1);
+	 				//newTrRow.append(newTdRow1);
 	 				newTrRow.append(newTdRow2);
 	 				newTrRow.append(newTdRow3);
 	 				newTrRow.append(newTdRow4);
