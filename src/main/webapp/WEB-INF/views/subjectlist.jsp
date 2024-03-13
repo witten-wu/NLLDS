@@ -167,7 +167,7 @@
 });
 
 	function loginToFilestash() {
-    	window.open("http://192.168.1.107:8334/files/home/wyd/Test/")
+    	window.open("http://192.168.1.107:8334/files/home/")
     }
 </script>
 </body>
