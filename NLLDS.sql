@@ -1,17 +1,17 @@
 /*
- Navicat MySQL Data Transfer
+ Navicat Premium Data Transfer
 
- Source Server         : 192.168.1.107_3306
+ Source Server         : localhost
  Source Server Type    : MySQL
- Source Server Version : 50742 (5.7.42-0ubuntu0.18.04.1)
- Source Host           : 192.168.1.107:3306
+ Source Server Version : 50742 (5.7.42)
+ Source Host           : localhost:3306
  Source Schema         : NLLDS
 
  Target Server Type    : MySQL
- Target Server Version : 50742 (5.7.42-0ubuntu0.18.04.1)
+ Target Server Version : 50742 (5.7.42)
  File Encoding         : 65001
 
- Date: 14/03/2024 10:45:54
+ Date: 14/03/2024 10:57:58
 */
 
 SET NAMES utf8mb4;
@@ -22,71 +22,71 @@ SET FOREIGN_KEY_CHECKS = 0;
 -- Table structure for project
 -- ----------------------------
 DROP TABLE IF EXISTS `project`;
-CREATE TABLE `project`  (
-  `pid` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
-  `pname` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
-  `createby` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
-  `manageby` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
+CREATE TABLE `project` (
+  `pid` varchar(255) NOT NULL,
+  `pname` varchar(255) NOT NULL,
+  `createby` varchar(255) NOT NULL,
+  `manageby` varchar(255) NOT NULL,
   `createdate` datetime NOT NULL,
-  `description` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
-  `questionnaire` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
-  `qustable` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
+  `description` varchar(255) DEFAULT NULL,
+  `questionnaire` varchar(255) DEFAULT NULL,
+  `qustable` varchar(255) DEFAULT NULL,
   PRIMARY KEY (`pid`) USING BTREE
-) ENGINE = InnoDB CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 ROW_FORMAT=DYNAMIC;
 
 -- ----------------------------
 -- Table structure for subject
 -- ----------------------------
 DROP TABLE IF EXISTS `subject`;
-CREATE TABLE `subject`  (
-  `subjectid` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
-  `subjectno` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
-  `projectid` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
-  `tasks` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
+CREATE TABLE `subject` (
+  `subjectid` varchar(255) NOT NULL,
+  `subjectno` varchar(255) NOT NULL,
+  `projectid` varchar(255) NOT NULL,
+  `tasks` varchar(255) DEFAULT NULL,
   PRIMARY KEY (`subjectid`) USING BTREE,
-  INDEX `projectid`(`projectid`) USING BTREE,
-  INDEX `subjectno`(`subjectno`) USING BTREE,
-  CONSTRAINT `subject_ibfk_1` FOREIGN KEY (`projectid`) REFERENCES `project` (`pid`) ON DELETE RESTRICT ON UPDATE RESTRICT
-) ENGINE = InnoDB CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
+  KEY `projectid` (`projectid`) USING BTREE,
+  KEY `subjectno` (`subjectno`) USING BTREE,
+  CONSTRAINT `subject_ibfk_1` FOREIGN KEY (`projectid`) REFERENCES `project` (`pid`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 ROW_FORMAT=DYNAMIC;
 
 -- ----------------------------
 -- Table structure for task
 -- ----------------------------
 DROP TABLE IF EXISTS `task`;
-CREATE TABLE `task`  (
+CREATE TABLE `task` (
   `tid` int(10) NOT NULL AUTO_INCREMENT,
-  `tname` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
-  `createby` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
+  `tname` varchar(255) NOT NULL,
+  `createby` varchar(255) NOT NULL,
   `createdate` datetime NOT NULL,
-  `description` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
-  `fields_table` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
+  `description` varchar(255) DEFAULT NULL,
+  `fields_table` varchar(255) NOT NULL,
   PRIMARY KEY (`tid`) USING BTREE
-) ENGINE = InnoDB CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 ROW_FORMAT=DYNAMIC;
 
 -- ----------------------------
 -- Table structure for taskfields
 -- ----------------------------
 DROP TABLE IF EXISTS `taskfields`;
-CREATE TABLE `taskfields`  (
+CREATE TABLE `taskfields` (
   `id` int(10) NOT NULL AUTO_INCREMENT,
-  `fieldname` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
-  `remark` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
+  `fieldname` varchar(255) NOT NULL,
+  `remark` varchar(255) DEFAULT NULL,
   `taskid` int(10) NOT NULL,
   PRIMARY KEY (`id`) USING BTREE,
-  INDEX `taskid`(`taskid`) USING BTREE,
-  CONSTRAINT `taskfields_ibfk_1` FOREIGN KEY (`taskid`) REFERENCES `task` (`tid`) ON DELETE RESTRICT ON UPDATE RESTRICT
-) ENGINE = InnoDB CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
+  KEY `taskid` (`taskid`) USING BTREE,
+  CONSTRAINT `taskfields_ibfk_1` FOREIGN KEY (`taskid`) REFERENCES `task` (`tid`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 ROW_FORMAT=DYNAMIC;
 
 -- ----------------------------
 -- Table structure for user
 -- ----------------------------
 DROP TABLE IF EXISTS `user`;
-CREATE TABLE `user`  (
-  `username` varchar(32) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
-  `password` varchar(32) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
+CREATE TABLE `user` (
+  `username` varchar(32) NOT NULL,
+  `password` varchar(32) NOT NULL,
   `grade` int(10) NOT NULL,
   PRIMARY KEY (`username`) USING BTREE
-) ENGINE = InnoDB CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 ROW_FORMAT=DYNAMIC;
 
 -- ----------------------------
 -- Triggers structure for table project
