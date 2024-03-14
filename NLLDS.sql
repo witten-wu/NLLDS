@@ -11,11 +11,12 @@
  Target Server Version : 50742 (5.7.42-0ubuntu0.18.04.1)
  File Encoding         : 65001
 
- Date: 13/03/2024 14:19:16
+ Date: 14/03/2024 10:45:54
 */
 
 SET NAMES utf8mb4;
 SET FOREIGN_KEY_CHECKS = 0;
+
 
 -- ----------------------------
 -- Table structure for project
@@ -29,6 +30,7 @@ CREATE TABLE `project`  (
   `createdate` datetime NOT NULL,
   `description` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
   `questionnaire` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
+  `qustable` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
   PRIMARY KEY (`pid`) USING BTREE
 ) ENGINE = InnoDB CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
 
@@ -43,6 +45,7 @@ CREATE TABLE `subject`  (
   `tasks` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL,
   PRIMARY KEY (`subjectid`) USING BTREE,
   INDEX `projectid`(`projectid`) USING BTREE,
+  INDEX `subjectno`(`subjectno`) USING BTREE,
   CONSTRAINT `subject_ibfk_1` FOREIGN KEY (`projectid`) REFERENCES `project` (`pid`) ON DELETE RESTRICT ON UPDATE RESTRICT
 ) ENGINE = InnoDB CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
 
@@ -81,6 +84,7 @@ DROP TABLE IF EXISTS `user`;
 CREATE TABLE `user`  (
   `username` varchar(32) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
   `password` varchar(32) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
+  `grade` int(10) NOT NULL,
   PRIMARY KEY (`username`) USING BTREE
 ) ENGINE = InnoDB CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
 
