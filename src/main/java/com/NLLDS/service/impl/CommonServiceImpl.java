@@ -46,8 +46,28 @@ public class CommonServiceImpl implements CommonService{
 		return projectDao.selectAllProject();
 	}
 	
+	public List<Project> selectUserProject(String username) {
+		return projectDao.selectUserProject(username);
+	}
+	
 	public List<Project> selectProjectQus() {
 		return projectDao.selectProjectQus();
+	}
+	
+	public List<Project> selectUserProjectQus(String username) {
+		return projectDao.selectUserProjectQus(username);
+	}
+	
+	public List<Project> selectProjectID() {
+		return projectDao.selectProjectID();
+	}
+	
+	public List<Project> selectUserProjectID(String username) {
+		return projectDao.selectUserProjectID(username);
+	}
+	
+	public List<User> selectAllUser() {
+		return userDao.selectAllUser();
 	}
 	
 	public List<Project> selectQuestionnaire(String pid) {
@@ -76,6 +96,10 @@ public class CommonServiceImpl implements CommonService{
 	
 	public List<Subject> selectSubjectTasks(String subjectid) {
 		return subjectDao.selectSubjectTasks(subjectid);
+	}
+	
+	public List<Project> selectSubjectQus(String projectid) {
+		return projectDao.selectSubjectQus(projectid);
 	}
 	
 	public int insertSubject(Subject subject) {

@@ -4,6 +4,8 @@ public class User {
     private String username;
 
     private String password;
+    
+    private int grade;
 
     public String getUsername() {
         return username;
@@ -19,5 +21,13 @@ public class User {
     
     public void setPassword(String password) {
         this.password = password;
+    }
+    
+    public int getGrade() {
+    	return grade;
+    }
+    
+    public void setGrade(int grade) {
+    	this.grade = grade;
     }
 }

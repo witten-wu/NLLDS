@@ -133,7 +133,7 @@
 	 				var projectid = pid;
 	 				
 	 				var newLink = document.createElement("a");
-					newLink.href = "subjectquestionnaire?projectid="+projectid+"&subjectid="+dataList[i].subjectid;
+					newLink.href = "subjectquestionnaire?projectid="+projectid+"&subjectno="+dataList[i].subjectno;
 					newLink.text = "detail..."
 					
 					var newLink2 = document.createElement("a");

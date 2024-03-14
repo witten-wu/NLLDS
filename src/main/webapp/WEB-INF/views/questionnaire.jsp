@@ -6,6 +6,8 @@
 <link rel="stylesheet" type="text/css" href="bootstrap/css/style.css">
 </head>
 <body>
+<%String Username = ((User)session.getAttribute("user")).getUsername();%>
+<%int Grade = ((User)session.getAttribute("user")).getGrade();%>
 <jsp:include page="sidebar.jsp" />
 <div class="container">
 	<div class="row clearfix">
@@ -14,7 +16,9 @@
 			<div id="inputFields" class="hidden" style="margin-bottom: 10px;">
 	                <div class="input-container">
 	                    <label for="newPId">Project ID:</label>
-	                    <input type="text" id="newPId" name="newPId">
+	                    <select id="newPId" name="newPId"> 
+					    	<option value="">Please Select</option>
+					    </select>
 	                </div>
 
 	                <div class="input-container">
@@ -50,6 +54,9 @@
 	    }
 	}
 $(document).ready(function(){
+	var Username = "<%=Username%>";
+    var Grade = <%=Grade%>;
+	
 	$("#addQusButton").click(function() {
 	    $("#inputFields").toggleClass("hidden");
 	});
@@ -64,10 +71,10 @@ $(document).ready(function(){
    	});
 	
 	function saveQus() {
-	    var pid = $("#newPId").val();
+	    var pid = $("#newPId option:selected").val();
 	    var questionnaire = $("#QusUrl").val();
 	    if(pid == ""){
-			alert("Please input the Project ID")
+			alert("Please select the Project ID")
 		}else if(questionnaire == ""){
 			alert("Please input the Questionnaire url")
 		}else{
@@ -98,10 +105,32 @@ $(document).ready(function(){
 		window.open("projectquestionnaire?projectid=" + pid);
     }
 	
+	
+	$.ajax({
+		url:"./showProjectID",
+		type:"POST", 
+		datatype:"json",
+		data:{"username":Username, "grade":Grade},
+		async:"false",
+		success:function(data){
+			data = JSON.parse(data); 
+			dataList = data.data; 
+			for(var i=0;i < dataList.length;i++){
+				var newRow = document.createElement("option");
+				var pid = document.createTextNode(dataList[i].pid);
+				newRow.append(pid);
+				newRow.value=dataList[i].pid;
+				$("#newPId").append(newRow);
+			}
+		}
+	});
+	
+	
 	$.ajax({ 
 		url:"./showProjectQus",
 		type:"POST", 
-		datatype:"json",	 
+		datatype:"json",
+		data:{"username":Username, "grade":Grade},
 		async:"false",
 		success:function(data){
 			var str =""; 

@@ -4,9 +4,10 @@
   <resultMap id="BaseResultMap" type="com.NLLDS.model.User" >
     <id column="username" property="username" jdbcType="VARCHAR" />
     <result column="password" property="password" jdbcType="VARCHAR" />
+    <result column="grade" property="grade" jdbcType="INTEGER" />
   </resultMap>
   <sql id="Base_Column_List" >
-    username, password
+    username, password, grade
   </sql>
 
   <select id="selectUserByUidAndPassword" resultMap="BaseResultMap" >
@@ -14,6 +15,13 @@
     <include refid="Base_Column_List" />
     FROM user
     WHERE username = #{username,jdbcType=VARCHAR} and password = #{password,jdbcType=VARCHAR}
+  </select>
+  
+  <select id="selectAllUser" resultMap="BaseResultMap">
+    SELECT
+    <include refid="Base_Column_List" />
+	FROM user
+	WHERE grade != 1
   </select>
   
 </mapper>

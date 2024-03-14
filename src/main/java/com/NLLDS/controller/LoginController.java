@@ -90,24 +90,43 @@ public class LoginController {
     
     @RequestMapping("/showProjectList")
     @ResponseBody
-    public JSONObject showProjectList(HttpSession session) throws Exception {
-		List<Project> projects=commonService.selectAllProject();
-		if(projects.isEmpty()||projects.size()==0){
-			return CommonUtil.constructResponse(0,"no record", null);
-		}else{
-			return CommonUtil.constructResponse(EnumUtil.OK,"project info", projects);
-		}
+    public JSONObject showProjectList(String username, int grade) throws Exception {
+    	if (grade == 1) {
+    		List<Project> projects=commonService.selectAllProject();
+    		if(projects.isEmpty()||projects.size()==0){
+    			return CommonUtil.constructResponse(0,"no record", null);
+    		}else{
+    			return CommonUtil.constructResponse(EnumUtil.OK,"project info", projects);
+    		}
+    	}else {
+    		List<Project> projects=commonService.selectUserProject(username);
+    		if(projects.isEmpty()||projects.size()==0){
+    			return CommonUtil.constructResponse(0,"no record", null);
+    		}else{
+    			return CommonUtil.constructResponse(EnumUtil.OK,"project info", projects);
+    		}
+    	}
 	}
     
     @RequestMapping("/showProjectQus")
     @ResponseBody
-    public JSONObject showProjectQus(HttpSession session) throws Exception {
-		List<Project> projects=commonService.selectProjectQus();
-		if(projects.isEmpty()||projects.size()==0){
-			return CommonUtil.constructResponse(0,"no record", null);
-		}else{
-			return CommonUtil.constructResponse(EnumUtil.OK,"project info", projects);
-		}
+    public JSONObject showProjectQus(String username, int grade) throws Exception {
+    	if (grade == 1) {
+    		List<Project> projects=commonService.selectProjectQus();
+    		if(projects.isEmpty()||projects.size()==0){
+    			return CommonUtil.constructResponse(0,"no record", null);
+    		}else{
+    			return CommonUtil.constructResponse(EnumUtil.OK,"project info", projects);
+    		}
+    	}else {
+    		List<Project> projects=commonService.selectUserProjectQus(username);
+    		if(projects.isEmpty()||projects.size()==0){
+    			return CommonUtil.constructResponse(0,"no record", null);
+    		}else{
+    			return CommonUtil.constructResponse(EnumUtil.OK,"project info", projects);
+    		}
+    	}
+		
 	}
     
     @RequestMapping("/getQuestionnaire")
@@ -140,6 +159,37 @@ public class LoginController {
 			return CommonUtil.constructResponse(0,"no record", null);
 		}else{
 			return CommonUtil.constructResponse(EnumUtil.OK,"subject info", tasks);
+		}
+	}
+    
+    @RequestMapping("/showProjectID")
+    @ResponseBody
+    public JSONObject showProjectID(String username, int grade) throws Exception {
+    	if (grade == 1) {
+    		List<Project> projects=commonService.selectProjectID();
+    		if(projects.isEmpty()||projects.size()==0){
+    			return CommonUtil.constructResponse(0,"no record", null);
+    		}else{
+    			return CommonUtil.constructResponse(EnumUtil.OK,"project info", projects);
+    		}
+    	}else {
+    		List<Project> projects=commonService.selectUserProjectID(username);
+    		if(projects.isEmpty()||projects.size()==0){
+    			return CommonUtil.constructResponse(0,"no record", null);
+    		}else{
+    			return CommonUtil.constructResponse(EnumUtil.OK,"project info", projects);
+    		}
+    	}
+	}
+    
+    @RequestMapping("/showManage")
+    @ResponseBody
+    public JSONObject showManage() throws Exception {
+		List<User> users=commonService.selectAllUser();
+		if(users.isEmpty()||users.size()==0){
+			return CommonUtil.constructResponse(0,"no record", null);
+		}else{
+			return CommonUtil.constructResponse(EnumUtil.OK,"user info", users);
 		}
 	}
     
@@ -297,6 +347,13 @@ public class LoginController {
 		return CommonUtil.constructResponse(EnumUtil.OK,"tasks info", subjects);
    	}
     
+    @RequestMapping("/getSubjectQus")
+   	@ResponseBody
+   	public JSONObject getSubjectQus(String projectid) throws Exception {
+    	List<Project> projects = commonService.selectSubjectQus(projectid);
+		return CommonUtil.constructResponse(EnumUtil.OK,"qus info", projects);
+   	}
+    
     @RequestMapping("/showSubjectTasks")
 	@ResponseBody
 	public JSONObject showSubjectTasks(String subjectid, String tablename) throws Exception {
@@ -306,6 +363,21 @@ public class LoginController {
             return CommonUtil.constructResponse(0, "No tasks found", null);
         }
         return CommonUtil.constructResponse(EnumUtil.OK,"tasks info", result);
+	}
+    
+    @RequestMapping("/showSubjectQus")
+	@ResponseBody
+	public JSONObject showSubjectQus(String subjectno, String tablename) throws Exception {
+    	try {
+	    	String sql = "SELECT * FROM " + tablename + " where subjectno = '" + subjectno + "'";
+	        List<Map<String, Object>> result = jdbcTemplate.queryForList(sql);
+	        if (result == null || result.isEmpty()) {
+	            return CommonUtil.constructResponse(0, "No qus found", null);
+	        }
+	        return CommonUtil.constructResponse(EnumUtil.OK,"qus info", result);
+    	} catch (Exception e) {
+            return CommonUtil.constructResponse(0, "Error occurred during query execution", null);
+        }
 	}
     
     @RequestMapping("/deleteFields")

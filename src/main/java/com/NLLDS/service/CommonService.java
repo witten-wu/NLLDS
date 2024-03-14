@@ -15,7 +15,17 @@ public interface CommonService {
 	
 	List<Project> selectAllProject();
 	
+	List<Project> selectUserProject(String username);
+	
 	List<Project> selectProjectQus();
+	
+	List<Project> selectUserProjectQus(String username);
+	
+	List<Project> selectProjectID();
+	
+	List<Project> selectUserProjectID(String username);
+	
+	List<User> selectAllUser();
 	
 	List<Project> selectQuestionnaire(String pid);
 	
@@ -30,6 +40,8 @@ public interface CommonService {
 	List<Subject> selectSubjectByProjectId(String pid);
 	
 	List<Subject> selectSubjectTasks(String subjectid);
+	
+	List<Project> selectSubjectQus(String projectid);
 	
 	int insertSubject(Subject subject);
 	

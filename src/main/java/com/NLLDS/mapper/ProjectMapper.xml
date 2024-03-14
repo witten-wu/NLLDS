@@ -9,6 +9,7 @@
     <result column="createdate" property="createdate" jdbcType="TIMESTAMP"/>
     <result column="description" property="description" jdbcType="VARCHAR" />
     <result column="questionnaire" property="questionnaire" jdbcType="VARCHAR" />
+    <result column="qustable" property="qustable" jdbcType="VARCHAR" />
   </resultMap>
   <sql id="Base_Column_List" >
     pid, pname, createby, manageby, createdate, description, questionnaire
@@ -19,10 +20,34 @@
 	FROM project
   </select>
   
+  <select id="selectUserProject" resultMap="BaseResultMap" parameterType="java.lang.String">
+    SELECT pid,pname,createby,manageby,createdate,description
+	FROM project
+	WHERE manageby LIKE CONCAT('%', #{username, jdbcType=VARCHAR}, '%')
+  </select>
+  
   <select id="selectProjectQus" resultMap="BaseResultMap">
     SELECT pid,pname,questionnaire
 	FROM project
 	WHERE questionnaire IS NOT NULL
+  </select>
+  
+  <select id="selectUserProjectQus" resultMap="BaseResultMap" parameterType="java.lang.String">
+    SELECT pid,pname,questionnaire
+	FROM project
+	WHERE manageby LIKE CONCAT('%', #{username, jdbcType=VARCHAR}, '%')
+	AND questionnaire IS NOT NULL
+  </select>
+  
+  <select id="selectProjectID" resultMap="BaseResultMap">
+    SELECT pid
+	FROM project
+  </select>
+  
+  <select id="selectUserProjectID" resultMap="BaseResultMap" parameterType="java.lang.String">
+    SELECT pid
+	FROM project
+	WHERE manageby LIKE CONCAT('%', #{username, jdbcType=VARCHAR}, '%')
   </select>
   
   <select id="selectQuestionnaire" resultMap="BaseResultMap" parameterType="java.lang.String">
@@ -30,6 +55,13 @@
 	FROM project
 	WHERE pid = #{pid,jdbcType=VARCHAR}
 	AND questionnaire IS NOT NULL
+  </select>
+  
+  <select id="selectSubjectQus" resultMap="BaseResultMap" parameterType="java.lang.String">
+    SELECT qustable
+	FROM project
+	WHERE pid = #{projectid,jdbcType=VARCHAR}
+	AND qustable IS NOT NULL
   </select>
   
   <insert id="insertProject" parameterType="com.NLLDS.model.Project" >

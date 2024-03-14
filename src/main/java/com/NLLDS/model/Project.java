@@ -15,6 +15,8 @@ public class Project {
     private String description;
     
     private String questionnaire;
+    
+    private String qustable;
 
     public String getPid() {
         return pid;
@@ -72,5 +74,11 @@ public class Project {
         this.questionnaire = questionnaire;
     }
 
-   
+    public String getQustable() {
+        return qustable;
+    }
+
+    public void setQustable(String qustable) {
+        this.qustable = qustable;
+    }
 }

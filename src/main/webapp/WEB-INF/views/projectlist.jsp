@@ -3,15 +3,19 @@
 <html lang="en">
 <head>
 <title>Project</title>
+<link href="bootstrap/css/select2.min.css" rel="stylesheet" />
 <link rel="stylesheet" type="text/css" href="bootstrap/css/style.css">
 </head>
 <body>
 <%String Username = ((User)session.getAttribute("user")).getUsername();%>
+<%int Grade = ((User)session.getAttribute("user")).getGrade();%>
 <jsp:include page="sidebar.jsp" />
 <div class="container">
 	<div class="row clearfix">
 		<div class="col-md-10">
-			<button id=addProjectButton style="margin-bottom: 10px;">Add Project</button>
+			<% if (Grade == 1) { %>
+				<button id=addProjectButton style="margin-bottom: 10px;">Add Project</button>
+			<% } %>
 			<div id="inputFields" class="hidden" style="margin-bottom: 10px;">
 	                <div class="input-container">
 	                    <label for="newProjectName">Project Name:</label>
@@ -20,13 +24,14 @@
 	                </div>
 
 	                <div class="input-container">
-	                    <label for="newProjectManageBy">Manage By:</label>
-	                    <input type="text" id="newProjectManageBy" name="newProjectManageBy">
-	                </div>
-
-	                <div class="input-container">
 	                    <label for="newProjectDescription">Description:</label>
 	                    <input type="text" id="newProjectDescription" name="newProjectDescription">
+	                </div>
+	                
+	                <div class="input-container">
+	                    <label for="newProjectManageBy">Manage By:</label>
+	                    <select class="js-example-basic-multiple" id="newProjectManageBy" name="newProjectManageBy" multiple="multiple">
+					    </select>
 	                </div>
 	                <button id="saveProjectButton" style="margin-bottom: 10px;">Save</button>
 	            </div>
@@ -49,6 +54,7 @@
 </div>
 <script src="bootstrap/js/jquery-3.1.1.min.js"></script>
 <script src="bootstrap/js/bootstrap.min.js"></script>
+<script src="bootstrap/js/select2.min.js"></script>
 <script type="text/javascript">
 	var box = document.getElementById("sidebox")
 	var btn = document.getElementById("sidebtn")
@@ -63,6 +69,8 @@ $(document).ready(function(){
 	var newProjectNameInput = document.getElementById('newProjectName');
     var newProjectNameError = document.getElementById('newProjectNameError');
     var saveProjectButton = document.getElementById('saveProjectButton');
+    var Username = "<%=Username%>";
+    var Grade = <%=Grade%>;
 
     newProjectNameInput.addEventListener('input', function() {
         var value = newProjectNameInput.value;
@@ -74,6 +82,11 @@ $(document).ready(function(){
             saveProjectButton.disabled = false;
         }
     });
+    
+    $('#newProjectManageBy').select2({
+    	width: '200px',
+        dropdownAutoWidth: true
+      });
 
 	$("#addProjectButton").click(function() {
         $("#inputFields").toggleClass("hidden");
@@ -92,11 +105,12 @@ $(document).ready(function(){
         var pname = $("#newProjectName").val();
         var createdby = "<%=Username%>"
         var manageby = $("#newProjectManageBy").val();
+        var manageby = manageby.join(",");
         var description = $("#newProjectDescription").val();
         if(pname == ""){
-			alert("Please input project name")
+			alert("Please input the project name")
 		}else if(manageby == ""){
-			alert("Please input the manager name")
+			alert("Please select the manager")
 		}else{
 	        $.ajax({ 
 				url:"./addProject",
@@ -126,10 +140,31 @@ $(document).ready(function(){
    	  window.location.href = url;
    	}
     
+    
+    $.ajax({
+		url:"./showManage",
+		type:"POST", 
+		datatype:"json",
+		async:"false",
+		success:function(data){
+			data = JSON.parse(data); 
+			dataList = data.data; 
+			for(var i=0;i < dataList.length;i++){
+				var newRow = document.createElement("option");
+				var username = document.createTextNode(dataList[i].username);
+				newRow.append(username);
+				newRow.value=dataList[i].username;
+				$("#newProjectManageBy").append(newRow);
+			}
+		}
+	});
+    
+    
 	$.ajax({ 
 		url:"./showProjectList",
 		type:"POST", 
 		datatype:"json",	 
+		data:{"username":Username, "grade":Grade},
 		async:"false",
 		success:function(data){
 			var str =""; 

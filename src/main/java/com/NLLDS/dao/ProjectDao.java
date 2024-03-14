@@ -8,7 +8,15 @@ public interface ProjectDao {
     
     List<Project> selectAllProject();
     
+    List<Project> selectUserProject(String username);
+    
     List<Project> selectProjectQus();
+    
+    List<Project> selectUserProjectQus(String username);
+    
+    List<Project> selectProjectID();
+	
+	List<Project> selectUserProjectID(String username);
     
     List<Project> selectQuestionnaire(String pid);
     
@@ -19,5 +27,7 @@ public interface ProjectDao {
     int updateProject(Project project);
     
     List<Project> checkProject(String pname);
+    
+    List<Project> selectSubjectQus(String projectid);
 
 }
