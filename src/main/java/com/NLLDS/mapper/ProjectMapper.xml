@@ -12,7 +12,7 @@
     <result column="qustable" property="qustable" jdbcType="VARCHAR" />
   </resultMap>
   <sql id="Base_Column_List" >
-    pid, pname, createby, manageby, createdate, description, questionnaire
+    pid, pname, createby, manageby, createdate, description, questionnaire, qustable
   </sql>
   
   <select id="selectAllProject" resultMap="BaseResultMap">
