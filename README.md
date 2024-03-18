@@ -67,4 +67,6 @@ IDE(Recommand): Eclipse (neon) for JavaEE
 <welcome-file>index.php</welcome-file>
 ```
 
-11. Restart tomcat and visit webpage.
+11. Upload monstaftp to Tomcat/webapps.
+
+12. Restart tomcat and visit webpage.
