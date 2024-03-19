@@ -10,31 +10,29 @@ Mysql 5.7.42
 
 Tomcat 8.5
 
-IDE(Recommand): Eclipse (neon) for JavaEE
-
 ## INSTALLATION
-1. 配置IDE(Eclipse) 的JDK/JRE(window→Preferences)
+1. Prepare Server Environment ( Java & PHP & Mysql & Tomcat)
 
-2. 配置Project(Properties)的Java Compiler(JDK)/Java Build Path(JRE Libraries)
+2. Prepare FTPS(SSL/TLS) Server (openssl + vsftpd)
 
-3. 配置Project(Properties)的Deployment Assembly(like src/main…, target, WebContent, Maven, etc.)
+3. Adjust src/main/resources/*.xml files to connect to Mysql
 
-4. 配置Server ( Java & PHP & Mysql & Tomcat)
+4. Execute NLLDS.sql
 
-5. 配置SSL/TLS opssl + vsftpd
+5. Build the project and export war package
 
-6. Adjust project’s xml files to connect to Mysql
+6. Upload war package to server(tomcat/webapps)
+```
+# Add this to server.xml in tomcat/conf
+<Context path="/NLLDS" docBase="/home/wyd/apache-tomcat-8.5.98/webapps/NLLDS.war" debug="0" reloadable="true" />
+```
 
-7. Export war package and upload to server(tomcat/webapps). Remember add <Context> to server.xml in tomcat.
+7. Copy JavaBridge.jar, script-api.jar, php-servlet.jar, php-script.jar to Tomcat/lib folder
 
-8. 安装PHP: sudo apt install php-cgi
-
-9. Add JavaBridge.jar, script-api.jar, php-servlet.jar, php-script.jar to Tomcat/lib folder
-
-10. 修改web.xml
+8. Adjust tomcat/conf/web.xml
 
 ```
-在<web-app>节点中加入以下内容:
+Add the following in node <web-app>:
 <listener>
 <listener-class>php.java.servlet.ContextLoaderListener</listener-class>
 </listener>
@@ -63,10 +61,12 @@ IDE(Recommand): Eclipse (neon) for JavaEE
 <url-pattern>*.php</url-pattern>
 </servlet-mapping>
 
-在<welcome-file-list>节点中加入以下内容:
+Add the following in node <welcome-file-list>:
 <welcome-file>index.php</welcome-file>
 ```
 
-11. Upload monstaftp to Tomcat/webapps.
+9. Upload monstaftp to Tomcat/webapps.
 
-12. Restart tomcat and visit webpage.
+10. Restart tomcat and visit webpage.
+
+
