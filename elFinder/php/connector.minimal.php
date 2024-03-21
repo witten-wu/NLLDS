@@ -164,10 +164,12 @@ class elFinderSimpleLogger {
      * @return void
      * @author Dmitry (dio) Levashov
      **/
-    public function __construct($path)
+    public function __construct($dir)
     {
-        $this->file = $path;
-        $dir = dirname($path);
+        $prefix = 'elfinder_';
+        $date = date('Y-m-d');
+        $filename = $prefix . $date . '.log';
+        $this->file = $dir . '/' . $filename;
         if (!is_dir($dir)) {
             mkdir($dir);
         }
@@ -236,7 +238,7 @@ class elFinderSimpleLogger {
 
 }
 
-$logger = new elFinderSimpleLogger('/home/wyd/apache-tomcat-8.5.98/logs/elfinder.log.txt');
+$logger = new elFinderSimpleLogger('/home/bmi/NLLDS/apache-tomcat-8.5.99/logs');
 
 // Documentation for connector options:
 // https://github.com/Studio-42/elFinder/wiki/Connector-configuration-options
