@@ -15,12 +15,12 @@ Tomcat 8.5
 
 2. Prepare FTPS(SSL/TLS) Server (openssl + vsftpd)
 ```
+# Vsftpd installation
 sudo apt update
 sudo apt install vsftpd
 sudo systemctl start vsftpd
 sudo systemctl enable vsftpd
 sudo openssl req -x509 -nodes -days 365 -newkey rsa:2048 -keyout /etc/ssl/private/vsftpd.pem -out /etc/ssl/private/vsftpd.pem
-
 sudo nano /etc/vsftpd.conf
 	ssl_enable=YES
 	allow_anon_ssl=NO
@@ -31,11 +31,26 @@ sudo nano /etc/vsftpd.conf
 	ssl_sslv3=NO
 	rsa_cert_file=/etc/ssl/private/vsftpd.pem
 	rsa_private_key_file=/etc/ssl/private/vsftpd.pem
-	
 sudo service vsftpd restart
 
 # Better close the firewall, nor the ftp may not be accessed
 sudo ufw disable
+
+# Linux User Group Setting:
+groupadd nllds
+useradd -d /home/ftpmanger -m ftpmanger -g nllds
+passwd ftpmanger
+
+# Set ftp users only can access specific dir
+sudo nano /etc/vsftpd.conf
+	chroot_local_user=YES
+	user_config_dir=/etc/vsftpd_user_list/
+	allow_writeable_chroot=YES
+sudo mkdir /etc/vsftpd_user_list/
+sudo nano /etc/vsftpd_user_list/ftpmanger
+	local_root=/media/bmi/BigData/NLL_Project
+	write_enable=YES
+sudo service vsftpd restart
 ```
 
 3. Adjust src/main/resources/*.xml files to connect to Mysql
