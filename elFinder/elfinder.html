@@ -55,7 +55,32 @@
 						}).bind('destroy', function() {
 							document.title = title;
 						});
-					}
+					},
+					height:'100%',
+					rememberLastDir: false,
+					defaultView: 'list',
+					uiOptions : {
+						// toolbar configuration
+						toolbar : [
+							['home', 'back', 'up', 'reload'],
+							['mkdir', 'mkfile', 'upload'],
+							['download'],
+							['rm'],
+							['quicklook'],
+							['search'],
+							['view'],
+						],
+					},
+					contextmenu : {
+						// navbarfolder menu
+						navbar : ['info'],
+
+						// current directory menu
+						cwd    : ['reload', 'upload', '|' , 'mkdir', 'mkfile', 'paste', '|', 'info'],
+
+						// current directory file menu
+						files  : ['quicklook', '|', 'download', 'rm', '|', 'copy', 'cut', 'paste', '|', 'edit', 'rename', '|', 'archive', 'extract', '|', 'info']
+					},
 				},
 				managers : {
 					// 'DOM Element ID': { /* elFinder options of this DOM Element */ }
