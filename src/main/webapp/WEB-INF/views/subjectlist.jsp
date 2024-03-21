@@ -167,7 +167,7 @@
 });
 
 	function loginToFilestash() {
-    	window.open("/mftp")
+    	window.open("/elFinder/elfinder.html")
     }
 </script>
 </body>

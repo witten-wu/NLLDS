@@ -103,7 +103,7 @@ Add the following in node <welcome-file-list>:
 <welcome-file>index.php</welcome-file>
 ```
 
-9. Upload monstaftp to Tomcat/webapps.
+9. Upload elFinder to Tomcat/webapps and adjust the config under php/connector.minimal.php
 
 10. Restart tomcat and visit webpage.
 
