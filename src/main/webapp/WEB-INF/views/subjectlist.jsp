@@ -176,15 +176,62 @@
 		}
 	});
 });
-
-	function jumpToFtp(pname, subjectno) {
-		const path = pname + '/' + subjectno;
+	
+	function sendRequest(url, command) {
+	  const headers = { 'Content-Type': 'application/json' };
+	  return fetch(url + '?' + command, { headers })
+	    .then(response => response.json())
+	    .then(data => {
+	      console.log(data);
+	    })
+	    .catch(error => {
+	      console.error(error);
+	    });
+	}
+	
+	async function jumpToFtp(pname, subjectno) {
 		// generate encrypted file path for localfile system
-		const encodedPath = btoa(path);
-		const replaced = encodedPath.replace(/\+/g, '-').replace(/\//g, '_').replace(/=/g, '.');
-		const finalPath = replaced.replace(/\.*$/, '');
-		console.log(finalPath);
-    	window.open("/elFinder/elfinder.html#elf_l1_" + finalPath);
+		const url = '/elFinder/php/connector.minimal.php';
+		
+		// encrypt project path
+		const encodedProjectPath = btoa(pname);
+		const replacedProjectPath = encodedProjectPath.replace(/\+/g, '-').replace(/\//g, '_').replace(/=/g, '.');
+		const projectPath = replacedProjectPath.replace(/\.*$/, '');
+		
+		// encrypt final path
+		const tmpath = pname + '/' + subjectno;
+		const encodedSubjectPath = btoa(tmpath);
+		const replacedSubjectPath = encodedSubjectPath.replace(/\+/g, '-').replace(/\//g, '_').replace(/=/g, '.');
+		const subjectPath = replacedSubjectPath.replace(/\.*$/, '');
+		
+		let command = '';
+		
+		try {
+			// Need to config l1 in new environment
+			// create project folder
+			command = "cmd=mkdir&target=l1_Lw" + "&name=" + pname;
+			await sendRequest(url, command);
+	    	
+			// create project/subject folder	
+	    	command = "cmd=mkdir&target=l1_" + projectPath + "&name=" + subjectno;
+	    	await sendRequest(url, command);
+	    	
+	    	// create project/subject/Neuroimaging folder
+	    	command = "cmd=mkdir&target=l1_" + subjectPath + "&name=Neuroimaging";
+	    	await sendRequest(url, command); 
+	    	
+	    	// create project/subject/Behavior folder
+	    	command = "cmd=mkdir&target=l1_" + subjectPath + "&name=Behavior";
+	    	await sendRequest(url, command); 
+	    	
+	    	// create project/subject/Neuroimaging/tasks folder
+	    	// create project/subject/Behavior/tasks folder
+	    	
+	    	// jump to subject folder
+	    	window.open("/elFinder/elfinder.html#elf_l1_" + subjectPath);
+		} catch (error) {
+		    console.error(error);
+		  }
     }
 </script>
 </body>
