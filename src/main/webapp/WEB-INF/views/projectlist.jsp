@@ -135,8 +135,8 @@ $(document).ready(function(){
         }
     }
     
-    function redirectToNewPage(projectId) {
-   	  var url = "subjectlist?pid=" + projectId;
+    function redirectToNewPage(projectId,projectName) {
+   	  var url = "subjectlist?pid=" + projectId + "&pname=" + projectName;
    	  window.location.href = url;
    	}
     
@@ -174,11 +174,11 @@ $(document).ready(function(){
 				for(var i=0;i<dataList.length;i++){
 					var newTrRow = document.createElement("tr");
 			        
-			        (function (projectId) {
+			        (function (projectId,projectName) {
 			            newTrRow.addEventListener("dblclick", function () {
-			            	redirectToNewPage(projectId);
+			            	redirectToNewPage(projectId,projectName);
 			            });
-			        })(dataList[i].pid); 
+			        })(dataList[i].pid,dataList[i].pname); 
 					
 	 				var newTdRow1 = document.createElement("td");
 	 				var newTdRow2 = document.createElement("td");
@@ -200,7 +200,7 @@ $(document).ready(function(){
 	 				var description = document.createTextNode(dataList[i].description);
 	 				
 	 				var newLink = document.createElement("a");
-					newLink.href = "subjectlist?pid=" + dataList[i].pid;
+					newLink.href = "subjectlist?pid=" + dataList[i].pid + "&pname=" + dataList[i].pname;
 					newLink.text = dataList[i].pname;
 					
 	 				newTdRow1.append(pid);

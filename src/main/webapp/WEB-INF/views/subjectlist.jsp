@@ -51,7 +51,16 @@
 	}
 	
 	var value = window.location.search.substr(1);
-	var pid = value.split('=')[1];
+	var paramPairs = value.split('&');
+	var paramObj = {};
+	paramPairs.forEach(function(pair) {
+	  var pairSplit = pair.split('=');
+	  var paramName = decodeURIComponent(pairSplit[0]);
+	  var paramValue = decodeURIComponent(pairSplit[1]);
+	  paramObj[paramName] = paramValue;
+	});
+	var pid = paramObj.pid;
+	var pname = paramObj.pname;
 	
 	var newSubjectInput = document.getElementById('newSubject');
     var newSubjectError = document.getElementById('newSubjectError');
@@ -143,9 +152,11 @@
 	 				var viewButton = document.createElement("button");
 	 				viewButton.innerText = "view";
 	 				
-	 				viewButton.addEventListener("click", function() {
-					    loginToFilestash();
-					});
+	 				(function (subjectno) {
+		 				viewButton.addEventListener("click", function() {
+						    jumpToFtp(pname, subjectno);
+						});
+	 				})(dataList[i].subjectno);
 	 				
 	 				//newTdRow1.append(subjectid);
 	 				newTdRow2.append(subjectno);
@@ -166,8 +177,14 @@
 	});
 });
 
-	function loginToFilestash() {
-    	window.open("/elFinder/elfinder.html")
+	function jumpToFtp(pname, subjectno) {
+		const path = pname + '/' + subjectno;
+		// generate encrypted file path for localfile system
+		const encodedPath = btoa(path);
+		const replaced = encodedPath.replace(/\+/g, '-').replace(/\//g, '_').replace(/=/g, '.');
+		const finalPath = replaced.replace(/\.*$/, '');
+		console.log(finalPath);
+    	window.open("/elFinder/elfinder.html#elf_l1_" + finalPath);
     }
 </script>
 </body>
