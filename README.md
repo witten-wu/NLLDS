@@ -4,7 +4,7 @@ Data System for NeuroLang Lab
 ## Environment
 Java SE 1.8
 
-PHP 7.2.24
+PHP > 7.4 (sudo apt-get install php-cgi)
 
 Mysql 5.7.42
 
