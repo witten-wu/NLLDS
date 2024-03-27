@@ -26,7 +26,7 @@
 			<thead>
 				<tr>
 					<th>Subject_No</th>
-					<th>Questionnaire</th>
+					<th>Survey</th>
 					<th>Tasks</th>
 					<th>File</th>
 				</tr>

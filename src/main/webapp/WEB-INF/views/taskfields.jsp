@@ -173,12 +173,6 @@ $(document).ready(function(){
     		    		    		datatype:"json",	 
     		    		    		data:{"tablename":tablename, "fieldname":fieldname},	
     		    		    		success:function(data){
-    		    		    			data = JSON.parse(data); 
-    		    		    			dataList = data.data; 
-    		    		    			if(data.code==1){
-    		    		    			}else if(data.code==0){
-    		    		    				alert(data.msg)
-    		    		    			}
     		    		    		}
     		    		    	});
     		    				

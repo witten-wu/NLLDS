@@ -40,6 +40,7 @@
 				<tr>
 					<th>Project_ID</th>
 					<th>Project_Name</th>
+					<th>Survey_ID</th>
 					<th>Project_Descriptions</th>
 					<th>Project_Manage_By</th>
 					<th>Project_Created_By</th>
@@ -172,52 +173,71 @@ $(document).ready(function(){
 			dataList = data.data; 
 			if(data.code==1){
 				for(var i=0;i<dataList.length;i++){
-					var newTrRow = document.createElement("tr");
-			        
-			        (function (projectId,projectName) {
-			            newTrRow.addEventListener("dblclick", function () {
-			            	redirectToNewPage(projectId,projectName);
-			            });
-			        })(dataList[i].pid,dataList[i].pname); 
-					
-	 				var newTdRow1 = document.createElement("td");
-	 				var newTdRow2 = document.createElement("td");
-	 				var newTdRow3 = document.createElement("td");
-	 				var newTdRow4 = document.createElement("td");
-	 				var newTdRow5 = document.createElement("td");
-	 				var newTdRow6 = document.createElement("td");
-	 				
-	 				var pid = document.createTextNode(dataList[i].pid);
-	 				var createby = document.createTextNode(dataList[i].createby);
-	 				var manageby = document.createTextNode(dataList[i].manageby);
-	 				
-	 				var date = new Date(dataList[i].createdate);
-					Y = date.getFullYear() + '-';
-					M = (date.getMonth()+1 < 10 ? '0'+(date.getMonth()+1) : date.getMonth()+1) + '-';
-					D = date.getDate() + ' ';
-					transferdate = Y+M+D;
-	 				
-	 				var description = document.createTextNode(dataList[i].description);
-	 				
-	 				var newLink = document.createElement("a");
-					newLink.href = "subjectlist?pid=" + dataList[i].pid + "&pname=" + dataList[i].pname;
-					newLink.text = dataList[i].pname;
-					
-	 				newTdRow1.append(pid);
-	 				newTdRow2.append(newLink);
-	 				newTdRow3.append(description);
-	 				newTdRow4.append(manageby);
-	 				newTdRow5.append(createby);
-	 				newTdRow6.append(transferdate);
-	 				
-	 				newTrRow.append(newTdRow1);
-	 				newTrRow.append(newTdRow2);
-	 				newTrRow.append(newTdRow3);
-	 				newTrRow.append(newTdRow4);
-	 				newTrRow.append(newTdRow5);
-	 				newTrRow.append(newTdRow6);
-	 				
-	 				$("tbody#showprojectlist").append(newTrRow);
+	 				(function (pname, pid, createby, manageby, createdate, description) {
+			        	$.ajax({
+		        	      url: "./SearchSurvey",
+		        	      type: "POST",
+		        	      dataType: "json",
+		        	      data: {"pname": pname},
+		        	      success: function(response) {
+		        	    	var newTrRow = document.createElement("tr");
+		        	    	
+		        	    	newTrRow.addEventListener("dblclick", function () {
+				            	redirectToNewPage(pid,pname);
+				            });
+		        	    	
+		        	    	var newTdRow1 = document.createElement("td");
+			 				var newTdRow2 = document.createElement("td");
+			 				var newTdRow3 = document.createElement("td");
+			 				var newTdRow4 = document.createElement("td");
+			 				var newTdRow5 = document.createElement("td");
+			 				var newTdRow6 = document.createElement("td");
+			 				var newTdRow7 = document.createElement("td");
+			 				
+			 				var Tpid = document.createTextNode(pid);
+			 				var Tcreateby = document.createTextNode(createby);
+			 				var Tmanageby = document.createTextNode(manageby);
+			 				var date = new Date(createdate);
+							Y = date.getFullYear() + '-';
+							M = (date.getMonth()+1 < 10 ? '0'+(date.getMonth()+1) : date.getMonth()+1) + '-';
+							D = date.getDate() + ' ';
+							var transferdate = Y+M+D;
+							var Tdescription = document.createTextNode(description);
+			 				var newLink = document.createElement("a");
+							newLink.href = "subjectlist?pid=" + pid + "&pname=" + pname;
+							newLink.text = pname;
+
+							newTdRow1.append(Tpid);
+			 				newTdRow2.append(newLink);
+			 				if (response.code == 1) {
+							  // assume only 1 record return and return "surveyls_alias"
+							  var surveyid = response.data;
+							  var newLink2 = document.createElement("a");
+							  newLink2.href = "/limesurvey/?r=" + pname;
+							  newLink2.target = "_blank";
+							  newLink2.text = surveyid;
+							  newTdRow3.append(newLink2);
+							} else{
+							  var surveyid = document.createTextNode("Not Found");
+							  newTdRow3.append(surveyid);
+							}
+			 				newTdRow4.append(Tdescription);
+			 				newTdRow5.append(Tmanageby);
+			 				newTdRow6.append(Tcreateby);
+			 				newTdRow7.append(transferdate);
+			 				
+			 				newTrRow.append(newTdRow1);
+			 				newTrRow.append(newTdRow2);
+			 				newTrRow.append(newTdRow3);
+			 				newTrRow.append(newTdRow4);
+			 				newTrRow.append(newTdRow5);
+			 				newTrRow.append(newTdRow6);
+			 				newTrRow.append(newTdRow7);
+							
+							$("tbody#showprojectlist").append(newTrRow);
+		        	      }
+		        	    });
+			        })(dataList[i].pname, dataList[i].pid, dataList[i].createby, dataList[i].manageby, dataList[i].createdate, dataList[i].description); 
 	 			}
 			}
 		}

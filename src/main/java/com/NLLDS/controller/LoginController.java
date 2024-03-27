@@ -5,6 +5,7 @@ import java.util.Map;
 import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -423,6 +424,20 @@ public class LoginController {
     		return CommonUtil.constructResponse(0, "Unable to delete, task data already exists.", count);
         }else {
         	return CommonUtil.constructResponse(EnumUtil.OK, "No record", null);
+        }
+	}
+    
+    @RequestMapping("/SearchSurvey")
+	@ResponseBody
+	public JSONObject SearchSurvey(String pname) throws Exception {
+    	try {
+	    	String sql = "SELECT surveyls_survey_id FROM lime_surveys_languagesettings where surveyls_alias = '" + pname + "'";
+	    	int surveyId = jdbcTemplate.queryForObject(sql, Integer.class);
+	        return CommonUtil.constructResponse(EnumUtil.OK,"surveyId info", surveyId);
+    	} catch (EmptyResultDataAccessException ex) {
+    	    return CommonUtil.constructResponse(0, "Not found", null);
+    	} catch (Exception e) {
+            return CommonUtil.constructResponse(0, "Error occurred during query execution", null);
         }
 	}
 }
