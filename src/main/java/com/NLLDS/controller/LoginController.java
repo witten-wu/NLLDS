@@ -289,7 +289,7 @@ public class LoginController {
     public JSONObject showFields(int taskid) throws Exception {
 		List<Table> fields=commonService.selectTaskFields(taskid);
 		if(fields.isEmpty()||fields.size()==0){
-			return CommonUtil.constructResponse(0,"no record", null);
+			return CommonUtil.constructResponse(0,"no task fields", null);
 		}else{
 			return CommonUtil.constructResponse(EnumUtil.OK,"fields info", fields);
 		}

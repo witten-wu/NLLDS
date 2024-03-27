@@ -70,17 +70,22 @@
 			success:function(data){
 				data = JSON.parse(data); 
 				dataList = data.data; 
-				var fieldsContainer = document.getElementById('fieldsContainer');
-		        for (var i = 0; i < dataList.length; i++) {
-		            var label = document.createElement('label');
-		            label.textContent = dataList[i].fieldname + ':';
-		            var input = document.createElement('input');
-		            input.type = 'text';
-		            input.name = dataList[i].fieldname;
-		            label.appendChild(input);
-		            label.classList.add('field-label');
-		            fieldsContainer.appendChild(label);
-		        }
+				if(data.code==1){
+					var fieldsContainer = document.getElementById('fieldsContainer');
+			        for (var i = 0; i < dataList.length; i++) {
+			            var label = document.createElement('label');
+			            label.textContent = dataList[i].fieldname + ':';
+			            var input = document.createElement('input');
+			            input.type = 'text';
+			            input.name = dataList[i].fieldname;
+			            label.appendChild(input);
+			            label.classList.add('field-label');
+			            fieldsContainer.appendChild(label);
+			        }
+				}else{
+    				alert(data.msg);
+    				location.reload();
+    			}
 			}
 		}); 
     }
@@ -135,12 +140,14 @@
 			success:function(data){
 				data = JSON.parse(data); 
 				dataList = data.data; 
-				for(var i=0;i < dataList.length;i++){
-					var newRow = document.createElement("option");
-					var tname = document.createTextNode(dataList[i].tname);
-					newRow.append(tname);
-					newRow.value=dataList[i].tid;
-					$("#showTaskList").append(newRow);
+				if(data.code==1){
+					for(var i=0;i < dataList.length;i++){
+						var newRow = document.createElement("option");
+						var tname = document.createTextNode(dataList[i].tname);
+						newRow.append(tname);
+						newRow.value=dataList[i].tid;
+						$("#showTaskList").append(newRow);
+					}
 				}
 			}
 		});
