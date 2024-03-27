@@ -61,6 +61,7 @@
 	});
 	var pid = paramObj.pid;
 	var pname = paramObj.pname;
+	var surveyid = paramObj.surveyid;
 	
 	var newSubjectInput = document.getElementById('newSubject');
     var newSubjectError = document.getElementById('newSubjectError');
@@ -130,47 +131,57 @@
 			dataList = data.data; 
 			if(data.code==1){
 				for(var i=0;i<dataList.length;i++){
-					var newTrRow = document.createElement("tr");
-	 				//var newTdRow1 = document.createElement("td");
-	 				var newTdRow2 = document.createElement("td");
-	 				var newTdRow3 = document.createElement("td");
-	 				var newTdRow4 = document.createElement("td");
-	 				var newTdRow5 = document.createElement("td");
-	 				
-	 				var subjectid = document.createTextNode(dataList[i].subjectid);
-	 				var subjectno = document.createTextNode(dataList[i].subjectno);
-	 				var projectid = pid;
-	 				
-	 				var newLink = document.createElement("a");
-					newLink.href = "subjectquestionnaire?projectid="+projectid+"&subjectno="+dataList[i].subjectno;
-					newLink.text = "detail..."
-					
-					var newLink2 = document.createElement("a");
-					newLink2.href = "subjectask?projectid="+projectid+"&subjectid="+dataList[i].subjectid;
-					newLink2.text = "detail...";
-	 				
-	 				var viewButton = document.createElement("button");
-	 				viewButton.innerText = "view";
-	 				
-	 				(function (subjectno) {
-		 				viewButton.addEventListener("click", function() {
-						    jumpToFtp(pname, subjectno);
-						});
-	 				})(dataList[i].subjectno);
-	 				
-	 				//newTdRow1.append(subjectid);
-	 				newTdRow2.append(subjectno);
-	 				newTdRow3.append(newLink);
-	 				newTdRow4.append(newLink2);
-	 				newTdRow5.append(viewButton);
-	 				
-	 				//newTrRow.append(newTdRow1);
-	 				newTrRow.append(newTdRow2);
-	 				newTrRow.append(newTdRow3);
-	 				newTrRow.append(newTdRow4);
-	 				newTrRow.append(newTdRow5);
-	 				
-	 				$("tbody#showsubjectlist").append(newTrRow);
+	 				(function (subjectid, subjectno) {
+	 					$.ajax({
+			        	      url: "./showSubjectSurvey",
+			        	      type: "POST",
+			        	      dataType: "json",
+			        	      data: {"surveyid": surveyid, "subjectno": subjectno},
+			        	      success: function(response) {
+			        	    	var newTrRow = document.createElement("tr");
+			  	 				var newTdRow1 = document.createElement("td");
+			  	 				var newTdRow2 = document.createElement("td");
+			  	 				var newTdRow3 = document.createElement("td");
+			  	 				var newTdRow4 = document.createElement("td");
+			  	 				
+				 				var Tsubjectno = document.createTextNode(subjectno);
+			  	 				
+				 				if (response.code == 1) {
+								  // assume only 1 record return and return "id"
+								  var id = response.data;
+								  var newLink = document.createElement("a");
+								  newLink.href = "/limesurvey/index.php?r=responses/view&surveyId=" + surveyid + "&id=" + id;
+								  newLink.target = "_blank";
+								  newLink.text = "detail...";
+								  newTdRow2.append(newLink);
+								} else{
+								  newTdRow2.append(document.createTextNode("Not Found"));
+								}
+				 				
+								var newLink2 = document.createElement("a");
+								newLink2.href = "subjectask?projectid="+pid+"&subjectid="+subjectid;
+								newLink2.text = "detail...";
+				 				
+				 				var viewButton = document.createElement("button");
+				 				viewButton.innerText = "view";
+				 				viewButton.addEventListener("click", function() {
+								    jumpToFtp(pname, subjectno);
+								});
+
+				 				
+				 				newTdRow1.append(Tsubjectno);
+				 				newTdRow3.append(newLink2);
+				 				newTdRow4.append(viewButton);
+				 				
+				 				newTrRow.append(newTdRow1);
+				 				newTrRow.append(newTdRow2);
+				 				newTrRow.append(newTdRow3);
+				 				newTrRow.append(newTdRow4);
+				 				
+				 				$("tbody#showsubjectlist").append(newTrRow);
+			        	      }
+			        	    });
+	 				})(dataList[i].subjectid, dataList[i].subjectno); 
 	 			}
 			}
 		}

@@ -136,8 +136,8 @@ $(document).ready(function(){
         }
     }
     
-    function redirectToNewPage(projectId,projectName) {
-   	  var url = "subjectlist?pid=" + projectId + "&pname=" + projectName;
+    function redirectToNewPage(projectId,projectName,SurveyId) {
+   	  var url = "subjectlist?pid=" + projectId + "&pname=" + projectName + "&surveyid=" + SurveyId;
    	  window.location.href = url;
    	}
     
@@ -181,11 +181,7 @@ $(document).ready(function(){
 		        	      data: {"pname": pname},
 		        	      success: function(response) {
 		        	    	var newTrRow = document.createElement("tr");
-		        	    	
-		        	    	newTrRow.addEventListener("dblclick", function () {
-				            	redirectToNewPage(pid,pname);
-				            });
-		        	    	
+
 		        	    	var newTdRow1 = document.createElement("td");
 			 				var newTdRow2 = document.createElement("td");
 			 				var newTdRow3 = document.createElement("td");
@@ -193,6 +189,24 @@ $(document).ready(function(){
 			 				var newTdRow5 = document.createElement("td");
 			 				var newTdRow6 = document.createElement("td");
 			 				var newTdRow7 = document.createElement("td");
+			 				
+			 				var surveyid = "";
+			 				if (response.code == 1) {
+							  // assume only 1 record return and return "surveyls_alias"
+							  surveyid = response.data;
+							  var newLink2 = document.createElement("a");
+							  newLink2.href = "/limesurvey/?r=" + pname;
+							  newLink2.target = "_blank";
+							  newLink2.text = surveyid;
+							  newTdRow3.append(newLink2);
+							} else{
+							  surveyid = "0";
+							  newTdRow3.append(document.createTextNode("Not Found"));
+							}
+			 				
+		        	    	newTrRow.addEventListener("dblclick", function () {
+				            	redirectToNewPage(pid,pname,surveyid);
+				            });
 			 				
 			 				var Tpid = document.createTextNode(pid);
 			 				var Tcreateby = document.createTextNode(createby);
@@ -204,23 +218,11 @@ $(document).ready(function(){
 							var transferdate = Y+M+D;
 							var Tdescription = document.createTextNode(description);
 			 				var newLink = document.createElement("a");
-							newLink.href = "subjectlist?pid=" + pid + "&pname=" + pname;
+							newLink.href = "subjectlist?pid=" + pid + "&pname=" + pname + "&surveyid=" + surveyid;
 							newLink.text = pname;
 
 							newTdRow1.append(Tpid);
 			 				newTdRow2.append(newLink);
-			 				if (response.code == 1) {
-							  // assume only 1 record return and return "surveyls_alias"
-							  var surveyid = response.data;
-							  var newLink2 = document.createElement("a");
-							  newLink2.href = "/limesurvey/?r=" + pname;
-							  newLink2.target = "_blank";
-							  newLink2.text = surveyid;
-							  newTdRow3.append(newLink2);
-							} else{
-							  var surveyid = document.createTextNode("Not Found");
-							  newTdRow3.append(surveyid);
-							}
 			 				newTdRow4.append(Tdescription);
 			 				newTdRow5.append(Tmanageby);
 			 				newTdRow6.append(Tcreateby);

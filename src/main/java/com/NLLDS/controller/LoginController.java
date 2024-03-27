@@ -440,4 +440,18 @@ public class LoginController {
             return CommonUtil.constructResponse(0, "Error occurred during query execution", null);
         }
 	}
+    
+    @RequestMapping("/showSubjectSurvey")
+	@ResponseBody
+	public JSONObject showSubjectSurvey(String surveyid, String subjectno) throws Exception {
+    	try {
+	    	String sql = "SELECT id FROM lime_survey_" + surveyid + " where token = '" + subjectno + "' and submitdate is not NULL";
+	    	int id = jdbcTemplate.queryForObject(sql, Integer.class);
+	        return CommonUtil.constructResponse(EnumUtil.OK,"surveyId info", id);
+    	} catch (EmptyResultDataAccessException ex) {
+    	    return CommonUtil.constructResponse(0, "Not found", null);
+    	} catch (Exception e) {
+            return CommonUtil.constructResponse(0, "Error occurred during query execution", null);
+        }
+	}
 }
