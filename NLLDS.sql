@@ -116,7 +116,7 @@ delimiter ;
 DROP TRIGGER IF EXISTS `generate_subjectid`;
 delimiter ;;
 CREATE TRIGGER `generate_subjectid` BEFORE INSERT ON `subject` FOR EACH ROW BEGIN
-    SET NEW.subjectid = CONCAT(NEW.subjectno, '-', UNIX_TIMESTAMP());
+    SET NEW.subjectid = CONCAT(NEW.subjectno, '_', UNIX_TIMESTAMP());
 END
 ;;
 delimiter ;
