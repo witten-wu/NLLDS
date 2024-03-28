@@ -19,7 +19,7 @@
   </select> -->
   
   <select id="selectSubjectByProjectId" resultMap="BaseResultMap">
-    SELECT s.subjectid, s.subjectno, GROUP_CONCAT(t.tname SEPARATOR ',') AS tasks
+    SELECT s.subjectid, s.subjectno, GROUP_CONCAT(t.tname ORDER BY t.tname SEPARATOR ',') AS tasks
 	FROM subject s
 	LEFT JOIN task t ON s.projectid = t.pid
 	WHERE s.projectid = #{pid,jdbcType=VARCHAR}

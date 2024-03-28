@@ -27,7 +27,7 @@
 				<tr>
 					<th>Subject_No</th>
 					<th>Survey</th>
-					<th>TasksFile</th>
+					<th>TaskFile</th>
 					<th>NeuroFile</th>
 				</tr>
 			</thead>
