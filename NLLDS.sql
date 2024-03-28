@@ -55,12 +55,15 @@ CREATE TABLE `subject` (
 DROP TABLE IF EXISTS `task`;
 CREATE TABLE `task` (
   `tid` int(10) NOT NULL AUTO_INCREMENT,
+  `pid` varchar(255) NOT NULL,
   `tname` varchar(255) NOT NULL,
   `createby` varchar(255) NOT NULL,
   `createdate` datetime NOT NULL,
   `description` varchar(255) DEFAULT NULL,
-  `fields_table` varchar(255) NOT NULL,
-  PRIMARY KEY (`tid`) USING BTREE
+  `fields_table` varchar(255) DEFAULT NULL,
+  PRIMARY KEY (`tid`) USING BTREE,
+  KEY `pid` (`pid`) USING BTREE,
+  CONSTRAINT `task_ibfk_1` FOREIGN KEY (`pid`) REFERENCES `project` (`pid`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 ROW_FORMAT=DYNAMIC;
 
 -- ----------------------------
