@@ -158,7 +158,7 @@
 								  newTdRow2.append(document.createTextNode("Not Found"));
 								}
 				 				
-				 				var taskArray = tasks.split(",");
+				 				var taskArray = tasks ? tasks.split(",") : [];
 	                            for (var j = 0; j < taskArray.length; j++) {
 	                            	var tmpLink = document.createElement("a");
 	                            	tmpLink.href = "#";
