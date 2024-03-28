@@ -6,14 +6,24 @@
     <result column="subjectno" property="subjectno" jdbcType="VARCHAR" />
     <result column="tasks" property="tasks" jdbcType="VARCHAR" />
   </resultMap>
+  
+  
   <sql id="Base_Column_List" >
     subjectid, subjectno, tasks
   </sql>
   
-  <select id="selectSubjectByProjectId" resultMap="BaseResultMap">
+  <!-- <select id="selectSubjectByProjectId" resultMap="BaseResultMap">
     SELECT subjectid, subjectno
 	FROM subject
 	WHERE projectid = #{pid,jdbcType=VARCHAR}
+  </select> -->
+  
+  <select id="selectSubjectByProjectId" resultMap="BaseResultMap">
+    SELECT s.subjectid, s.subjectno, GROUP_CONCAT(t.tname SEPARATOR ',') AS tasks
+	FROM subject s
+	INNER JOIN task t ON s.projectid = t.pid
+	WHERE s.projectid = #{pid,jdbcType=VARCHAR}
+	GROUP BY s.subjectid, s.subjectno
   </select>
   
   <select id="selectSubjectTasks" resultMap="BaseResultMap">

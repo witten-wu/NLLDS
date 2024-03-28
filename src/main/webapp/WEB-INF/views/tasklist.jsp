@@ -7,12 +7,20 @@
 </head>
 <body>
 <%String Username = ((User)session.getAttribute("user")).getUsername();%>
+<%int Grade = ((User)session.getAttribute("user")).getGrade();%>
 <jsp:include page="sidebar.jsp" />
 <div class="container">
 	<div class="row clearfix">
 		<div class="col-md-10">
 			<button id=addTaskButton style="margin-bottom: 10px;">Add Task</button>
 			<div id="inputFields" class="hidden" style="margin-bottom: 10px;">
+					<div class="input-container">
+	                    <label for="newPId">Project ID:</label>
+	                    <select id="newPId" name="newPId"> 
+					    	<option value="">Please Select</option>
+					    </select>
+	                </div>
+	                
 	                <div class="input-container">
 	                    <label for="newTaskName">Task Name:</label>
 	                    <input type="text" id="newTaskName" name="newTaskName">
@@ -28,12 +36,13 @@
            <table class="table" style="margin-bottom: 10px;">
 			<thead>
 				<tr>
-					<th>Task_ID</th>
+					<th>Project_ID</th>
+					<!-- <th>Task_ID</th> -->
 					<th>Task_Name</th>
 					<th>Task_Descriptions</th>
 					<th>Task_Created_By</th>
 					<th>Task_Created_date</th>
-					<th>Task_Fields</th>
+					<!-- <th>Task_Fields</th> -->
 				</tr>
 			</thead>
 			<tbody id="showtasklist">
@@ -55,6 +64,9 @@
 	    }
 	}
 $(document).ready(function(){
+	var Username = "<%=Username%>";
+    var Grade = <%=Grade%>;
+	
 	var newTaskNameInput = document.getElementById('newTaskName');
     var newTaskNameError = document.getElementById('newTaskNameError');
     var saveTaskButton = document.getElementById('saveTaskButton');
@@ -87,19 +99,23 @@ $(document).ready(function(){
         var tname = $("#newTaskName").val();
         var createby = "<%=Username%>"
         var description = $("#newTaskDescription").val();
-        var fields_table = tname + '_template'
-        if(tname == ""){
+        /* var fields_table = tname + '_template' */
+        var pid = $("#newPId option:selected").val();
+        if(pid == ""){
+			alert("Please select the Project ID")
+		}else if(tname == ""){
 			alert("Please input task name")
 		}else{
 	        $.ajax({ 
 				url:"./addTask",
 				type:"POST", 
 				datatype:"json",
-				data:{"tname":tname,"createby":createby,"description":description,"fields_table":fields_table},	 
+				data:{"pid":pid,"tname":tname,"createby":createby,"description":description},
+				/* data:{"tname":tname,"createby":createby,"description":description,"fields_table":fields_table}, */
 				success:function(data){
 					data=JSON.parse(data);
 					if(data.code==1){
-							$.ajax({ 
+							/* $.ajax({ 
 							url:"./createTable",
 							type:"POST", 
 							datatype:"json",
@@ -110,24 +126,93 @@ $(document).ready(function(){
 						        $("#inputFields").addClass("hidden");
 						        location.reload();
 							}
-						})
+						}) */
 					}else if(data.code==0){
 						alert(data.msg)
 					}
 				}
-			})  
+			})
+			
+			$("#newPId").val("");
+			$("#newTaskName").val("");
+	        $("#newTaskDescription").val("");
+	        $("#inputFields").addClass("hidden");
+	        location.reload();
         }
     }
     
-    function redirectToNewPage(taskid, tablename) {
+    /* function redirectToNewPage(taskid, tablename) {
    	  var url = "taskfields?tid=" + taskid + "&table=" + tablename;
    	  window.location.href = url;
-   	}
-    
+   	} */
+   	
+   	$.ajax({
+		url:"./showProjectID",
+		type:"POST", 
+		datatype:"json",
+		data:{"username":Username, "grade":Grade},
+		async:"false",
+		success:function(data){
+			data = JSON.parse(data); 
+			dataList = data.data; 
+			for(var i=0;i < dataList.length;i++){
+				var newRow = document.createElement("option");
+				var pid = document.createTextNode(dataList[i].pid);
+				newRow.append(pid);
+				newRow.value=dataList[i].pid;
+				$("#newPId").append(newRow);
+			}
+		}
+	});
+   	
+   	
+   	function showContextMenu(x, y, taskid) {
+	    var menu = document.createElement("ul");
+	    menu.className = "context-menu";
+	    menu.innerHTML = "<li>delete</li>";
+	    menu.querySelector("li").addEventListener("click", function () {
+	      deleteTasks(taskid); 
+	      menu.remove(); 
+	    });
+	    menu.style.left = x + "px";
+	    menu.style.top = y + "px";
+	    document.body.appendChild(menu);
+	    document.addEventListener("mousedown", function (event) {
+	      var target = event.target;
+	      if (!menu.contains(target)) {
+	        menu.remove();
+	        var selectedTr = document.querySelector("tr.selected-row");
+	        if (selectedTr) {
+	          selectedTr.classList.remove("selected-row");
+	        }
+	      }
+	    });
+	}
+   	
+   	function deleteTasks(taskid) {
+    	$.ajax({ 
+    		url:"./deleteTasks",
+    		type:"POST", 
+    		datatype:"json",	 
+    		data:{"taskid":taskid},	
+    		async:"false",
+    		success:function(data){
+    			data = JSON.parse(data); 
+    			dataList = data.data; 
+    			if(data.code==1){
+    				location.reload();
+    			}else if(data.code==0){
+    				alert(data.msg)
+    			}
+    		}
+    	});
+    }
+   	
 	$.ajax({ 
 		url:"./showTaskList",
 		type:"POST", 
-		datatype:"json",	 
+		datatype:"json",
+		data:{"username":Username, "grade":Grade},
 		async:"false",
 		success:function(data){
 			var str =""; 
@@ -137,20 +222,31 @@ $(document).ready(function(){
 				for(var i=0;i<dataList.length;i++){
 					var newTrRow = document.createElement("tr");
 					
-					(function (taskid, tablename) {
+					/* (function (taskid, tablename) {
 			            newTrRow.addEventListener("dblclick", function () {
 			            	redirectToNewPage(taskid, tablename);
 			            });
-			        })(dataList[i].tid, dataList[i].fields_table); 
+			        })(dataList[i].tid, dataList[i].fields_table);  */
+			        
+					(function (taskid) {
+			        	newTrRow.addEventListener("contextmenu", function (e) {
+				          e.preventDefault();
+				          showContextMenu(e.clientX, e.clientY, taskid);
+				          $("tbody#showtasklist tr").removeClass("selected-row");
+				          this.classList.add("selected-row");
+				        });
+			        })(dataList[i].tid); 
 					
-	 				var newTdRow1 = document.createElement("td");
+			        var newTdRow0 = document.createElement("td");
+	 				/* var newTdRow1 = document.createElement("td"); */
 	 				var newTdRow2 = document.createElement("td");
 	 				var newTdRow3 = document.createElement("td");
 	 				var newTdRow4 = document.createElement("td");
 	 				var newTdRow5 = document.createElement("td");
-	 				var newTdRow6 = document.createElement("td");
+	 				/* var newTdRow6 = document.createElement("td"); */
 	 				
-	 				var tid = document.createTextNode(dataList[i].tid);
+	 				var pid = document.createTextNode(dataList[i].pid);
+	 				/* var tid = document.createTextNode(dataList[i].tid); */
 	 				var tname = document.createTextNode(dataList[i].tname);
 	 				var description = document.createTextNode(dataList[i].description);
 	 				var createby = document.createTextNode(dataList[i].createby);
@@ -161,23 +257,25 @@ $(document).ready(function(){
 					D = date.getDate() + ' ';
 					transferdate = Y+M+D;
 	 				
-	 				var newLink = document.createElement("a");
+	 				/* var newLink = document.createElement("a");
 					newLink.href = "taskfields?tid=" + dataList[i].tid + "&table=" + dataList[i].fields_table;
-					newLink.text = "detail...";
+					newLink.text = "detail..."; */
 					
-	 				newTdRow1.append(tid);
+					newTdRow0.append(pid);
+	 				/* newTdRow1.append(tid); */
 	 				newTdRow2.append(tname);
 	 				newTdRow3.append(description);
 	 				newTdRow4.append(createby);
 	 				newTdRow5.append(transferdate);
-	 				newTdRow6.append(newLink);
+	 				/* newTdRow6.append(newLink); */
 	 				
-	 				newTrRow.append(newTdRow1);
+	 				newTrRow.append(newTdRow0);
+	 				/* newTrRow.append(newTdRow1); */
 	 				newTrRow.append(newTdRow2);
 	 				newTrRow.append(newTdRow3);
 	 				newTrRow.append(newTdRow4);
 	 				newTrRow.append(newTdRow5);
-	 				newTrRow.append(newTdRow6);
+	 				/* newTrRow.append(newTdRow6); */
 	 				
 	 				$("tbody#showtasklist").append(newTrRow);
 	 			}

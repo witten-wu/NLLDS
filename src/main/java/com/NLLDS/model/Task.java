@@ -3,6 +3,8 @@ import java.sql.Timestamp;
 
 public class Task {
     private int tid;
+    
+    private String pid;
 
     private String tname;
 
@@ -20,6 +22,14 @@ public class Task {
 
     public void setTid(int tid) {
         this.tid = tid;
+    }
+    
+    public String getPid() {
+        return pid;
+    }
+
+    public void setPid(String pid) {
+        this.pid = pid;
     }
 
     public String getTname() {

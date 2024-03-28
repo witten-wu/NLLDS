@@ -154,13 +154,22 @@ public class LoginController {
     
     @RequestMapping("/showTaskList")
     @ResponseBody
-    public JSONObject showTaskList() throws Exception {
-		List<Task> tasks=commonService.selectAllTask();
-		if(tasks.isEmpty()||tasks.size()==0){
-			return CommonUtil.constructResponse(0,"no record", null);
-		}else{
-			return CommonUtil.constructResponse(EnumUtil.OK,"subject info", tasks);
-		}
+    public JSONObject showTaskList(String username, int grade) throws Exception {
+    	if (grade == 1) {
+    		List<Task> tasks=commonService.selectAllTask();
+    		if(tasks.isEmpty()||tasks.size()==0){
+    			return CommonUtil.constructResponse(0,"no record", null);
+    		}else{
+    			return CommonUtil.constructResponse(EnumUtil.OK,"task info", tasks);
+    		}
+    	}else {
+    		List<Task> tasks=commonService.selectUserProjectTask(username);
+    		if(tasks.isEmpty()||tasks.size()==0){
+    			return CommonUtil.constructResponse(0,"no record", null);
+    		}else{
+    			return CommonUtil.constructResponse(EnumUtil.OK,"task info", tasks);
+    		}
+    	}
 	}
     
     @RequestMapping("/showProjectID")
@@ -257,13 +266,13 @@ public class LoginController {
     
     @RequestMapping("/addTask")
 	@ResponseBody
-	public JSONObject addTask(String tname,String createby,String description, String fields_table) throws Exception {
+	public JSONObject addTask(String pid, String tname, String createby, String description) throws Exception {
     	Task task=new Task();
+    	task.setPid(pid);
     	task.setTname(tname);
     	task.setCreateby(createby);
     	task.setDescription(description);
-    	task.setFields_table(fields_table);
-    	List<Task> tasks=commonService.checkTask(tname);
+    	List<Task> tasks=commonService.checkTask(tname, pid);
     	if(tasks.isEmpty()){
 	    	Integer resultOfInsertTask=commonService.insertTask(task);
 			if(resultOfInsertTask>0){
@@ -404,6 +413,19 @@ public class LoginController {
         } else {
         	return CommonUtil.constructResponse(0, "delete error", null);
         }
+   	}
+    
+    @RequestMapping("/deleteTasks")
+   	@ResponseBody
+   	public JSONObject deleteTasks(int taskid) throws Exception {
+    	Task task=new Task();
+    	task.setTid(taskid);
+    	Integer resultOfDelete=commonService.deleteTasks(task);
+		if(resultOfDelete>0){ 
+			return CommonUtil.constructResponse(EnumUtil.OK,"delete success", null);
+		}else{
+			return CommonUtil.constructResponse(0,"delete error", null);
+		}
    	}
     
     @RequestMapping("/deleteColumn")

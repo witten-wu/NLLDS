@@ -27,8 +27,8 @@
 				<tr>
 					<th>Subject_No</th>
 					<th>Survey</th>
-					<th>Tasks</th>
-					<th>File</th>
+					<th>TasksFile</th>
+					<th>NeuroFile</th>
 				</tr>
 			</thead>
 			<tbody id="showsubjectlist">
@@ -131,7 +131,7 @@
 			dataList = data.data; 
 			if(data.code==1){
 				for(var i=0;i<dataList.length;i++){
-	 				(function (subjectid, subjectno) {
+	 				(function (subjectid, subjectno, tasks) {
 	 					$.ajax({
 			        	      url: "./showSubjectSurvey",
 			        	      type: "POST",
@@ -158,19 +158,33 @@
 								  newTdRow2.append(document.createTextNode("Not Found"));
 								}
 				 				
-								var newLink2 = document.createElement("a");
-								newLink2.href = "subjectask?projectid="+pid+"&subjectid="+subjectid;
-								newLink2.text = "detail...";
+				 				var taskArray = tasks.split(",");
+	                            for (var j = 0; j < taskArray.length; j++) {
+	                            	var tmpLink = document.createElement("a");
+	                            	tmpLink.href = "#";
+	                            	tmpLink.text = taskArray[j];
+	                            	tmpLink.addEventListener("click", function() {
+	                            		event.preventDefault();
+	                            		// can modify to jump to specific task folder
+									    jumpToFtp(pname, subjectno, "Behavior");
+									});
+	                            	newTdRow3.append(tmpLink);
+	                                if (j < taskArray.length - 1) {
+	                                    var commaSpan = document.createElement("span");
+	                                    commaSpan.innerText = ", ";
+	                                    newTdRow3.append(commaSpan);
+	                                }
+	                            }
 				 				
 				 				var viewButton = document.createElement("button");
 				 				viewButton.innerText = "view";
 				 				viewButton.addEventListener("click", function() {
-								    jumpToFtp(pname, subjectno);
+								    jumpToFtp(pname, subjectno, "Neuroimaging");
 								});
+				 				viewButton.style.display = "block";
+				 				viewButton.style.margin = "0 auto";
 
-				 				
 				 				newTdRow1.append(Tsubjectno);
-				 				newTdRow3.append(newLink2);
 				 				newTdRow4.append(viewButton);
 				 				
 				 				newTrRow.append(newTdRow1);
@@ -181,7 +195,7 @@
 				 				$("tbody#showsubjectlist").append(newTrRow);
 			        	      }
 			        	    });
-	 				})(dataList[i].subjectid, dataList[i].subjectno); 
+	 				})(dataList[i].subjectid, dataList[i].subjectno, dataList[i].tasks); 
 	 			}
 			}
 		}
@@ -200,7 +214,7 @@
 	    });
 	}
 	
-	async function jumpToFtp(pname, subjectno) {
+	async function jumpToFtp(pname, subjectno, target) {
 		// generate encrypted file path for localfile system
 		const url = '/elFinder/php/connector.minimal.php';
 		
@@ -209,7 +223,7 @@
 		const replacedProjectPath = encodedProjectPath.replace(/\+/g, '-').replace(/\//g, '_').replace(/=/g, '.');
 		const projectPath = replacedProjectPath.replace(/\.*$/, '');
 		
-		// encrypt final path
+		// encrypt subject path
 		const tmpath = pname + '/' + subjectno;
 		const encodedSubjectPath = btoa(tmpath);
 		const replacedSubjectPath = encodedSubjectPath.replace(/\+/g, '-').replace(/\//g, '_').replace(/=/g, '.');
@@ -238,11 +252,17 @@
 	    	// create project/subject/Neuroimaging/tasks folder
 	    	// create project/subject/Behavior/tasks folder
 	    	
-	    	// jump to subject folder
-	    	window.open("/elFinder/elfinder.html#elf_l1_" + subjectPath);
+	    	
+	    	// jump to target folder
+    		// encrypt target path
+    		const targetpath = pname + '/' + subjectno + '/' + target;
+    		const encodedtargetpath = btoa(targetpath);
+    		const replacedtargetpath = encodedtargetpath.replace(/\+/g, '-').replace(/\//g, '_').replace(/=/g, '.');
+    		const processedtargetpath = replacedtargetpath.replace(/\.*$/, '');
+    		window.open("/elFinder/elfinder.html#elf_l1_" + processedtargetpath);
 		} catch (error) {
 		    console.error(error);
-		  }
+		}
     }
 </script>
 </body>

@@ -49,9 +49,11 @@ public interface CommonService {
 	
 	List<Task> selectAllTask();
 	
+	List<Task> selectUserProjectTask(String username);
+	
 	int insertTask(Task task);
 	
-	List<Task> checkTask(String tname);
+	List<Task> checkTask(String tname, String pid);
 	
 	int createTable(Table table);
 	
@@ -68,6 +70,8 @@ public interface CommonService {
 	List<Table> checkTable(String fieldname, int taskid);
 	
 	int deleteFields(Table table);
+	
+	int deleteTasks(Task task);
 	
 	int deleteColumn(Table table);
 }

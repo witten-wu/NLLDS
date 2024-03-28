@@ -113,11 +113,15 @@ public class CommonServiceImpl implements CommonService{
 		return taskDao.selectAllTask();
 	}
 	
+	public List<Task> selectUserProjectTask(String username) {
+		return taskDao.selectUserProjectTask(username);
+	}
+	
 	public int insertTask(Task task) {
 		return taskDao.insertTask(task);
 	}
-	public List<Task> checkTask(String tname) {
-		return taskDao.checkTask(tname);
+	public List<Task> checkTask(String tname, String pid) {
+		return taskDao.checkTask(tname, pid);
 	}
 	
 	public int createTable(Table table) {
@@ -150,6 +154,10 @@ public class CommonServiceImpl implements CommonService{
 	
 	public int deleteFields(Table table) {
 		return tableDao.deleteFields(table);
+	}
+	
+	public int deleteTasks(Task task) {
+		return taskDao.deleteTasks(task);
 	}
 	
 	public int deleteColumn(Table table) {
