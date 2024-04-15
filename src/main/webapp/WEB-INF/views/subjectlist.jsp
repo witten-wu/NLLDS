@@ -6,6 +6,8 @@
 <link rel="stylesheet" type="text/css" href="bootstrap/css/style.css">
 </head>
 <body>
+<%String Username = ((User)session.getAttribute("user")).getUsername();%>
+<%int Grade = ((User)session.getAttribute("user")).getGrade();%>
 <jsp:include page="sidebar.jsp" />
 <div class="container">
 	<div class="row clearfix">
