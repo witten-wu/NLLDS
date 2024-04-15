@@ -21,7 +21,14 @@
     SELECT
     <include refid="Base_Column_List" />
 	FROM user
-	WHERE grade != 1
+	WHERE grade = 2
+  </select>
+  
+  <select id="selectAllCollaborator" resultMap="BaseResultMap">
+    SELECT
+    <include refid="Base_Column_List" />
+	FROM user
+	WHERE grade = 3
   </select>
   
 </mapper>

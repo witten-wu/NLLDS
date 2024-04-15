@@ -203,13 +203,25 @@ public class LoginController {
 		}
 	}
     
+    @RequestMapping("/showCollaborator")
+    @ResponseBody
+    public JSONObject showCollaborator() throws Exception {
+		List<User> users=commonService.selectAllCollaborator();
+		if(users.isEmpty()||users.size()==0){
+			return CommonUtil.constructResponse(0,"no record", null);
+		}else{
+			return CommonUtil.constructResponse(EnumUtil.OK,"collaborator info", users);
+		}
+	}
+    
     @RequestMapping("/addProject")
 	@ResponseBody
-	public JSONObject addProject(String pname,String createdby,String manageby,String description) throws Exception {
+	public JSONObject addProject(String pname,String createdby,String manageby, String collaborator, String description) throws Exception {
     	Project project=new Project();
     	project.setPname(pname);
     	project.setCreateby(createdby);
     	project.setManageby(manageby);
+    	project.setCollaborator(collaborator);
     	project.setDescription(description);
     	
     	List<Project> projects=commonService.checkProject(pname);

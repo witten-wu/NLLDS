@@ -27,6 +27,8 @@ public interface CommonService {
 	
 	List<User> selectAllUser();
 	
+	List<User> selectAllCollaborator();
+	
 	List<Project> selectQuestionnaire(String pid);
 	
 	List<Project> checkQuestionnaire(String pid);

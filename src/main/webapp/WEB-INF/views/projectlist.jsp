@@ -33,6 +33,12 @@
 	                    <select class="js-example-basic-multiple" id="newProjectManageBy" name="newProjectManageBy" multiple="multiple">
 					    </select>
 	                </div>
+	                
+	                <div class="input-container">
+	                    <label for="newProjectCollaborator">Collaborator:</label>
+	                    <select class="js-example-basic-multiple" id="newProjectCollaborator" name="newProjectCollaborator" multiple="multiple">
+					    </select>
+	                </div>
 	                <button id="saveProjectButton" style="margin-bottom: 10px;">Save</button>
 	            </div>
            <table class="table" style="margin-bottom: 10px;">
@@ -41,10 +47,11 @@
 					<th>Project_ID</th>
 					<th>Project_Name</th>
 					<th>Survey_ID</th>
-					<th>Project_Descriptions</th>
-					<th>Project_Manage_By</th>
-					<th>Project_Created_By</th>
-					<th>Project_Created_date</th>
+					<th>Descriptions</th>
+					<th>Manage_By</th>
+					<th>Collaborator</th>
+					<th>Created_By</th>
+					<th>Created_date</th>
 				</tr>
 			</thead>
 			<tbody id="showprojectlist">
@@ -88,6 +95,11 @@ $(document).ready(function(){
     	width: '200px',
         dropdownAutoWidth: true
       });
+    
+    $('#newProjectCollaborator').select2({
+    	width: '200px',
+        dropdownAutoWidth: true
+      });
 
 	$("#addProjectButton").click(function() {
         $("#inputFields").toggleClass("hidden");
@@ -107,17 +119,21 @@ $(document).ready(function(){
         var createdby = "<%=Username%>"
         var manageby = $("#newProjectManageBy").val();
         var manageby = manageby.join(",");
+        var collaborator = $("#newProjectCollaborator").val();
+        var collaborator = collaborator.join(",");
         var description = $("#newProjectDescription").val();
         if(pname == ""){
 			alert("Please input the project name")
 		}else if(manageby == ""){
 			alert("Please select the manager")
+		}else if(collaborator == ""){
+			alert("Please select the collaborator")
 		}else{
 	        $.ajax({ 
 				url:"./addProject",
 				type:"POST", 
 				datatype:"json",
-				data:{"pname":pname,"createdby":createdby,"manageby":manageby,"description":description},	 
+				data:{"pname":pname,"createdby":createdby,"manageby":manageby, "collaborator":collaborator, "description":description},	 
 				success:function(data){
 					data=JSON.parse(data);
 					if(data.code==1){
@@ -129,6 +145,7 @@ $(document).ready(function(){
 
 	        $("#newProjectName").val("");
 	        $("#newProjectManageBy").val("");
+	        $("#newProjectCollaborator").val("");
 	        $("#newProjectDescription").val("");
 	        $("#inputFields").addClass("hidden");
 	        
@@ -150,12 +167,38 @@ $(document).ready(function(){
 		success:function(data){
 			data = JSON.parse(data); 
 			dataList = data.data; 
+			var firstOption = document.createElement("option");
+	        firstOption.value = "N/A";
+	        firstOption.text = "N/A";
+	        $("#newProjectManageBy").append(firstOption);
 			for(var i=0;i < dataList.length;i++){
 				var newRow = document.createElement("option");
 				var username = document.createTextNode(dataList[i].username);
 				newRow.append(username);
 				newRow.value=dataList[i].username;
 				$("#newProjectManageBy").append(newRow);
+			}
+		}
+	});
+    
+    $.ajax({
+		url:"./showCollaborator",
+		type:"POST", 
+		datatype:"json",
+		async:"false",
+		success:function(data){
+			data = JSON.parse(data); 
+			dataList = data.data; 
+	        var firstOption = document.createElement("option");
+	        firstOption.value = "N/A";
+	        firstOption.text = "N/A";
+	        $("#newProjectCollaborator").append(firstOption);
+			for(var i=0;i < dataList.length;i++){
+				var newRow = document.createElement("option");
+				var username = document.createTextNode(dataList[i].username);
+				newRow.append(username);
+				newRow.value=dataList[i].username;
+				$("#newProjectCollaborator").append(newRow);
 			}
 		}
 	});
@@ -173,7 +216,7 @@ $(document).ready(function(){
 			dataList = data.data; 
 			if(data.code==1){
 				for(var i=0;i<dataList.length;i++){
-	 				(function (pname, pid, createby, manageby, createdate, description) {
+	 				(function (pname, pid, createby, manageby, collaborator, createdate, description) {
 			        	$.ajax({
 		        	      url: "./SearchSurvey",
 		        	      type: "POST",
@@ -189,6 +232,7 @@ $(document).ready(function(){
 			 				var newTdRow5 = document.createElement("td");
 			 				var newTdRow6 = document.createElement("td");
 			 				var newTdRow7 = document.createElement("td");
+			 				var newTdRow8 = document.createElement("td");
 			 				
 			 				var surveyid = "";
 			 				if (response.code == 1) {
@@ -211,6 +255,7 @@ $(document).ready(function(){
 			 				var Tpid = document.createTextNode(pid);
 			 				var Tcreateby = document.createTextNode(createby);
 			 				var Tmanageby = document.createTextNode(manageby);
+			 				var Tcollaborator = document.createTextNode(collaborator);
 			 				var date = new Date(createdate);
 							Y = date.getFullYear() + '-';
 							M = (date.getMonth()+1 < 10 ? '0'+(date.getMonth()+1) : date.getMonth()+1) + '-';
@@ -225,8 +270,9 @@ $(document).ready(function(){
 			 				newTdRow2.append(newLink);
 			 				newTdRow4.append(Tdescription);
 			 				newTdRow5.append(Tmanageby);
-			 				newTdRow6.append(Tcreateby);
-			 				newTdRow7.append(transferdate);
+			 				newTdRow6.append(Tcollaborator);
+			 				newTdRow7.append(Tcreateby);
+			 				newTdRow8.append(transferdate);
 			 				
 			 				newTrRow.append(newTdRow1);
 			 				newTrRow.append(newTdRow2);
@@ -235,11 +281,12 @@ $(document).ready(function(){
 			 				newTrRow.append(newTdRow5);
 			 				newTrRow.append(newTdRow6);
 			 				newTrRow.append(newTdRow7);
+			 				newTrRow.append(newTdRow8);
 							
 							$("tbody#showprojectlist").append(newTrRow);
 		        	      }
 		        	    });
-			        })(dataList[i].pname, dataList[i].pid, dataList[i].createby, dataList[i].manageby, dataList[i].createdate, dataList[i].description); 
+			        })(dataList[i].pname, dataList[i].pid, dataList[i].createby, dataList[i].manageby, dataList[i].collaborator, dataList[i].createdate, dataList[i].description); 
 	 			}
 			}
 		}

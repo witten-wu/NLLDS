@@ -70,6 +70,10 @@ public class CommonServiceImpl implements CommonService{
 		return userDao.selectAllUser();
 	}
 	
+	public List<User> selectAllCollaborator() {
+		return userDao.selectAllCollaborator();
+	}
+	
 	public List<Project> selectQuestionnaire(String pid) {
 		return projectDao.selectQuestionnaire(pid);
 	}

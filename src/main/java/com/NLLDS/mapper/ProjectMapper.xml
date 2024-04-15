@@ -6,24 +6,26 @@
     <result column="pname" property="pname" jdbcType="VARCHAR" />
     <result column="createby" property="createby" jdbcType="VARCHAR" />
     <result column="manageby" property="manageby" jdbcType="VARCHAR" />
+    <result column="collaborator" property="collaborator" jdbcType="VARCHAR" />
     <result column="createdate" property="createdate" jdbcType="TIMESTAMP"/>
     <result column="description" property="description" jdbcType="VARCHAR" />
     <result column="questionnaire" property="questionnaire" jdbcType="VARCHAR" />
     <result column="qustable" property="qustable" jdbcType="VARCHAR" />
   </resultMap>
   <sql id="Base_Column_List" >
-    pid, pname, createby, manageby, createdate, description, questionnaire, qustable
+    pid, pname, createby, manageby, collaborator, createdate, description, questionnaire, qustable
   </sql>
   
   <select id="selectAllProject" resultMap="BaseResultMap">
-    SELECT pid,pname,createby,manageby,createdate,description
+    SELECT pid,pname,createby,manageby,collaborator,createdate,description
 	FROM project
   </select>
   
   <select id="selectUserProject" resultMap="BaseResultMap" parameterType="java.lang.String">
-    SELECT pid,pname,createby,manageby,createdate,description
+    SELECT pid,pname,createby,manageby,collaborator,createdate,description
 	FROM project
 	WHERE manageby LIKE CONCAT('%', #{username, jdbcType=VARCHAR}, '%')
+	OR collaborator LIKE CONCAT('%', #{username, jdbcType=VARCHAR}, '%')
   </select>
   
   <select id="selectProjectQus" resultMap="BaseResultMap">
@@ -48,6 +50,7 @@
     SELECT pid
 	FROM project
 	WHERE manageby LIKE CONCAT('%', #{username, jdbcType=VARCHAR}, '%')
+	OR collaborator LIKE CONCAT('%', #{username, jdbcType=VARCHAR}, '%')
   </select>
   
   <select id="selectQuestionnaire" resultMap="BaseResultMap" parameterType="java.lang.String">
@@ -66,9 +69,9 @@
   
   <insert id="insertProject" parameterType="com.NLLDS.model.Project" >
     INSERT into project (pname, createby, 
-      manageby,description)
+      manageby,collaborator,description)
     values (#{pname,jdbcType=VARCHAR}, #{createby,jdbcType=VARCHAR}, #{manageby,jdbcType=VARCHAR}, 
-      #{description,jdbcType=VARCHAR})
+      #{collaborator,jdbcType=VARCHAR}, #{description,jdbcType=VARCHAR})
   </insert>
   
   <update id="updateProject" parameterType="com.NLLDS.model.Project" >

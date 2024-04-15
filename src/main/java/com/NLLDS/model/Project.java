@@ -9,6 +9,8 @@ public class Project {
     private String createby;
 
     private String manageby;
+    
+    private String collaborator;
 
     private Timestamp createdate;
 
@@ -48,6 +50,14 @@ public class Project {
 
     public void setManageby(String manageby) {
         this.manageby = manageby;
+    }
+    
+    public String getCollaborator() {
+        return collaborator;
+    }
+
+    public void setCollaborator(String collaborator) {
+        this.collaborator = collaborator;
     }
 
     public Timestamp getCreatedate() {

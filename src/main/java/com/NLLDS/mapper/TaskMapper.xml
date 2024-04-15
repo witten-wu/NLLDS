@@ -35,7 +35,7 @@
     SELECT t.tid, t.pid, t.tname, t.createby, t.createdate, t.description
 	FROM task t, project p
 	WHERE t.pid = p.pid
-	AND p.manageby LIKE CONCAT('%', #{username, jdbcType=VARCHAR}, '%')
+	AND (p.manageby LIKE CONCAT('%', #{username, jdbcType=VARCHAR}, '%') or p.collaborator LIKE CONCAT('%', #{username, jdbcType=VARCHAR}, '%'))
 	ORDER BY t.pid
   </select>
   
