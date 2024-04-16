@@ -8,6 +8,8 @@ public class Subject {
     private String projectid;
     
     private String tasks;
+    
+    private String addby;
 
     public String getSubjectid() {
         return subjectid;
@@ -39,6 +41,14 @@ public class Subject {
 
     public void setTasks(String tasks) {
         this.tasks = tasks;
+    }
+    
+    public String getAddby() {
+        return addby;
+    }
+
+    public void setAddby(String addby) {
+        this.addby = addby;
     }
 
 }

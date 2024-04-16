@@ -143,13 +143,22 @@ public class LoginController {
     
     @RequestMapping("/showSubjectList")
     @ResponseBody
-    public JSONObject showSubjectList(String pid) throws Exception {
-		List<Subject> subjects=commonService.selectSubjectByProjectId(pid);
-		if(subjects.isEmpty()||subjects.size()==0){
-			return CommonUtil.constructResponse(0,"no record", null);
-		}else{
-			return CommonUtil.constructResponse(EnumUtil.OK,"subject info", subjects);
-		}
+    public JSONObject showSubjectList(String pid, int grade, String username) throws Exception {
+    	if (grade == 3) {
+    		List<Subject> subjects=commonService.selectSubjectByCollaborator(pid,username);
+    		if(subjects.isEmpty()||subjects.size()==0){
+    			return CommonUtil.constructResponse(0,"no record", null);
+    		}else{
+    			return CommonUtil.constructResponse(EnumUtil.OK,"subject info", subjects);
+    		}
+    	}else {
+    		List<Subject> subjects=commonService.selectSubjectByProjectId(pid);
+    		if(subjects.isEmpty()||subjects.size()==0){
+    			return CommonUtil.constructResponse(0,"no record", null);
+    		}else{
+    			return CommonUtil.constructResponse(EnumUtil.OK,"subject info", subjects);
+    		}
+    	}
 	}
     
     @RequestMapping("/showTaskList")
@@ -258,10 +267,11 @@ public class LoginController {
     
     @RequestMapping("/addSubject")
 	@ResponseBody
-	public JSONObject addSubject(String subjectno,String projectid) throws Exception {
+	public JSONObject addSubject(String subjectno,String projectid,String addby) throws Exception {
     	Subject subject=new Subject();
     	subject.setSubjectno(subjectno);
     	subject.setProjectid(projectid);
+    	subject.setAddby(addby);
 
     	List<Subject> subjects=commonService.checkSubject(subjectno);
     	if(subjects.isEmpty()){

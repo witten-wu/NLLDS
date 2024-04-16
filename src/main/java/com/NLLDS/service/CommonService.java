@@ -41,6 +41,8 @@ public interface CommonService {
 	
 	List<Subject> selectSubjectByProjectId(String pid);
 	
+	List<Subject> selectSubjectByCollaborator(String pid, String username);
+	
 	List<Subject> selectSubjectTasks(String subjectid);
 	
 	List<Project> selectSubjectQus(String projectid);

@@ -98,6 +98,10 @@ public class CommonServiceImpl implements CommonService{
 		return subjectDao.selectSubjectByProjectId(pid);
 	}
 	
+	public List<Subject> selectSubjectByCollaborator(String pid, String username) {
+		return subjectDao.selectSubjectByCollaborator(pid,username);
+	}
+	
 	public List<Subject> selectSubjectTasks(String subjectid) {
 		return subjectDao.selectSubjectTasks(subjectid);
 	}

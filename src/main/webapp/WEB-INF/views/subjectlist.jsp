@@ -20,7 +20,7 @@
                     <span id="newSubjectError" style="color: red;"></span>
                 </div>
                 <div class="input-container">
-                    <span id="subjectDescription" style="margin-right: 10px; font-size: 14px; color: #888;">subject No. Format: Project_HK/GZ_No_Date. For example, NGL_HK_001_20240101</span>
+                    <span id="subjectDescription" style="margin-right: 10px; font-size: 14px; color: #888;">subject No. Format: Project_Region_No._Date. For example, NGL_HK_001_20240101</span>
                 </div>
                 <button id="saveSubjectButton" style="margin-bottom: 10px;">Save</button>
             </div>
@@ -97,6 +97,7 @@
     function saveNewSubject() {
         var subjectno = $("#newSubject").val();
 		var projectid = pid;
+		var addby = "<%=Username%>"
         if(subjectno == ""){
 			alert("Please input subject No.")
 		}else{
@@ -104,7 +105,7 @@
 				url:"./addSubject",
 				type:"POST", 
 				datatype:"json",
-				data:{"subjectno":subjectno,"projectid":projectid},	 
+				data:{"subjectno":subjectno,"projectid":projectid,"addby":addby},	 
 				success:function(data){
 					data=JSON.parse(data);
 					if(data.code==1){
@@ -120,12 +121,15 @@
 	        location.reload();
         }
     }
-
+	
+    var Grade = <%=Grade%>;
+    var Username = "<%=Username%>"
+    
 	$.ajax({ 
 		url:"./showSubjectList",
 		type:"POST", 
 		datatype:"json",
-		data:{"pid":pid},	 
+		data:{"pid":pid, "grade":Grade, "username":Username},	 
 		async:"false",
 		success:function(data){
 			var str =""; 

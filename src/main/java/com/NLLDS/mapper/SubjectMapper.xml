@@ -5,11 +5,12 @@
     <id column="subjectid" property="subjectid" jdbcType="VARCHAR" />
     <result column="subjectno" property="subjectno" jdbcType="VARCHAR" />
     <result column="tasks" property="tasks" jdbcType="VARCHAR" />
+    <result column="addby" property="addby" jdbcType="VARCHAR" />
   </resultMap>
   
   
   <sql id="Base_Column_List" >
-    subjectid, subjectno, tasks
+    subjectid, subjectno, tasks, addby
   </sql>
   
   <!-- <select id="selectSubjectByProjectId" resultMap="BaseResultMap">
@@ -26,6 +27,15 @@
 	GROUP BY s.subjectid, s.subjectno
   </select>
   
+  <select id="selectSubjectByCollaborator" resultMap="BaseResultMap">
+    SELECT s.subjectid, s.subjectno, GROUP_CONCAT(t.tname ORDER BY t.tname SEPARATOR ',') AS tasks
+	FROM subject s
+	LEFT JOIN task t ON s.projectid = t.pid
+	WHERE s.projectid = #{pid,jdbcType=VARCHAR}
+	AND s.addby = #{username,jdbcType=VARCHAR}
+	GROUP BY s.subjectid, s.subjectno
+  </select>
+  
   <select id="selectSubjectTasks" resultMap="BaseResultMap">
     SELECT *
 	FROM subject
@@ -33,8 +43,8 @@
   </select>
   
   <insert id="insertSubject" parameterType="com.NLLDS.model.Subject" >
-    INSERT into subject (subjectno,projectid)
-    values (#{subjectno,jdbcType=VARCHAR}, #{projectid,jdbcType=VARCHAR})
+    INSERT into subject (subjectno,projectid,addby)
+    values (#{subjectno,jdbcType=VARCHAR}, #{projectid,jdbcType=VARCHAR}, #{addby,jdbcType=VARCHAR})
   </insert>
   
   <select id="checkSubject" resultMap="BaseResultMap" parameterType="java.lang.String">
