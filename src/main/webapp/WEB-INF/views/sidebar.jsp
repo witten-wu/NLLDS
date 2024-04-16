@@ -8,6 +8,9 @@
 <%String Username = ((User)session.getAttribute("user")).getUsername();%>
 <%int Grade = ((User)session.getAttribute("user")).getGrade();%>
 	<aside class="box" id="sidebox">
+		<div class="logo">
+          <img src="bootstrap/css/cuhkico.png" alt="Logo" width="150" height="135">
+        </div>
         <button id="sidebtn">三</button>
         <ul>
             <li><a href="projectlist">Project</a></li>

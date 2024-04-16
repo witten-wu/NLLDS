@@ -163,6 +163,8 @@ relaxedQueryChars="[]|{}-^&#x60;&quot;&lt;&gt;"
 relaxedPathChars="[]|{}-^&#x60;&quot;&lt;&gt;"
 ```
 
-11. Restart tomcat and ready now.
+11. Replace the favicon.ico under tomcat/webapps/ROOT
+
+12. Restart tomcat and ready now.
 
 
