@@ -19,7 +19,7 @@
             <% if (Grade == 1) { %>
 			    <li><a href="/elFinder/elfinder.html" target="_blank">FTPServer</a></li>
 			<% } %>
-		    <!-- <li><a href="questionnaire">Questionnaire</a></li> -->
+		    <li><a href="https://witten-wu.github.io/NLLDS-Manual/" target="_blank">Manual</a></li>
         </ul>
     </aside>
 

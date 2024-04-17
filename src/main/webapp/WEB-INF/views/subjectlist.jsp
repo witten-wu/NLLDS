@@ -20,7 +20,7 @@
                     <span id="newSubjectError" style="color: red;"></span>
                 </div>
                 <div class="input-container">
-                    <span id="subjectDescription" style="margin-right: 10px; font-size: 14px; color: #888;">subject No. Format: Project_Region_No._Date. For example, NGL_HK_001_20240101</span>
+                    <span id="subjectDescription" style="margin-right: 10px; font-size: 14px; color: #888;">Subject No. Format: Project_Region_No._Date. For example, NGL_HK_001_20240101</span>
                 </div>
                 <button id="saveSubjectButton" style="margin-bottom: 10px;">Save</button>
             </div>

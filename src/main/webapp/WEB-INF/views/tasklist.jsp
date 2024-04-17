@@ -39,9 +39,9 @@
 					<th>Project_ID</th>
 					<!-- <th>Task_ID</th> -->
 					<th>Task_Name</th>
-					<th>Task_Descriptions</th>
-					<th>Task_Created_By</th>
-					<th>Task_Created_date</th>
+					<th>Descriptions</th>
+					<th>Created_By</th>
+					<th>Created_date</th>
 					<!-- <th>Task_Fields</th> -->
 				</tr>
 			</thead>
