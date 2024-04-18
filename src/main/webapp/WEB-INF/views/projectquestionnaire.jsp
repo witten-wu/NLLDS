@@ -50,7 +50,7 @@ html, body {
 		 				iframe.src = qusurl;
 		 			}
 				}else if(data.code==0){
-					alert(data.msg)
+					alert(data.msg);
 				}
 			}
 		});

@@ -6,6 +6,8 @@ public class User {
     private String password;
     
     private int grade;
+    
+    private String region;
 
     public String getUsername() {
         return username;
@@ -29,5 +31,13 @@ public class User {
     
     public void setGrade(int grade) {
     	this.grade = grade;
+    }
+    
+    public String getRegion() {
+        return region;
+    }
+    
+    public void setRegion(String region) {
+        this.region = region;
     }
 }

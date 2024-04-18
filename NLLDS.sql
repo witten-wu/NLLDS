@@ -90,6 +90,7 @@ CREATE TABLE `user` (
   `username` varchar(32) NOT NULL,
   `password` varchar(32) NOT NULL,
   `grade` int(10) NOT NULL,
+  `region` varchar(255) DEFAULT NULL,
   PRIMARY KEY (`username`) USING BTREE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 ROW_FORMAT=DYNAMIC;
 

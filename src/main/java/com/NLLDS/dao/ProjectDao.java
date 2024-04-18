@@ -29,5 +29,7 @@ public interface ProjectDao {
     List<Project> checkProject(String pname);
     
     List<Project> selectSubjectQus(String projectid);
+    
+    int deleteProject(Project project);
 
 }

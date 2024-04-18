@@ -127,17 +127,16 @@ $(document).ready(function(){
 						        location.reload();
 							}
 						}) */
+						$("#newPId").val("");
+						$("#newTaskName").val("");
+				        $("#newTaskDescription").val("");
+				        $("#inputFields").addClass("hidden");
+				        location.reload();
 					}else if(data.code==0){
-						alert(data.msg)
+						alert(data.msg);
 					}
 				}
 			})
-			
-			$("#newPId").val("");
-			$("#newTaskName").val("");
-	        $("#newTaskDescription").val("");
-	        $("#inputFields").addClass("hidden");
-	        location.reload();
         }
     }
     
@@ -155,12 +154,14 @@ $(document).ready(function(){
 		success:function(data){
 			data = JSON.parse(data); 
 			dataList = data.data; 
-			for(var i=0;i < dataList.length;i++){
-				var newRow = document.createElement("option");
-				var pid = document.createTextNode(dataList[i].pid);
-				newRow.append(pid);
-				newRow.value=dataList[i].pid;
-				$("#newPId").append(newRow);
+			if(data.code==1){
+				for(var i=0;i < dataList.length;i++){
+					var newRow = document.createElement("option");
+					var pid = document.createTextNode(dataList[i].pid);
+					newRow.append(pid);
+					newRow.value=dataList[i].pid;
+					$("#newPId").append(newRow);
+				}
 			}
 		}
 	});
@@ -202,7 +203,7 @@ $(document).ready(function(){
     			if(data.code==1){
     				location.reload();
     			}else if(data.code==0){
-    				alert(data.msg)
+    				alert(data.msg);
     			}
     		}
     	});

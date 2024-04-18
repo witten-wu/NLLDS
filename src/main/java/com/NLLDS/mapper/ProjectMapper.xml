@@ -94,4 +94,9 @@
     WHERE pid = #{pid,jdbcType=VARCHAR}
   </select>
   
+  <delete id="deleteProject" parameterType="java.lang.String" >
+    delete from project
+    where pid = #{pid,jdbcType=VARCHAR}
+  </delete>
+  
 </mapper>

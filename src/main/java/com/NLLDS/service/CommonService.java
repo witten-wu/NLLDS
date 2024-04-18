@@ -77,5 +77,7 @@ public interface CommonService {
 	
 	int deleteTasks(Task task);
 	
+	int deleteProject(Project project);
+	
 	int deleteColumn(Table table);
 }

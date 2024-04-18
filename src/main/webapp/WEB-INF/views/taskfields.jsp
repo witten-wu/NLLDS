@@ -116,7 +116,7 @@ $(document).ready(function(){
 							}
 						})
 					}else if(data.code==0){
-						alert(data.msg)
+						alert(data.msg);
 					}
 				}
 			})
@@ -177,12 +177,12 @@ $(document).ready(function(){
     		    		    	});
     		    				
     		    			}else if(data.code==0){
-    		    				alert(data.msg)
+    		    				alert(data.msg);
     		    			}
     		    		}
     		    	});
     			}else if(data.code==0){
-    				alert(data.msg)
+    				alert(data.msg);
     			}
     		}
     	});

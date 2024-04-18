@@ -471,6 +471,45 @@ public class LoginController {
         }
 	}
     
+    @RequestMapping("/checkProjectStatus")
+	@ResponseBody
+	public JSONObject checkProjectStatus(String pid) throws Exception {
+    	String sql = "SELECT COUNT(*) FROM subject where projectid = '" + pid + "'";
+    	int count = jdbcTemplate.queryForObject(sql, Integer.class);
+    	String sql2 = "SELECT COUNT(*) FROM task where pid = '" + pid + "'";
+    	int count2 = jdbcTemplate.queryForObject(sql2, Integer.class);
+    	int countotal = count + count2;
+    	if (countotal > 0) {
+    		return CommonUtil.constructResponse(0, "Unable to delete, exists subject/task data.", countotal);
+        }else {
+        	return CommonUtil.constructResponse(EnumUtil.OK, "No record", null);
+        }
+	}
+    
+    @RequestMapping("/CheckSubjectNo")
+	@ResponseBody
+	public JSONObject CheckSubjectNo(String prefix) throws Exception {
+    	String sql = "SELECT COUNT(*) FROM subject where subjectno like '%" + prefix + "%'";
+    	int count = jdbcTemplate.queryForObject(sql, Integer.class) + 1;
+    	String sql2 = "SELECT DATE_FORMAT(CURRENT_DATE(), '%Y%m%d') AS formatted_date";
+    	String date = jdbcTemplate.queryForObject(sql2, String.class);
+    	String suffix = count + "_" + date;
+        return CommonUtil.constructResponse(EnumUtil.OK, "", suffix);
+	}
+    
+    @RequestMapping("/deleteProject")
+   	@ResponseBody
+   	public JSONObject deleteProject(String pid) throws Exception {
+    	Project project=new Project();
+    	project.setPid(pid);
+    	Integer resultOfDelete=commonService.deleteProject(project);
+		if(resultOfDelete>0){ 
+			return CommonUtil.constructResponse(EnumUtil.OK,"delete success", null);
+		}else{
+			return CommonUtil.constructResponse(0,"delete error", null);
+		}
+   	}
+    
     @RequestMapping("/SearchSurvey")
 	@ResponseBody
 	public JSONObject SearchSurvey(String pname) throws Exception {

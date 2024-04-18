@@ -86,17 +86,15 @@ $(document).ready(function(){
 				success:function(data){
 					data=JSON.parse(data);
 					if(data.code==1){
+						$("#newPId").val("");
+				        $("#QusUrl").val("");
+				        $("#inputFields").addClass("hidden");
+				        location.reload();
 					}else if(data.code==0){
-						alert(data.msg)
+						alert(data.msg);
 					}
 				}
 			})
-	
-	        $("#newPId").val("");
-	        $("#QusUrl").val("");
-	        $("#inputFields").addClass("hidden");
-	        
-	        location.reload();
 	    }
 	}
 	

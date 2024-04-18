@@ -8,6 +8,7 @@
 <body>
 <%String Username = ((User)session.getAttribute("user")).getUsername();%>
 <%int Grade = ((User)session.getAttribute("user")).getGrade();%>
+<%String Region = ((User)session.getAttribute("user")).getRegion();%>
 <jsp:include page="sidebar.jsp" />
 <div class="container">
 	<div class="row clearfix">
@@ -20,7 +21,7 @@
                     <span id="newSubjectError" style="color: red;"></span>
                 </div>
                 <div class="input-container">
-                    <span id="subjectDescription" style="margin-right: 10px; font-size: 14px; color: #888;">Subject No. Format: Project_Region_No._Date. For example, NGL_HK_001_20240101</span>
+                	<span id="subjectRemark" style="margin-right: 10px; font-size: 14px; color: #f00;">Please use our pre-generated Subject No. directly.<span id="subjectDescription" style="margin-right: 10px; font-size: 14px; color: #888;"> (Subject No. Format: Project_Region_No._Date)</span></span>
                 </div>
                 <button id="saveSubjectButton" style="margin-bottom: 10px;">Save</button>
             </div>
@@ -82,7 +83,25 @@
 	
 	$(document).ready(function(){
 	$("#addSubjectButton").click(function() {
-        $("#inputFields").toggleClass("hidden");
+		$("#inputFields").toggleClass("hidden");
+		
+		if (!$("#inputFields").hasClass("hidden")) {
+			var prefix = pname + "_" + "<%=Region%>" + "_";
+			 $.ajax({ 
+				url:"./CheckSubjectNo",
+				type:"POST", 
+				datatype:"json",
+				data:{"prefix":prefix},	 
+				success:function(data){
+					data=JSON.parse(data);
+					suffix = data.data;
+					$("#newSubject").val(prefix + suffix);
+				}
+			});
+		}else{
+			$("#newSubject").val("");
+		}
+		
     });
     
     $("#saveSubjectButton").click(function() {
@@ -109,16 +128,14 @@
 				success:function(data){
 					data=JSON.parse(data);
 					if(data.code==1){
+						$("#newSubject").val("");
+				        $("#inputFields").addClass("hidden");
+				        location.reload();
 					}else if(data.code==0){
-						alert(data.msg)
+						alert(data.msg);
 					}
 				}
 			})
-
-	        $("#newSubject").val("");
-	        $("#inputFields").addClass("hidden");
-	        
-	        location.reload();
         }
     }
 	

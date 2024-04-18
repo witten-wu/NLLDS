@@ -188,7 +188,7 @@
 	    			if(data.code==1){
 	    				location.reload();
 	    			}else if(data.code==0){
-	    				alert(data.msg)
+	    				alert(data.msg);
 	    			}
 	    		}
 	    	});

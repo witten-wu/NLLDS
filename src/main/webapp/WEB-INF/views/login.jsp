@@ -86,7 +86,7 @@ $(document).ready(function(){
 					window.history.replaceState(null, "", "projectlist");
 					window.location.href="projectlist"
 				}else{
-					alert(data.msg)
+					alert(data.msg);
 				}
 			}
 		});

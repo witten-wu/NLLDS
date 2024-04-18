@@ -137,19 +137,17 @@ $(document).ready(function(){
 				success:function(data){
 					data=JSON.parse(data);
 					if(data.code==1){
+						$("#newProjectName").val("");
+				        $("#newProjectManageBy").val("");
+				        $("#newProjectCollaborator").val("");
+				        $("#newProjectDescription").val("");
+				        $("#inputFields").addClass("hidden");
+				        location.reload();
 					}else if(data.code==0){
-						alert(data.msg)
+						alert(data.msg);
 					}
 				}
 			})
-
-	        $("#newProjectName").val("");
-	        $("#newProjectManageBy").val("");
-	        $("#newProjectCollaborator").val("");
-	        $("#newProjectDescription").val("");
-	        $("#inputFields").addClass("hidden");
-	        
-	        location.reload();
         }
     }
     
@@ -171,13 +169,15 @@ $(document).ready(function(){
 	        firstOption.value = "N/A";
 	        firstOption.text = "N/A";
 	        $("#newProjectManageBy").append(firstOption);
-			for(var i=0;i < dataList.length;i++){
-				var newRow = document.createElement("option");
-				var username = document.createTextNode(dataList[i].username);
-				newRow.append(username);
-				newRow.value=dataList[i].username;
-				$("#newProjectManageBy").append(newRow);
-			}
+	        if(data.code==1){
+	        	for(var i=0;i < dataList.length;i++){
+					var newRow = document.createElement("option");
+					var username = document.createTextNode(dataList[i].username);
+					newRow.append(username);
+					newRow.value=dataList[i].username;
+					$("#newProjectManageBy").append(newRow);
+				}
+	        }
 		}
 	});
     
@@ -193,15 +193,72 @@ $(document).ready(function(){
 	        firstOption.value = "N/A";
 	        firstOption.text = "N/A";
 	        $("#newProjectCollaborator").append(firstOption);
-			for(var i=0;i < dataList.length;i++){
-				var newRow = document.createElement("option");
-				var username = document.createTextNode(dataList[i].username);
-				newRow.append(username);
-				newRow.value=dataList[i].username;
-				$("#newProjectCollaborator").append(newRow);
-			}
+	        if(data.code==1){
+	        	for(var i=0;i < dataList.length;i++){
+					var newRow = document.createElement("option");
+					var username = document.createTextNode(dataList[i].username + " (" + dataList[i].region + ")");
+					newRow.append(username);
+					newRow.value=dataList[i].username;
+					$("#newProjectCollaborator").append(newRow);
+				}
+	        }
 		}
 	});
+    
+    
+    function showContextMenu(x, y, pid) {
+	    var menu = document.createElement("ul");
+	    menu.className = "context-menu";
+	    menu.innerHTML = "<li>delete</li>";
+	    menu.querySelector("li").addEventListener("click", function () {
+	      deleteProject(pid); 
+	      menu.remove(); 
+	    });
+	    menu.style.left = x + "px";
+	    menu.style.top = y + "px";
+	    document.body.appendChild(menu);
+	    document.addEventListener("mousedown", function (event) {
+	      var target = event.target;
+	      if (!menu.contains(target)) {
+	        menu.remove();
+	        var selectedTr = document.querySelector("tr.selected-row");
+	        if (selectedTr) {
+	          selectedTr.classList.remove("selected-row");
+	        }
+	      }
+	    });
+	}
+   	
+    function deleteProject(pid) {
+    	$.ajax({ 
+    		url:"./checkProjectStatus",
+    		type:"POST", 
+    		datatype:"json",	 
+    		data:{"pid":pid},	
+    		success:function(data){
+    			data = JSON.parse(data); 
+    			if(data.code==1){
+    				$.ajax({ 
+    		    		url:"./deleteProject",
+    		    		type:"POST", 
+    		    		datatype:"json",	 
+    		    		data:{"pid":pid},	
+    		    		async:"false",
+    		    		success:function(data){
+    		    			data = JSON.parse(data); 
+    		    			if(data.code==1){
+    		    				location.reload();
+    		    			}else if(data.code==0){
+    		    				alert(data.msg);
+    		    			}
+    		    		}
+    		    	});
+    			}else if(data.code==0){
+    				alert(data.msg);
+    			}
+    		}
+    	});
+    }
     
     
 	$.ajax({ 
@@ -224,6 +281,13 @@ $(document).ready(function(){
 		        	      data: {"pname": pname},
 		        	      success: function(response) {
 		        	    	var newTrRow = document.createElement("tr");
+		        	    	
+		        	    	newTrRow.addEventListener("contextmenu", function (e) {
+					          e.preventDefault();
+					          showContextMenu(e.clientX, e.clientY, pid);
+					          $("tbody#showprojectlist tr").removeClass("selected-row");
+					          this.classList.add("selected-row");
+					        });
 
 		        	    	var newTdRow1 = document.createElement("td");
 			 				var newTdRow2 = document.createElement("td");

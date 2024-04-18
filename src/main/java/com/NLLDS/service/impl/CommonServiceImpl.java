@@ -168,6 +168,10 @@ public class CommonServiceImpl implements CommonService{
 		return taskDao.deleteTasks(task);
 	}
 	
+	public int deleteProject(Project project) {
+		return projectDao.deleteProject(project);
+	}
+	
 	public int deleteColumn(Table table) {
 		return tableDao.deleteColumn(table);
 	}
