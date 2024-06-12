@@ -5,56 +5,61 @@
   <meta charset="UTF-8">
   <title>Login</title>
   <style>
-    body {
-      display: flex;
-  	  justify-content: center;
-  	  align-items: center;
-  	  margin: 100px;
-      font-family: Arial, sans-serif;
-    }
-    .container {
-      max-width: 800px;
-      margin: 0 auto;
-      padding: 20px;
-      border: 1px solid #ccc;
-      border-radius: 5px;
-      background-color: #f9f9f9;
-    }
-    form {
-	  width: 300px;
-	  /* other styles */
+  *, *:after, *:before {
+	    -webkit-box-sizing: border-box;
+	    -moz-box-sizing: border-box;
+	    box-sizing: border-box;
 	}
-    .form-group {
-      margin-bottom: 15px;
-    }
-    .form-group label {
-      display: block;
-      margin-bottom: 5px;
-      font-weight: bold;
-    }
-    .form-group input {
-      width: 100%;
-      padding: 5px;
-      border: 1px solid #ccc;
-      border-radius: 3px;
-    }
-    
+	.login-title {
+      text-align: center;
+	  margin-bottom: 20px;
+	  font-size: 17px;
+	  font-weight: bold;
+	  color: #000;
+	  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+	  font-family: 'Georgia', serif;
+	  letter-spacing: 2px;
+	}
+	.login {
+	    width: 300px;
+	    margin: 10% auto;
+	}
+	.login form {
+	  width: 100%;
+	}
+	input {
+	    border: 2px solid rgba(0, 0, 0, 1);
+	    box-shadow: 0 -5px 45px rgba(100, 100, 100, 0.2) inset, 0 1px 1px rgba(255, 255, 255, 0.2);
+	    margin-bottom: 10px;
+	    outline: medium none;
+	    padding: 10px;
+	    font-family: 'Georgia', serif;
+	    font-size: 12px;
+	    font-weight: bold;
+	    text-shadow: 1px 1px 1px rgba(0, 0, 0, 0.3);
+	    width: 100%;
+	}
+	
+	button {
+	    background: Black;
+	    font-family: 'Georgia', serif;
+	    font-size: 12px;
+	    font-weight: bold;
+	    color: #FFFFFF;
+	    padding: 10px 25px;
+	    width: 100%;
+	}
   </style>
 </head>
 
 <body>
   <%User user =(User)session.getAttribute("user");%>
-  <div class="container">
-    <form>
-      <div class="form-group">
-        <label for="username">Username:</label>
-        <input type="text" id="username" placeholder="Enter your username">
-      </div>
-      <div class="form-group">
-        <label for="password">Password:</label>
-        <input type="password" id="password" placeholder="Enter your password">
-      </div>
-      <button type="button" class="btn" id="login">Login</button>	
+  <div class="login">
+    <div class="login-title">NLL Data System</div>
+  	<form>
+	    <input type="text" id="username" placeholder="Enter your Username">
+	    <input type="password" id="password" placeholder="Enter your Password">
+	    <button type="button" class="btn" id="login">Login</button>	
     </form>
   </div>
 
