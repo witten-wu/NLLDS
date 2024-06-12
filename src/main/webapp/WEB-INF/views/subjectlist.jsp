@@ -25,18 +25,20 @@
                 </div>
                 <button id="saveSubjectButton" style="margin-bottom: 10px;">Save</button>
             </div>
-           <table class="table" style="margin-bottom: 10px;">
-			<thead>
-				<tr>
-					<th>Subject_No</th>
-					<th>Survey</th>
-					<th>TaskFile</th>
-					<th>NeuroFile</th>
-				</tr>
-			</thead>
-			<tbody id="showsubjectlist">
-			</tbody>
-		   </table>
+           <div class="table-container">
+	           <table class="table" style="margin-bottom: 10px;">
+				<thead>
+					<tr>
+						<th>Subject No</th>
+						<th>Survey</th>
+						<th>TaskFile</th>
+						<th>NeuroFile</th>
+					</tr>
+				</thead>
+				<tbody id="showsubjectlist">
+				</tbody>
+			   </table>
+		   </div>
         </div>
 	</div>
 </div>
@@ -147,7 +149,7 @@
 		type:"POST", 
 		datatype:"json",
 		data:{"pid":pid, "grade":Grade, "username":Username},	 
-		async:"false",
+		async: false,
 		success:function(data){
 			var str =""; 
 			data = JSON.parse(data); 
@@ -160,6 +162,7 @@
 			        	      type: "POST",
 			        	      dataType: "json",
 			        	      data: {"surveyid": surveyid, "subjectno": subjectno},
+			        	      async: false,
 			        	      success: function(response) {
 			        	    	var newTrRow = document.createElement("tr");
 			  	 				var newTdRow1 = document.createElement("td");

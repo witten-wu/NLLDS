@@ -155,7 +155,7 @@
 		function showContextMenu(x, y, id, tablename) {
 	       var menu = document.createElement("ul");
 	       menu.className = "context-menu";
-	       menu.innerHTML = "<li>delete</li>";
+	       menu.innerHTML = "<li>Delete</li>";
 	       menu.querySelector("li").addEventListener("click", function () {
 	         deleteSubjectTask(id, tablename); 
 	         menu.remove(); 

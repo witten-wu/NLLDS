@@ -126,7 +126,7 @@ $(document).ready(function(){
     function showContextMenu(x, y, id, fieldname) {
        var menu = document.createElement("ul");
        menu.className = "context-menu";
-       menu.innerHTML = "<li>delete</li>";
+       menu.innerHTML = "<li>Delete</li>";
        menu.querySelector("li").addEventListener("click", function () {
          deleteTaskField(id, fieldname); 
          menu.remove(); 

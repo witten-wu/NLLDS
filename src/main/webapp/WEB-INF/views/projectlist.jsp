@@ -41,22 +41,24 @@
 	                </div>
 	                <button id="saveProjectButton" style="margin-bottom: 10px;">Save</button>
 	            </div>
-           <table class="table" style="margin-bottom: 10px;">
-			<thead>
-				<tr>
-					<th>Project_ID</th>
-					<th>Project_Name</th>
-					<th>Survey_ID</th>
-					<th>Descriptions</th>
-					<th>Manage_By</th>
-					<th>Collaborator</th>
-					<th>Created_By</th>
-					<th>Created_date</th>
-				</tr>
-			</thead>
-			<tbody id="showprojectlist">
-			</tbody>
-		   </table>
+	       <div class="table-container">
+	           <table class="table" style="margin-bottom: 10px;">
+				<thead>
+					<tr>
+						<th style="display: none;">Project_ID</th>
+						<th>Project Name</th>
+						<th>Survey ID</th>
+						<th>Descriptions</th>
+						<th>Manage By</th>
+						<th>Collaborator</th>
+						<th>Created By</th>
+						<th>Created date</th>
+					</tr>
+				</thead>
+				<tbody id="showprojectlist">
+				</tbody>
+			   </table>
+		   </div>
         </div>
 	</div>
 </div>
@@ -209,7 +211,7 @@ $(document).ready(function(){
     function showContextMenu(x, y, pid) {
 	    var menu = document.createElement("ul");
 	    menu.className = "context-menu";
-	    menu.innerHTML = "<li>delete</li>";
+	    menu.innerHTML = "<li>Delete</li>";
 	    menu.querySelector("li").addEventListener("click", function () {
 	      deleteProject(pid); 
 	      menu.remove(); 
@@ -266,7 +268,7 @@ $(document).ready(function(){
 		type:"POST", 
 		datatype:"json",	 
 		data:{"username":Username, "grade":Grade},
-		async:"false",
+		async:false,
 		success:function(data){
 			var str =""; 
 			data = JSON.parse(data); 
@@ -279,17 +281,21 @@ $(document).ready(function(){
 		        	      type: "POST",
 		        	      dataType: "json",
 		        	      data: {"pname": pname},
+		        	      async:false,
 		        	      success: function(response) {
 		        	    	var newTrRow = document.createElement("tr");
 		        	    	
-		        	    	newTrRow.addEventListener("contextmenu", function (e) {
-					          e.preventDefault();
-					          showContextMenu(e.clientX, e.clientY, pid);
-					          $("tbody#showprojectlist tr").removeClass("selected-row");
-					          this.classList.add("selected-row");
-					        });
+		        	    	if (Grade == 1) {
+			        	    	newTrRow.addEventListener("contextmenu", function (e) {
+						          e.preventDefault();
+						          showContextMenu(e.clientX, e.clientY, pid);
+						          $("tbody#showprojectlist tr").removeClass("selected-row");
+						          this.classList.add("selected-row");
+						        });
+		        	    	}
 
 		        	    	var newTdRow1 = document.createElement("td");
+		        	    	newTdRow1.style.display = "none";
 			 				var newTdRow2 = document.createElement("td");
 			 				var newTdRow3 = document.createElement("td");
 			 				var newTdRow4 = document.createElement("td");

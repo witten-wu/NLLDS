@@ -15,7 +15,7 @@
 			<button id=addTaskButton style="margin-bottom: 10px;">Add Task</button>
 			<div id="inputFields" class="hidden" style="margin-bottom: 10px;">
 					<div class="input-container">
-	                    <label for="newPId">Project ID:</label>
+	                    <label for="newPId">Project:</label>
 	                    <select id="newPId" name="newPId"> 
 					    	<option value="">Please Select</option>
 					    </select>
@@ -33,21 +33,23 @@
 	                </div>
 	                <button id="saveTaskButton" style="margin-bottom: 10px;">Save</button>
 	            </div>
-           <table class="table" style="margin-bottom: 10px;">
-			<thead>
-				<tr>
-					<th>Project_ID</th>
-					<!-- <th>Task_ID</th> -->
-					<th>Task_Name</th>
-					<th>Descriptions</th>
-					<th>Created_By</th>
-					<th>Created_date</th>
-					<!-- <th>Task_Fields</th> -->
-				</tr>
-			</thead>
-			<tbody id="showtasklist">
-			</tbody>
-		   </table>
+	       <div class="table-container">
+	           <table class="table" style="margin-bottom: 10px;">
+				<thead>
+					<tr>
+						<th>Project</th>
+						<!-- <th>Task_ID</th> -->
+						<th>Task Name</th>
+						<th>Descriptions</th>
+						<th>Created By</th>
+						<th>Created date</th>
+						<!-- <th>Task_Fields</th> -->
+					</tr>
+				</thead>
+				<tbody id="showtasklist">
+				</tbody>
+			   </table>
+		   </div>
         </div>
 	</div>
 </div>
@@ -170,7 +172,7 @@ $(document).ready(function(){
    	function showContextMenu(x, y, taskid) {
 	    var menu = document.createElement("ul");
 	    menu.className = "context-menu";
-	    menu.innerHTML = "<li>delete</li>";
+	    menu.innerHTML = "<li>Delete</li>";
 	    menu.querySelector("li").addEventListener("click", function () {
 	      deleteTasks(taskid); 
 	      menu.remove(); 
