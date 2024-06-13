@@ -191,8 +191,8 @@
 		        jumpToFtp(pname, subjectno, "Neuroimaging");
 		      });
 		      viewButton.style.display = "block";
-		      viewButton.style.margin-left = "0";
-		      viewButton.style.margin-right = "auto";
+		      viewButton.style.marginLeft  = "0";
+		      viewButton.style.marginRight = "auto";
 		
 		      newTdRow1.append(Tsubjectno);
 		      newTdRow4.append(viewButton);
