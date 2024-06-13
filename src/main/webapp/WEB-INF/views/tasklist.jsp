@@ -35,7 +35,7 @@
 	            </div>
 	       <div class="table-container">
 	           <table class="table" style="margin-bottom: 10px;">
-				<thead>
+				<thead style="background-color: #000000; color: white;">
 					<tr>
 						<th>Project</th>
 						<!-- <th>Task_ID</th> -->

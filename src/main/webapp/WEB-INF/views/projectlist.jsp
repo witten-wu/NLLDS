@@ -10,6 +10,9 @@
 <%String Username = ((User)session.getAttribute("user")).getUsername();%>
 <%int Grade = ((User)session.getAttribute("user")).getGrade();%>
 <jsp:include page="sidebar.jsp" />
+<div id="Loading-overlay" class="loading-overlay">
+	<div id="Loading" class="loader"></div>
+</div>
 <div class="container">
 	<div class="row clearfix">
 		<div class="col-md-10">
@@ -42,8 +45,8 @@
 	                <button id="saveProjectButton" style="margin-bottom: 10px;">Save</button>
 	            </div>
 	       <div class="table-container">
-	           <table class="table" style="margin-bottom: 10px;">
-				<thead>
+	           <table class="table table-bordered table-hover dt-responsive" style="margin-bottom: 10px;">
+				<thead style="background-color: #000000; color: white;">
 					<tr>
 						<th style="display: none;">Project_ID</th>
 						<th>Project Name</th>
@@ -116,49 +119,6 @@ $(document).ready(function(){
    	  $(this).addClass("selected-row");
    	});
     
-    function saveNewProject() {
-        var pname = $("#newProjectName").val();
-        var createdby = "<%=Username%>"
-        var manageby = $("#newProjectManageBy").val();
-        var manageby = manageby.join(",");
-        var collaborator = $("#newProjectCollaborator").val();
-        var collaborator = collaborator.join(",");
-        var description = $("#newProjectDescription").val();
-        if(pname == ""){
-			alert("Please input the project name")
-		}else if(manageby == ""){
-			alert("Please select the manager")
-		}else if(collaborator == ""){
-			alert("Please select the collaborator")
-		}else{
-	        $.ajax({ 
-				url:"./addProject",
-				type:"POST", 
-				datatype:"json",
-				data:{"pname":pname,"createdby":createdby,"manageby":manageby, "collaborator":collaborator, "description":description},	 
-				success:function(data){
-					data=JSON.parse(data);
-					if(data.code==1){
-						$("#newProjectName").val("");
-				        $("#newProjectManageBy").val("");
-				        $("#newProjectCollaborator").val("");
-				        $("#newProjectDescription").val("");
-				        $("#inputFields").addClass("hidden");
-				        location.reload();
-					}else if(data.code==0){
-						alert(data.msg);
-					}
-				}
-			})
-        }
-    }
-    
-    function redirectToNewPage(projectId,projectName,SurveyId) {
-   	  var url = "subjectlist?pid=" + projectId + "&pname=" + projectName + "&surveyid=" + SurveyId;
-   	  window.location.href = url;
-   	}
-    
-    
     $.ajax({
 		url:"./showManage",
 		type:"POST", 
@@ -207,31 +167,116 @@ $(document).ready(function(){
 		}
 	});
     
-    
-    function showContextMenu(x, y, pid) {
-	    var menu = document.createElement("ul");
-	    menu.className = "context-menu";
-	    menu.innerHTML = "<li>Delete</li>";
-	    menu.querySelector("li").addEventListener("click", function () {
-	      deleteProject(pid); 
-	      menu.remove(); 
-	    });
-	    menu.style.left = x + "px";
-	    menu.style.top = y + "px";
-	    document.body.appendChild(menu);
-	    document.addEventListener("mousedown", function (event) {
-	      var target = event.target;
-	      if (!menu.contains(target)) {
-	        menu.remove();
-	        var selectedTr = document.querySelector("tr.selected-row");
-	        if (selectedTr) {
-	          selectedTr.classList.remove("selected-row");
-	        }
-	      }
-	    });
+    getAjaxData(Username, Grade);
+});
+	
+	async function getAjaxData(Username, Grade) {
+		
+	  $("#Loading-overlay").show();	
+	  $("#Loading").show();
+	  
+	  try {
+		  const response1 = await $.ajax({
+		    url: "./showProjectList",
+		    type: "POST",
+		    datatype: "json",
+		    data:{"username":Username, "grade":Grade}
+		  });
+		  const data = JSON.parse(response1);
+		  const dataList = data.data;
+
+		   if (data.code === 1) {
+				for (let i = 0; i < dataList.length; i++) {
+				    const { pname, pid, createby, manageby, collaborator, createdate, description } = dataList[i];
+				    const response2 = await $.ajax({
+					    url: "./SearchSurvey",
+					    type: "POST",
+					    dataType: "json",
+					    data: {"pname": pname}
+				  	});
+		
+					const newTrRow = document.createElement("tr");
+				    	
+			    	if (Grade == 1) {
+		    	    	newTrRow.addEventListener("contextmenu", function (e) {
+						e.preventDefault();
+						showContextMenu(e.clientX, e.clientY, pid);
+						$("tbody#showprojectlist tr").removeClass("selected-row");
+						this.classList.add("selected-row");
+			        	});
+			    	}
+		
+			    	const newTdRow1 = document.createElement("td");
+			    	newTdRow1.style.display = "none";
+			    	const newTdRow2 = document.createElement("td");
+			    	const newTdRow3 = document.createElement("td");
+			    	const newTdRow4 = document.createElement("td");
+			    	const newTdRow5 = document.createElement("td");
+			    	const newTdRow6 = document.createElement("td");
+			    	const newTdRow7 = document.createElement("td");
+			    	const newTdRow8 = document.createElement("td");
+					
+					var surveyid = "";
+					if (response2.code == 1) {
+					  surveyid = response2.data;
+					  const newLink2 = document.createElement("a");
+					  newLink2.href = "/limesurvey/?r=" + pname;
+					  newLink2.target = "_blank";
+					  newLink2.text = surveyid;
+					  newTdRow3.append(newLink2);
+					} else{
+					  surveyid = "0";
+					  newTdRow3.append(document.createTextNode("Not Found"));
+					}
+					
+			    	newTrRow.addEventListener("dblclick", function () {
+			          redirectToNewPage(pid,pname,surveyid);
+			        });
+					
+			    	const Tpid = document.createTextNode(pid);
+			    	const Tcreateby = document.createTextNode(createby);
+			    	const Tmanageby = document.createTextNode(manageby);
+			    	const Tcollaborator = document.createTextNode(collaborator);
+					var date = new Date(createdate);
+					Y = date.getFullYear() + '-';
+					M = (date.getMonth()+1 < 10 ? '0'+(date.getMonth()+1) : date.getMonth()+1) + '-';
+					D = date.getDate() + ' ';
+					const transferdate = Y+M+D;
+					const Tdescription = document.createTextNode(description);
+					const newLink = document.createElement("a");
+					newLink.href = "subjectlist?pid=" + pid + "&pname=" + pname + "&surveyid=" + surveyid;
+					newLink.text = pname;
+				
+					newTdRow1.append(Tpid);
+					newTdRow2.append(newLink);
+					newTdRow4.append(Tdescription);
+					newTdRow5.append(Tmanageby);
+					newTdRow6.append(Tcollaborator);
+					newTdRow7.append(Tcreateby);
+					newTdRow8.append(transferdate);
+					
+					newTrRow.append(newTdRow1);
+					newTrRow.append(newTdRow2);
+					newTrRow.append(newTdRow3);
+					newTrRow.append(newTdRow4);
+					newTrRow.append(newTdRow5);
+					newTrRow.append(newTdRow6);
+					newTrRow.append(newTdRow7);
+					newTrRow.append(newTdRow8);
+					
+					$("tbody#showprojectlist").append(newTrRow);
+			   }
+		  }
+	  } catch (error) {
+		  console.error(error);
+	  }
+	  
+	  $("#Loading").hide();
+	  $("#Loading-overlay").hide();
+	  
 	}
-   	
-    function deleteProject(pid) {
+	
+	function deleteProject(pid) {
     	$.ajax({ 
     		url:"./checkProjectStatus",
     		type:"POST", 
@@ -261,107 +306,72 @@ $(document).ready(function(){
     		}
     	});
     }
-    
-    
-	$.ajax({ 
-		url:"./showProjectList",
-		type:"POST", 
-		datatype:"json",	 
-		data:{"username":Username, "grade":Grade},
-		async:false,
-		success:function(data){
-			var str =""; 
-			data = JSON.parse(data); 
-			dataList = data.data; 
-			if(data.code==1){
-				for(var i=0;i<dataList.length;i++){
-	 				(function (pname, pid, createby, manageby, collaborator, createdate, description) {
-			        	$.ajax({
-		        	      url: "./SearchSurvey",
-		        	      type: "POST",
-		        	      dataType: "json",
-		        	      data: {"pname": pname},
-		        	      async:false,
-		        	      success: function(response) {
-		        	    	var newTrRow = document.createElement("tr");
-		        	    	
-		        	    	if (Grade == 1) {
-			        	    	newTrRow.addEventListener("contextmenu", function (e) {
-						          e.preventDefault();
-						          showContextMenu(e.clientX, e.clientY, pid);
-						          $("tbody#showprojectlist tr").removeClass("selected-row");
-						          this.classList.add("selected-row");
-						        });
-		        	    	}
+	
+	function showContextMenu(x, y, pid) {
+	    var menu = document.createElement("ul");
+	    menu.className = "context-menu";
+	    menu.innerHTML = "<li>Delete</li>";
+	    menu.querySelector("li").addEventListener("click", function () {
+	      deleteProject(pid); 
+	      menu.remove(); 
+	    });
+	    menu.style.left = x + "px";
+	    menu.style.top = y + "px";
+	    document.body.appendChild(menu);
+	    document.addEventListener("mousedown", function (event) {
+	      var target = event.target;
+	      if (!menu.contains(target)) {
+	        menu.remove();
+	        var selectedTr = document.querySelector("tr.selected-row");
+	        if (selectedTr) {
+	          selectedTr.classList.remove("selected-row");
+	        }
+	      }
+	    });
+	}
+	
 
-		        	    	var newTdRow1 = document.createElement("td");
-		        	    	newTdRow1.style.display = "none";
-			 				var newTdRow2 = document.createElement("td");
-			 				var newTdRow3 = document.createElement("td");
-			 				var newTdRow4 = document.createElement("td");
-			 				var newTdRow5 = document.createElement("td");
-			 				var newTdRow6 = document.createElement("td");
-			 				var newTdRow7 = document.createElement("td");
-			 				var newTdRow8 = document.createElement("td");
-			 				
-			 				var surveyid = "";
-			 				if (response.code == 1) {
-							  // assume only 1 record return and return "surveyls_alias"
-							  surveyid = response.data;
-							  var newLink2 = document.createElement("a");
-							  newLink2.href = "/limesurvey/?r=" + pname;
-							  newLink2.target = "_blank";
-							  newLink2.text = surveyid;
-							  newTdRow3.append(newLink2);
-							} else{
-							  surveyid = "0";
-							  newTdRow3.append(document.createTextNode("Not Found"));
-							}
-			 				
-		        	    	newTrRow.addEventListener("dblclick", function () {
-				            	redirectToNewPage(pid,pname,surveyid);
-				            });
-			 				
-			 				var Tpid = document.createTextNode(pid);
-			 				var Tcreateby = document.createTextNode(createby);
-			 				var Tmanageby = document.createTextNode(manageby);
-			 				var Tcollaborator = document.createTextNode(collaborator);
-			 				var date = new Date(createdate);
-							Y = date.getFullYear() + '-';
-							M = (date.getMonth()+1 < 10 ? '0'+(date.getMonth()+1) : date.getMonth()+1) + '-';
-							D = date.getDate() + ' ';
-							var transferdate = Y+M+D;
-							var Tdescription = document.createTextNode(description);
-			 				var newLink = document.createElement("a");
-							newLink.href = "subjectlist?pid=" + pid + "&pname=" + pname + "&surveyid=" + surveyid;
-							newLink.text = pname;
-
-							newTdRow1.append(Tpid);
-			 				newTdRow2.append(newLink);
-			 				newTdRow4.append(Tdescription);
-			 				newTdRow5.append(Tmanageby);
-			 				newTdRow6.append(Tcollaborator);
-			 				newTdRow7.append(Tcreateby);
-			 				newTdRow8.append(transferdate);
-			 				
-			 				newTrRow.append(newTdRow1);
-			 				newTrRow.append(newTdRow2);
-			 				newTrRow.append(newTdRow3);
-			 				newTrRow.append(newTdRow4);
-			 				newTrRow.append(newTdRow5);
-			 				newTrRow.append(newTdRow6);
-			 				newTrRow.append(newTdRow7);
-			 				newTrRow.append(newTdRow8);
-							
-							$("tbody#showprojectlist").append(newTrRow);
-		        	      }
-		        	    });
-			        })(dataList[i].pname, dataList[i].pid, dataList[i].createby, dataList[i].manageby, dataList[i].collaborator, dataList[i].createdate, dataList[i].description); 
-	 			}
-			}
-		}
-	});
-});
+    function redirectToNewPage(projectId,projectName,SurveyId) {
+   	  var url = "subjectlist?pid=" + projectId + "&pname=" + projectName + "&surveyid=" + SurveyId;
+   	  window.location.href = url;
+   	}
+    
+    function saveNewProject() {
+        var pname = $("#newProjectName").val();
+        var createdby = "<%=Username%>"
+        var manageby = $("#newProjectManageBy").val();
+        var manageby = manageby.join(",");
+        var collaborator = $("#newProjectCollaborator").val();
+        var collaborator = collaborator.join(",");
+        var description = $("#newProjectDescription").val();
+        if(pname == ""){
+			alert("Please input the project name")
+		}else if(manageby == ""){
+			alert("Please select the manager")
+		}else if(collaborator == ""){
+			alert("Please select the collaborator")
+		}else{
+	        $.ajax({ 
+				url:"./addProject",
+				type:"POST", 
+				datatype:"json",
+				data:{"pname":pname,"createdby":createdby,"manageby":manageby, "collaborator":collaborator, "description":description},	 
+				success:function(data){
+					data=JSON.parse(data);
+					if(data.code==1){
+						$("#newProjectName").val("");
+				        $("#newProjectManageBy").val("");
+				        $("#newProjectCollaborator").val("");
+				        $("#newProjectDescription").val("");
+				        $("#inputFields").addClass("hidden");
+				        location.reload();
+					}else if(data.code==0){
+						alert(data.msg);
+					}
+				}
+			})
+        }
+    }
 </script>
 </body>
 </html>    

@@ -10,6 +10,9 @@
 <%int Grade = ((User)session.getAttribute("user")).getGrade();%>
 <%String Region = ((User)session.getAttribute("user")).getRegion();%>
 <jsp:include page="sidebar.jsp" />
+<div id="Loading-overlay" class="loading-overlay">
+	<div id="Loading" class="loader"></div>
+</div>
 <div class="container">
 	<div class="row clearfix">
 		<div class="col-md-10">
@@ -21,13 +24,13 @@
                     <span id="newSubjectError" style="color: red;"></span>
                 </div>
                 <div class="input-container">
-                	<span id="subjectRemark" style="margin-right: 10px; font-size: 14px; color: #f00;">Please use our pre-generated Subject No. directly.<span id="subjectDescription" style="margin-right: 10px; font-size: 14px; color: #888;"> (Subject No. Format: Project_Region_No._Date)</span></span>
+                	<span id="subjectRemark" style="margin-right: 10px; font-size: 14px; color: #f00;">Please use our pre-generated Subject No.<span id="subjectDescription" style="margin-right: 10px; font-size: 14px; color: #888;"> (Subject No. Format: Project_Region_No._Date)</span></span>
                 </div>
                 <button id="saveSubjectButton" style="margin-bottom: 10px;">Save</button>
             </div>
            <div class="table-container">
-	           <table class="table" style="margin-bottom: 10px;">
-				<thead>
+	           <table class="table table-bordered table-hover dt-responsive" style="margin-bottom: 10px;">
+				<thead style="background-color: #000000; color: white;">
 					<tr>
 						<th>Subject No</th>
 						<th>Survey</th>
@@ -84,6 +87,7 @@
     });
 	
 	$(document).ready(function(){
+	
 	$("#addSubjectButton").click(function() {
 		$("#inputFields").toggleClass("hidden");
 		
@@ -114,8 +118,101 @@
    	  $("tbody#showsubjectlist tr").removeClass("selected-row");
    	  $(this).addClass("selected-row");
    	});
+	
+    var Grade = <%=Grade%>;
+    var Username = "<%=Username%>"
     
-    function saveNewSubject() {
+    getAjaxData(pid, Grade, Username, surveyid, pname);
+});
+	
+	async function getAjaxData(pid, Grade, Username, surveyid, pname) {
+		
+		$("#Loading-overlay").show();	
+		$("#Loading").show();
+		
+		try {
+		  const response1 = await $.ajax({
+		    url: "./showSubjectList",
+		    type: "POST",
+		    datatype: "json",
+		    data: { "pid": pid, "grade": Grade, "username": Username }
+		  });
+		  const data = JSON.parse(response1);
+		  const dataList = data.data;
+		
+		  if (data.code === 1) {
+		    for (let i = 0; i < dataList.length; i++) {
+		      const { subjectid, subjectno, tasks } = dataList[i];
+		      const response2 = await $.ajax({
+		        url: "./showSubjectSurvey",
+		        type: "POST",
+		        dataType: "json",
+		        data: { "surveyid": surveyid, "subjectno": subjectno }
+		      });
+		
+		      const newTrRow = document.createElement("tr");
+		      const newTdRow1 = document.createElement("td");
+		      const newTdRow2 = document.createElement("td");
+		      const newTdRow3 = document.createElement("td");
+		      const newTdRow4 = document.createElement("td");
+		
+		      const Tsubjectno = document.createTextNode(subjectno);
+		
+		      if (response2.code === 1) {
+		        const id = response2.data;
+		        const newLink = document.createElement("a");
+		        newLink.href = "/limesurvey/index.php?r=responses/view&surveyId=" + surveyid + "&id=" + id;
+		        newLink.target = "_blank";
+		        newLink.text = "detail...";
+		        newTdRow2.append(newLink);
+		      } else {
+		        newTdRow2.append(document.createTextNode("Not Found"));
+		      }
+		
+		      const taskArray = tasks ? tasks.split(",") : [];
+		      for (let j = 0; j < taskArray.length; j++) {
+		        const tmpLink = document.createElement("a");
+		        tmpLink.href = "#";
+		        tmpLink.text = taskArray[j];
+		        tmpLink.addEventListener("click", function() {
+		          event.preventDefault();
+		          jumpToFtp(pname, subjectno, "Behavior");
+		        });
+		        newTdRow3.append(tmpLink);
+		        if (j < taskArray.length - 1) {
+		          const commaSpan = document.createElement("span");
+		          commaSpan.innerText = ", ";
+		          newTdRow3.append(commaSpan);
+		        }
+		      }
+		
+		      const viewButton = document.createElement("button");
+		      viewButton.innerText = "view";
+		      viewButton.addEventListener("click", function() {
+		        jumpToFtp(pname, subjectno, "Neuroimaging");
+		      });
+		      viewButton.style.display = "block";
+		      viewButton.style.margin = "0 auto";
+		
+		      newTdRow1.append(Tsubjectno);
+		      newTdRow4.append(viewButton);
+		
+		      newTrRow.append(newTdRow1);
+		      newTrRow.append(newTdRow2);
+		      newTrRow.append(newTdRow3);
+		      newTrRow.append(newTdRow4);
+		
+		      $("tbody#showsubjectlist").append(newTrRow);
+		    }
+		  }
+		} catch (error) {
+		  console.error(error);
+		}
+		$("#Loading").hide();
+		$("#Loading-overlay").hide();
+	}
+	
+	function saveNewSubject() {
         var subjectno = $("#newSubject").val();
 		var projectid = pid;
 		var addby = "<%=Username%>"
@@ -140,93 +237,6 @@
 			})
         }
     }
-	
-    var Grade = <%=Grade%>;
-    var Username = "<%=Username%>"
-    
-	$.ajax({ 
-		url:"./showSubjectList",
-		type:"POST", 
-		datatype:"json",
-		data:{"pid":pid, "grade":Grade, "username":Username},	 
-		async: false,
-		success:function(data){
-			var str =""; 
-			data = JSON.parse(data); 
-			dataList = data.data; 
-			if(data.code==1){
-				for(var i=0;i<dataList.length;i++){
-	 				(function (subjectid, subjectno, tasks) {
-	 					$.ajax({
-			        	      url: "./showSubjectSurvey",
-			        	      type: "POST",
-			        	      dataType: "json",
-			        	      data: {"surveyid": surveyid, "subjectno": subjectno},
-			        	      async: false,
-			        	      success: function(response) {
-			        	    	var newTrRow = document.createElement("tr");
-			  	 				var newTdRow1 = document.createElement("td");
-			  	 				var newTdRow2 = document.createElement("td");
-			  	 				var newTdRow3 = document.createElement("td");
-			  	 				var newTdRow4 = document.createElement("td");
-			  	 				
-				 				var Tsubjectno = document.createTextNode(subjectno);
-			  	 				
-				 				if (response.code == 1) {
-								  // assume only 1 record return and return "id"
-								  var id = response.data;
-								  var newLink = document.createElement("a");
-								  newLink.href = "/limesurvey/index.php?r=responses/view&surveyId=" + surveyid + "&id=" + id;
-								  newLink.target = "_blank";
-								  newLink.text = "detail...";
-								  newTdRow2.append(newLink);
-								} else{
-								  newTdRow2.append(document.createTextNode("Not Found"));
-								}
-				 				
-				 				var taskArray = tasks ? tasks.split(",") : [];
-	                            for (var j = 0; j < taskArray.length; j++) {
-	                            	var tmpLink = document.createElement("a");
-	                            	tmpLink.href = "#";
-	                            	tmpLink.text = taskArray[j];
-	                            	tmpLink.addEventListener("click", function() {
-	                            		event.preventDefault();
-	                            		// can modify to jump to specific task folder
-									    jumpToFtp(pname, subjectno, "Behavior");
-									});
-	                            	newTdRow3.append(tmpLink);
-	                                if (j < taskArray.length - 1) {
-	                                    var commaSpan = document.createElement("span");
-	                                    commaSpan.innerText = ", ";
-	                                    newTdRow3.append(commaSpan);
-	                                }
-	                            }
-				 				
-				 				var viewButton = document.createElement("button");
-				 				viewButton.innerText = "view";
-				 				viewButton.addEventListener("click", function() {
-								    jumpToFtp(pname, subjectno, "Neuroimaging");
-								});
-				 				viewButton.style.display = "block";
-				 				viewButton.style.margin = "0 auto";
-
-				 				newTdRow1.append(Tsubjectno);
-				 				newTdRow4.append(viewButton);
-				 				
-				 				newTrRow.append(newTdRow1);
-				 				newTrRow.append(newTdRow2);
-				 				newTrRow.append(newTdRow3);
-				 				newTrRow.append(newTdRow4);
-				 				
-				 				$("tbody#showsubjectlist").append(newTrRow);
-			        	      }
-			        	    });
-	 				})(dataList[i].subjectid, dataList[i].subjectno, dataList[i].tasks); 
-	 			}
-			}
-		}
-	});
-});
 	
 	function sendRequest(url, command) {
 	  const headers = { 'Content-Type': 'application/json' };
