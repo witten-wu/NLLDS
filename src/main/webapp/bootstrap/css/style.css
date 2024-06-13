@@ -93,7 +93,7 @@
   }
   
   .container {
-    max-width: 1920px;
+    max-width: 100%;
 	margin: 0 auto;
 	display: flex;
 	padding: 20px;
@@ -101,9 +101,11 @@
   
   .table-container {
   	height: 80vh;
+  	width: 100%;
   	overflow-y: auto;
   }
   .table {
+    width: 100%;
     border-collapse: collapse;
     margin-bottom: 20px;
   }

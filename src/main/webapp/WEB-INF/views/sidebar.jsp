@@ -17,7 +17,7 @@
             <li><a href="tasklist">Task</a></li>
             <li><a href="/limesurvey/index.php?r=admin/authentication/sa/login" target="_blank">Survey</a></li>
             <% if (Grade == 1) { %>
-			    <li><a href="/elFinder/elfinder.html" target="_blank">FTPServer</a></li>
+			    <li><a href="/elFinder/elfinder.html" target="_blank">FileSystem</a></li>
 			<% } %>
 		    <li><a href="https://witten-wu.github.io/NLLDS-Manual/" target="_blank">Manual</a></li>
         </ul>

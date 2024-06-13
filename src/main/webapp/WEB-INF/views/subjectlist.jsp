@@ -14,8 +14,8 @@
 	<div id="Loading" class="loader"></div>
 </div>
 <div class="container">
-	<div class="row clearfix">
-		<div class="col-md-10">
+	<div class="row clearfix" style="width:100%">
+		<div class="col-md-10" style="width:100%">
 			<button id=addSubjectButton style="margin-bottom: 10px;">Add Subject</button>
 			<div id="inputFields" class="hidden" style="margin-bottom: 10px;">
                 <div class="input-container">
@@ -126,7 +126,6 @@
 });
 	
 	async function getAjaxData(pid, Grade, Username, surveyid, pname) {
-		
 		$("#Loading-overlay").show();	
 		$("#Loading").show();
 		
@@ -192,7 +191,8 @@
 		        jumpToFtp(pname, subjectno, "Neuroimaging");
 		      });
 		      viewButton.style.display = "block";
-		      viewButton.style.margin = "0 auto";
+		      viewButton.style.margin-left = "0";
+		      viewButton.style.margin-right = "auto";
 		
 		      newTdRow1.append(Tsubjectno);
 		      newTdRow4.append(viewButton);

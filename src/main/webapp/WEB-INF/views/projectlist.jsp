@@ -14,8 +14,8 @@
 	<div id="Loading" class="loader"></div>
 </div>
 <div class="container">
-	<div class="row clearfix">
-		<div class="col-md-10">
+	<div class="row clearfix" style="width:100%">
+		<div class="col-md-10" style="width:100%">
 			<% if (Grade == 1) { %>
 				<button id=addProjectButton style="margin-bottom: 10px;">Add Project</button>
 			<% } %>

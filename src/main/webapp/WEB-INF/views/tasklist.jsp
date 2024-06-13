@@ -10,8 +10,8 @@
 <%int Grade = ((User)session.getAttribute("user")).getGrade();%>
 <jsp:include page="sidebar.jsp" />
 <div class="container">
-	<div class="row clearfix">
-		<div class="col-md-10">
+	<div class="row clearfix" style="width:100%">
+		<div class="col-md-10" style="width:100%">
 			<button id=addTaskButton style="margin-bottom: 10px;">Add Task</button>
 			<div id="inputFields" class="hidden" style="margin-bottom: 10px;">
 					<div class="input-container">
