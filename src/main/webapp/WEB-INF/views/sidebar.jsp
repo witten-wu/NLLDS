@@ -15,13 +15,12 @@
         <ul>
             <li><a href="projectlist">Project</a></li>
             <li><a href="tasklist">Task</a></li>
-            <li><a href="/limesurvey/index.php?r=admin/authentication/sa/login" target="_blank">Survey</a></li>
+            <li><a href="/limesurvey/index.php?r=admin/authentication/sa/login" target="_blank">Survey System</a></li>
             <% if (Grade == 1) { %>
-			    <li><a href="/elFinder/elfinder.html" target="_blank">FileSystem</a></li>
+			    <li><a href="/elFinder/elfinder.html" target="_blank">File System</a></li>
 			<% } %>
 		    <li><a href="https://witten-wu.github.io/NLLDS-Manual/" target="_blank">Manual</a></li>
         </ul>
     </aside>
-
 </body>
 </html>
