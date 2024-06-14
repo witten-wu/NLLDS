@@ -10,12 +10,33 @@ echo viewHelper::getViewTestTag('login');
 ?>
 <noscript>If you see this you have probably JavaScript deactivated. LimeSurvey does not work without Javascript being activated in the browser!
 </noscript>
+<style>
+    .login .login-panel {
+        max-width: 300px;
+    }
+    label {
+        font-family: 'Georgia', serif;
+        font-size: 13px;
+    }
+    input {
+	    font-family: 'Georgia', serif;
+	    font-weight: bold;
+	    text-shadow: 1px 1px 1px rgba(0, 0, 0, 0.3);
+	    width: 100%;
+        height: 38px;
+	}
+    .login .col-right input, .login .col-right select, .login .col-right button, .login .col-right .select2 {
+        margin-bottom: 0.5rem;
+    }
+    .login .col-right{
+        justify-content: flex-start;
+    }
+</style>
 <div class="login">
     <div class="row main-body">
         <div class="col-12 col-xl col-right">
-            <div class="login-panel">
-                <h1><?php eT("Administration"); ?></h1>
-                <p><?php eT("Log in"); ?></p>
+            <div class="login-panel" style="margin: 10% auto; font-family:Georgia, serif;">
+                <h4 style="text-align: center; margin-bottom: 5px; font-size: 17px; font-weight: bold; color: Green; text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3); letter-spacing: 2px;"><?php eT("NLL Survey System"); ?></h4>
 
                 <!-- Form -->
                 <?php
@@ -120,18 +141,9 @@ echo viewHelper::getViewTestTag('login');
                     <div class="col-12">
                         <p><input type='hidden' name='action' value='login' />
                             <input type='hidden' id='width' name='width' value='' />
-                            <button type="submit" class="btn btn-primary" name='login_submit' value='login'><?php
-                                                                                                            eT('Log in'); ?></button>
+                            <button type="submit" class="btn btn-primary" name='login_submit' value='login' style="background: #145b17;font-family: 'Georgia', serif;color: #FFFFFF;width: 100%; margin-top: 10px; border-color: Black;"><?php
+                                                                                                            eT('Login'); ?></button>
                         </p>
-                        <?php
-                        if (Yii::app()->getConfig("display_user_password_in_email") === true) {
-                        ?>
-                            <a href='<?php
-                                        echo $this->createUrl("admin/authentication/sa/forgotpassword"); ?>'><?php
-                                                                                                                eT("Forgot your password?"); ?></a><br />
-                        <?php
-                        }
-                        ?>
                     </div>
 
                 </div>
@@ -139,7 +151,6 @@ echo viewHelper::getViewTestTag('login');
                 echo CHtml::endForm(); ?>
             </div>
         </div>
-        <?php echo Yii::app()->getController()->renderPartial('/admin/authentication/sidebar'); ?>
     </div>
 </div>
 <!-- Set focus on user input -->
