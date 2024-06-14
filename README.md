@@ -153,6 +153,7 @@ Add the following in node <welcome-file-list>:
 ```
 Download limesurvey6.x.x from https://community.limesurvey.org/downloads/ and unzip
 Upload limesurvey to Tomcat/webapps (Use Binary to transfer)
+Replace the login.php page
 chmod -R 777 /path/to/limesurvey/tmp
 chmod -R 777 /path/to/limesurvey/upload
 chmod -R 777 /path/to/limesurvey/application/config
